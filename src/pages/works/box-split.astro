@@ -1,0 +1,25 @@
+---
+import Split from "@lib/components/SVGGenerators/split.astro";
+import WorksLayout from "@lib/layouts/WorksLayout.astro";
+
+export const prerender = false;
+
+const url = Astro.url;
+const depth = +url.searchParams.get("depth") || 6;
+---
+
+<WorksLayout title="splitring">
+  <section>
+    <h4>box-split</h4>
+    <form method="get">
+      <fieldset>
+        <label>
+          split depth:
+          <input type="number" name="depth" min="3" max="8" value={depth} />
+        </label>
+      </fieldset>
+      <button type="submit">fetch</button>
+    </form>
+  </section>
+  <Split depth={depth} />
+</WorksLayout>

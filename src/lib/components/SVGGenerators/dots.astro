@@ -1,0 +1,36 @@
+---
+---
+
+<svg viewBox="">
+  <defs>
+    <pattern
+      id="pattern-lines"
+      x="0"
+      y="0"
+      width="16"
+      height="16"
+      patternUnits="userSpaceOnUse"
+      patternTransform=""
+    >
+      <g transform="translate(4 4)">
+        <circle cx="0" cy="0" r="1"></circle>
+      </g>
+      <g transform="translate(12 12)">
+        <circle cx="0" cy="0" r="1"></circle>
+      </g>
+      <!-- <rect x="0" y="0" width="16" height="16" stroke="blue" fill="none"></rect> -->
+    </pattern>
+  </defs>
+  <g transform="translate(0 0)">
+    <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern-lines)"
+    ></rect>
+  </g>
+</svg>
+
+<style>
+  svg {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+</style>

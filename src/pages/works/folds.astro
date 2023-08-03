@@ -1,0 +1,36 @@
+---
+import FoldsGenerator from "@lib/components/SVGGenerators/FoldsGenerator.astro";
+import WorksLayout from "@lib/layouts/WorksLayout.astro";
+
+export const prerender = false;
+
+const searchParams = Astro.url.searchParams;
+const stride = +searchParams.get("stride") || 6;
+const iterations = +searchParams.get("iterations") || 16;
+---
+
+<WorksLayout title="Folds">
+  <section>
+    <h4>folding</h4>
+    <form method="get">
+      <fieldset>
+        <label>
+          stride:
+          <input type="number" name="stride" min="1" max="64" value={stride} />
+        </label>
+        <label>
+          iterations:
+          <input
+            type="number"
+            name="iterations"
+            min="2"
+            max="32"
+            value={iterations}
+          />
+        </label>
+      </fieldset>
+      <button type="submit">fetch</button>
+    </form>
+  </section>
+  <FoldsGenerator stride={stride} iterations={iterations} />
+</WorksLayout>

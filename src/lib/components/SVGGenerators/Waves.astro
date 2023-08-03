@@ -1,0 +1,37 @@
+---
+---
+
+<svg>
+  <pattern
+    id="pattern-waves"
+    x="0"
+    y="0"
+    width="32"
+    height="16"
+    patternUnits="userSpaceOnUse"
+    patternTransform="rotate(45)"
+  >
+    <g transform="translate(0 8)">
+      <path
+        d="M0,0 q8,8 16,0 t16,0"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-dasharray="2 4"
+        vector-effect="non-scaling-stroke"
+      ></path>
+    </g>
+  </pattern>
+  <g fill="none">
+    <rect width="100%" height="100%" fill="url(#pattern-waves)"></rect>
+  </g>
+</svg>
+
+<style>
+  svg {
+    background-color: hsl(var(--color-secondary));
+    width: 100%;
+    height: 100%;
+  }
+</style>

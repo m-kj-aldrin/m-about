@@ -1,0 +1,20 @@
+---
+import { getCtx, setCtx } from "@lib/vv";
+
+const store = {
+  name: "illu",
+  children: [],
+};
+
+setCtx(store);
+
+setTimeout(() => {
+  console.log(
+    store.children.forEach((c) => {
+      console.log(c);
+    })
+  );
+}, 10);
+---
+
+<slot />

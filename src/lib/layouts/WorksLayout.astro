@@ -1,0 +1,43 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+---
+
+<BaseLayout title={title}>
+  <div class="work-frame">
+    <div class="inner">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .work-frame {
+    container-name: work-frame;
+    container-type: inline-size;
+
+    /* display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(30ch,1fr));
+    gap: 16px; */
+    /* width: 75%;
+    margin-inline: auto; */
+  }
+  .inner {
+    display: flex;
+    /* display: grid;
+    grid-template-columns: 1fr 1fr; */
+    gap: 32px;
+  }
+  @container work-frame (max-width:640px) {
+    .inner {
+      text-align: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  }
+</style>

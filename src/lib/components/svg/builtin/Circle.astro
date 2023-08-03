@@ -1,0 +1,11 @@
+---
+import { SVGProps } from "@lib/types/svg";
+interface Props extends SVGProps {
+  c?: { x?: number; y?: number };
+  r?: number;
+}
+
+const { c = { ...{ x: 0, y: 0 } }, r = 2, ...t } = Astro.props;
+---
+
+<circle cx={c.x} cy={c.y} r={r} {...t}></circle>

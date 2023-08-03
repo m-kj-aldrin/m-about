@@ -1,0 +1,38 @@
+---
+import WorksLayout from "@lib/layouts/WorksLayout.astro";
+import { range } from "@lib/utils/iter";
+const images = await Astro.glob("/src/assets/seed/img/*").then((files) => {
+  return files.map((file) => file.default);
+});
+---
+
+<WorksLayout title="snap-seed">
+  <div class="snap-grid">
+    {
+      images.map((img) => {
+        return (
+          <img
+            src={img.src}
+            width={img.width}
+            height={img.height}
+            loading="lazy"
+          />
+        );
+      })
+    }
+  </div>
+</WorksLayout>
+
+<style>
+  .snap-grid {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(384px, 1fr));
+    grid-auto-rows: 384px;
+  }
+
+  .snap-grid img {
+    height: 100%;
+    width: 100%;
+  }
+</style>

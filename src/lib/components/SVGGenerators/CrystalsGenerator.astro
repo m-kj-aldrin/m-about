@@ -1,0 +1,78 @@
+---
+import { grid } from "@u/grid";
+import { range } from "@u/iter";
+import { irand } from "@u/stokhos";
+import { add, div, mult, rotate, unit, type vec2 } from "@u/vector";
+
+const vec2Div = (v, x, y): vec2 => [v[0] / x, v[1] / y];
+const vec2Mult = (v, x, y): vec2 => [v[0] * x, v[1] * y];
+
+interface Props {
+  dimension?: {
+    x?: number;
+    y?: number;
+  };
+}
+
+const { dimension } = Astro.props;
+
+const size = { x: 3, y: 3, ...dimension };
+---
+
+<svg viewBox="0 0 256 256" preserveAspectRatio="">
+  <g filter="">
+    <g transform-origin="center" filter="url(#filter-scrible)">
+      {
+        grid(size.x, size.y)
+          .map((v) => vec2Div(v, size.x, size.y))
+          .map((v) => add(v, [0.5 / size.x, 0.5 / size.y]))
+          .map((v) => vec2Mult(v, 256, 256))
+          .map(([x, y]) => {
+            const spokes = irand(1, 8);
+            const turn = irand(1, spokes) / spokes;
+            const l = irand(1, 3) * 8;
+            return (
+              <g transform={`translate(${x} ${y})`}>
+                {range(spokes).map((i, _, arr) => {
+                  const v = rotate([l, 0], (i / arr.length) * 2 + turn);
+                  const v0 = add(v, mult(unit(v), 4));
+                  const spokes = irand(2, 6);
+                  const c = irand(1, 3);
+                  return (
+                    <g stroke="black" fill="none" transform={``}>
+                      <path d={`M0,0 L${v[0]},${v[1]}`} />
+                      <g transform={`translate(${v0[0]} ${v0[1]})`}>
+                        <circle r={c} />
+                        {range(spokes).map((j, _, jarr) => {
+                          const v0_v = rotate(
+                            [4 + 0, 0],
+                            (j / jarr.length) * 2
+                          );
+                          return (
+                            <g>
+                              <g transform={`translate(${v0_v[0]} ${v0_v[1]})`}>
+                                <circle r="0.5" />
+                              </g>
+                            </g>
+                          );
+                        })}
+                      </g>
+                    </g>
+                  );
+                })}
+                <g>
+                  <circle r="2" fill="" />
+                </g>
+              </g>
+            );
+          })
+      }
+    </g>
+  </g>
+</svg>
+
+<style>
+  svg {
+    width: 100%;
+  }
+</style>

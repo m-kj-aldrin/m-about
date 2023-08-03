@@ -1,0 +1,63 @@
+---
+import Icon from "@lib/components/Icon.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About">
+  <div class="center">
+    <div class="about">
+      <div class="text">
+        <!-- <p>
+          ▌▌▌▐▄▄▄▌ ▐▄▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▀▀▄▄▄
+          ▄▄▄▄▌▌▄▄ ▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▀▀ ▄ ▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄ ▄▄▄▄ ▄▄
+          ▄▄▄▄▄▄▄▄ ▄▄ ▄▄▄▄▄▄▄<span>Marcus Aldrin</span>▄ ▄▄▄▄ ▄▄ ▄▄▄▄▄▄▄▄
+          ▄▄▄▄▄▄▄ ▄ ▄▄▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄▄▄▀▀ ▄▄▄▄▄▄▄▄▄ ▄▄▄▄ ▄▄ ▄▄▄▄▄▄▄▄ ▄▄ ▄▄▄▄▄▄▄▄
+        </p> -->
+        <p>
+          <span>Marcus Aldrin</span>
+        </p>
+        <div class="social">
+          <a href="mailto:marcus@urminne.xyz">
+            <Icon name="mail" />
+          </a>
+          <a href="https://github.com/m-kj-aldrin" target="_blank">
+            <Icon name="github" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .social {
+    margin-block-start: 10px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .center {
+    height: 100%;
+    display: grid;
+    place-content: center;
+  }
+
+  .text {
+    /* font-family: 'Courier New', Courier, monospace; */
+    /* text-align: justify; */
+    /* letter-spacing: -1px; */
+    /* line-height: 0.85; */
+    /* word-spacing: -0.9ch; */
+  }
+
+  .about span {
+    word-spacing: initial;
+    /* vertical-align: sub; */
+    transform: translateY(1.2px);
+    display: inline-block;
+    /* margin-inline: 1ch; */
+    text-transform: uppercase;
+    text-shadow: 0 2px 0 hsl(var(--color-offset)),
+      0 4px 0 hsl(var(--color-secondary)), 0 6px 0 hsl(var(--color-ternary));
+  }
+</style>

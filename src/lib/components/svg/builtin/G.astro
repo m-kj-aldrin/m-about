@@ -1,0 +1,11 @@
+---
+import { SVGProps } from "@lib/types/svg";
+
+interface Props extends SVGProps {}
+
+const t = Astro.props;
+---
+
+<g {...t}>
+  <slot />
+</g>

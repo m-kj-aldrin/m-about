@@ -1,0 +1,80 @@
+---
+import Icon, { IconTypes } from "./Icon.astro";
+import { Replace } from "../types/util";
+const url = Astro.url;
+
+type TopPaths = "/" | "/works/" | "/about/";
+
+const paths: TopPaths[] = ["/", "/works/", "/about/"];
+
+type CleanPath = Replace<Exclude<"/", TopPaths>, "/", "">;
+
+const re = /\/works\/.+/;
+const work = re.test(url.pathname);
+---
+
+<nav>
+  <ul>
+    {
+      paths.map((path, i) => {
+        const worksSubDir = work && path == "/works/";
+
+        const iconType: IconTypes =
+          path == "/"
+            ? "home"
+            : worksSubDir
+            ? "back"
+            : (path.replaceAll("/", "") as CleanPath);
+
+        return (
+          <li>
+            <a
+              href={path}
+              aria-current={url.pathname == path ? "page" : null}
+              aria-label={worksSubDir && "back to works page"}
+            >
+              <Icon name={iconType} />
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>
+
+<style>
+  a {
+    display: block;
+    line-height: 0;
+  }
+  nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+
+    background-color: hsla(var(--color-light), 0.9);
+    /* background: linear-gradient(
+      to top right,
+      hsla(var(--color-offset), 0.1) -50%,
+      hsl(var(--color-light), 0.9) 70%
+    ); */
+
+    padding: 12px 12px;
+
+    border-radius: 4px;
+
+    box-shadow: 0 0 16px 8px hsla(var(--color-dark), 0),
+      inset 0 0 12px 2px hsla(var(--color-primary), 0.05);
+    border: 1px hsl(var(--color-primary), 0.1) dashed;
+    transform: translate(-50%, 0);
+  }
+  ul {
+    display: flex;
+    gap: 8px;
+  }
+
+  [aria-current="page"],
+  [aria-label="back to works page"] {
+    color: hsl(var(--color-offset));
+  }
+</style>

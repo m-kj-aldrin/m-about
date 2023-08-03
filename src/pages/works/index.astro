@@ -1,0 +1,102 @@
+---
+import Grid from "@lib/components/Grid.astro";
+import Waves from "@lib/components/SVGGenerators/Waves.astro";
+import Dots from "@lib/components/SVGGenerators/dots.astro";
+import Lines from "@lib/components/SVGGenerators/lines.astro";
+import Card from "@lib/components/card/Card.astro";
+import Crystaline from "@lib/components/card/illustrations/crystaline.astro";
+import Fold from "@lib/components/card/illustrations/fold.astro";
+import Loops from "@lib/components/card/illustrations/loops.astro";
+import Sqrsplit from "@lib/components/card/illustrations/sqrsplit.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Works">
+  <Grid>
+    <a href="/works/loops" data-row="2" data-column="2">
+      <Card bgColor="secondary" fgColor="dark" variant="plain">
+        <Loops slot="illustration" />
+      </Card>
+    </a>
+    <a aria-disabled="true" data-column="2" data-row="3">
+      <Card variant="outline" bgColor="secondary" title="patterns" />
+    </a>
+    <a href="/works/folds" data-column="1" data-row="2">
+      <Card variant="inverse" bgColor="offset">
+        <Fold slot="illustration" />
+      </Card>
+    </a>
+    <a href="/works/filter" data-column="2" data-row="2">
+      <Card title="filter" variant="plain" bgColor="dark" />
+    </a>
+    <div data-column="1" data-row="6">
+      <Waves />
+    </div>
+    <a href="/works/box-split" data-column="2">
+      <Card title="" bgColor="offset">
+        <Sqrsplit slot="illustration" />
+      </Card>
+    </a>
+    <a aria-disabled="true" data-column="2">
+      <Card title="" bgColor="primary" variant="outline">
+        <Crystaline slot="illustration" />
+      </Card>
+    </a>
+    <div data-row="2" data-column="1">
+      <Dots />
+    </div>
+    <div data-column="2" data-row="3" class="square-content">
+      <Lines />
+    </div>
+    <a href="/works/snap-seed">
+      <Card title="snap-seed" bgColor="ternary" variant="inverse">
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="-256 -256 512 512"
+          slot="illustration"
+        >
+          <g transform="translate(0 0)" fill="currentColor">
+            <circle r="256" cx="0" cy="0"></circle>
+          </g>
+        </svg>
+      </Card>
+    </a>
+  </Grid>
+</BaseLayout>
+
+<style>
+  div {
+    cursor: help;
+  }
+  a {
+    display: grid;
+  }
+
+  a[aria-disabled="true"] {
+    filter: grayscale(0.4);
+    opacity: 0.3;
+  }
+
+  a[aria-disabled="true"] :global(.blip) {
+    color: red;
+  }
+  a[aria-disabled="true"] :global(article:hover .blip) {
+    background-color: transparent;
+  }
+
+  .square-content {
+    display: grid;
+    justify-items: center;
+
+    border-radius: 8px;
+    border: 2px currentColor solid;
+    padding: 32px;
+  }
+  .square-content > :global(*) {
+    height: 100%;
+    width: auto;
+    max-height: 100%;
+    aspect-ratio: 1/1;
+  }
+</style>

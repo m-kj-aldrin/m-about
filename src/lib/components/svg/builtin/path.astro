@@ -1,0 +1,17 @@
+---
+import { SVGProps } from "@lib/types/svg";
+interface Props extends SVGProps {
+  /** Start point [num,num] */
+  start?: [number, number];
+  /** Path string*/
+  d?: string;
+}
+
+const { start = [0, 0], d, ...rest } = Astro.props;
+
+let _d_ = "";
+
+_d_ = `M${start[0]},${start[1]} ${d}`;
+---
+
+<path d={_d_} {...rest}></path>

@@ -1,0 +1,31 @@
+---
+import WorksLayout from "@lib/layouts/WorksLayout.astro";
+import { range } from "@lib/utils/iter";
+const videos = await Astro.glob("/src/assets/gen/video/*").then((files) =>
+  files.map((file) => file.default)
+);
+const posters = await Astro.glob("/src/assets/gen/posters/*").then((files) =>
+  files.map((file) => file.default)
+);
+---
+
+<WorksLayout title="Loops">
+  <div class="loops-grid">
+    {
+      videos.map((video, i) => {
+        return (
+          <video controls preload="none" poster={posters[i].src} src={video} />
+        );
+      })
+    }
+  </div>
+</WorksLayout>
+
+<style>
+  .loops-grid {
+    width: 100%;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(384px, 1fr));
+  }
+</style>
