@@ -19,6 +19,8 @@ const posters = await Astro.glob("/src/assets/gen/posters/*").then((files) =>
                         preload="none"
                         poster={posters[i].src}
                         src={video}
+                        width="1024px"
+                        height="1024px"
                     />
                 );
             })
