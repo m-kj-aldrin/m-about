@@ -1,16 +1,16 @@
 {
-  "name": "about",
-  "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "astro dev --host",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "@astrojs/netlify": "^2.5.0",
-    "astro": "^2.8.5"
-  }
+    "name": "about",
+    "type": "module",
+    "version": "0.0.1",
+    "scripts": {
+        "dev": "astro dev --host",
+        "start": "astro dev",
+        "build": "astro build",
+        "preview": "astro preview",
+        "astro": "astro"
+    },
+    "dependencies": {
+        "@astrojs/netlify": "^2.5.0",
+        "astro": "latest"
+    }
 }

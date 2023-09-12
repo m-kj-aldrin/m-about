@@ -2,46 +2,60 @@
 import Grid from "@lib/components/Grid.astro";
 import Card from "@lib/components/card/Card.astro";
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
+
+import filterMans from "src/assets/filter/img/filter5.jpeg";
+import seedPoster from "src/assets/seed/img/seed2.jpeg";
+import loopPoster from "src/assets/gen/posters/loop4.jpeg";
+import draftPoster from "src/assets/draft/img/draft4.jpeg";
 ---
 
 <BaseLayout title="Works">
-    <!-- <Grid> -->
     <div class="grid">
         <a href="/works/loops" data-row="5" data-column="3">
-            <Card bgColor="dark" variant="outline">
+            <Card>
                 <img
-                    src="/src/assets/gen/posters/loop4.jpeg"
+                    src={loopPoster.src}
                     slot="illustration"
-                    width="512px"
-                    height="512px"
+                    width={512}
+                    height={512}
                     style="object-fit: cover;transform:scale(1.25)"
                 />
             </Card>
         </a>
         <a href="/works/filter" data-column="3" data-row="6">
-            <Card variant="outline" bgColor="dark" blend={true}>
+            <Card>
                 <img
-                    src="/src/assets/filter/img/filter5.jpeg"
+                    src={filterMans.src}
                     slot="illustration"
-                    width="512px"
-                    height="512px"
+                    width={512}
+                    height={512}
                     style="object-fit: cover; transform:scale(1.25) translateY(10%)"
                 />
             </Card>
         </a>
         <a href="/works/snap-seed">
-            <Card title="snap-seed" bgColor="ternary" variant="inverse">
+            <Card>
                 <img
-                    src="/src/assets/seed/img/seed2.jpeg"
+                    src={seedPoster.src}
                     slot="illustration"
-                    width="512px"
-                    height="512px"
+                    width={512}
+                    height={512}
+                    style="object-fit: cover;"
+                />
+            </Card>
+        </a>
+        <a href="/works/draft">
+            <Card>
+                <img
+                    src={draftPoster.src}
+                    slot="illustration"
+                    width={512}
+                    height={512}
                     style="object-fit: cover;"
                 />
             </Card>
         </a>
     </div>
-    <!-- </Grid> -->
 </BaseLayout>
 
 <style>
@@ -52,5 +66,11 @@ import BaseLayout from "@lib/layouts/BaseLayout.astro";
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
+    }
+
+    @media (max-width: 896px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>

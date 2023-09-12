@@ -2,55 +2,49 @@
 ---
 
 <div class="square">
-  <!-- <div>ur</div>
-  <div></div>
-  <div>minne</div> -->
-  <div>m</div>
-  <div></div>
-  <div>aldrin</div>
+    <div>m</div>
+    <div></div>
+    <div>aldrin</div>
 </div>
-<div class="square"></div>
 
 <style>
-  .square {
-    align-self: flex-start;
-    aspect-ratio: 1/1;
-    border-radius: 2px;
-    line-height: 1;
+    .square {
+        align-self: flex-start;
+        aspect-ratio: 1/1;
+        border-radius: 2px;
+        line-height: 1;
 
-    font-size: 12px;
-    font-weight: 300;
-    opacity: 0.75;
-  }
-  .square:first-child {
-    width: 64px;
-    background-color: transparent;
+        font-size: 12px;
+        font-weight: 300;
+        opacity: 0.75;
+    }
+    .square:first-child {
+        width: 64px;
+        background-color: transparent;
 
-    /* font-family: monospace; */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+        box-shadow: 0 0 24px 8px hsla(var(--color-dark), 0.05);
+    }
 
-    box-shadow: 0 0 24px 8px hsla(var(--color-dark), 0.05);
-  }
+    .square:first-child div:first-child {
+        border-right: none;
+    }
 
-  .square:first-child div:first-child {
-    border-right: none;
-  }
+    .square:first-child div:nth-child(2) {
+        background-color: hsl(var(--color-secondary));
+    }
 
-  .square:first-child div:nth-child(2) {
-    background-color: hsl(var(--color-secondary));
-  }
+    .square:first-child div {
+        border: 1px hsla(var(--color-dark), 0.2) dashed;
+        display: grid;
+        place-content: center;
+    }
 
-  .square:first-child div {
-    border: 2px currentColor dashed;
-    display: grid;
-    place-content: center;
-  }
-
-  .square:first-child div:last-child {
-    grid-column: span 2;
-    border-top: none;
-  }
+    .square:first-child div:last-child {
+        grid-column: span 2;
+        border-top: none;
+    }
 </style>

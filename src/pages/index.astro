@@ -1,48 +1,39 @@
 ---
 import Splash2 from "@lib/components/splash2.astro";
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
-import vec2 from "@lib/utils/_vec";
-
-const v0 = vec2({ x: 5, y: 0 });
-const v1 = vec2({ x: 2, y: 3 });
-
-const v2 = vec2.max(v0, v1);
-const v3 = vec2.min(v0, v1);
-
-console.log(v0, v1, v2, v3);
 ---
 
 <BaseLayout fullScreen={true} title="Home">
-  <div class="inner">
-    <Splash2 />
-  </div>
+    <div class="inner">
+        <Splash2 />
+    </div>
 </BaseLayout>
 
 <style>
-  .inner {
-    display: grid;
-    margin-inline: auto;
-    height: 100%;
-    aspect-ratio: 1/1;
-    max-width: 100%;
-  }
+    .inner {
+        display: grid;
+        margin-inline: auto;
+        height: 100%;
+        aspect-ratio: 1/1;
+        max-width: 100%;
+    }
 
-  .inner {
-    container-type: size;
-    container-name: main-info;
-  }
+    .inner {
+        container-type: size;
+        container-name: main-info;
+    }
 
-  @container main-info not (min-aspect-ratio:1/1) {
-    .inner :global(svg) {
-      height: 100%;
+    @container main-info not (min-aspect-ratio:1/1) {
+        .inner :global(svg) {
+            height: 100%;
+        }
+        .inner :global(svg .shapes) {
+            /* transform: rotate(-45deg); */
+        }
     }
-    .inner :global(svg .shapes) {
-      /* transform: rotate(-45deg); */
+    @container main-info (max-aspect-ratio: 7/10) {
+        .inner :global(svg) {
+            transform: scale(0.9);
+        }
     }
-  }
-  @container main-info (max-aspect-ratio: 7/10) {
-    .inner :global(svg) {
-      transform: scale(0.9);
-    }
-  }
 </style>
