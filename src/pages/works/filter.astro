@@ -1,38 +1,41 @@
 ---
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
 const images = await Astro.glob("/src/assets/filter/img/*").then((files) =>
-  files.map((file) => file.default)
+    files.map((file) => file.default)
 );
 ---
 
 <BaseLayout title="filter">
-  <div class="filter-grid">
-    {
-      images.map((image) => {
-        return (
-          <img src={image.src} width={1024} height={1024} loading="lazy" />
-        );
-      })
-    }
-  </div>
+    <div class="filter-grid">
+        {
+            images.map((image) => {
+                return (
+                    <img
+                        src={image.src}
+                        width={1024}
+                        height={1024}
+                        loading="lazy"
+                    />
+                );
+            })
+        }
+    </div>
 </BaseLayout>
 
 <style>
-  .filter-grid {
-    /* display: grid;
-    gap: 16px;
-    justify-items: center; */
-    /* width: 100%; */
-    display: grid;
-    gap: 8px;
-    grid-template-columns: repeat(auto-fit, minmax(512px, 1fr));
-    /* grid-auto-rows: 384px; */
-    /* columns: 512px 2; */
-  }
+    img {
+        height: auto;
+        aspect-ratio: 1/1;
+    }
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
 
-  .snap-grid img {
-    /* object-fit: contain; */
-    /* height: 100%;
-    width: 100%; */
-  }
+    @media (max-width: 1024px) {
+        .filter-grid {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
