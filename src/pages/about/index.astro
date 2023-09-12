@@ -25,10 +25,7 @@ const circleFillChance = stickyChance(0.01, 0.01);
     <div class="inner">
         <!-- <div class="center"> -->
         <!-- <div class="about"> -->
-        <div
-            class="text"
-            style="writing-mode: vertical-lr; text-orientation: upright;"
-        >
+        <div class="text">
             <p>
                 <span>Marcus Aldrin</span>
             </p>
@@ -167,7 +164,7 @@ const circleFillChance = stickyChance(0.01, 0.01);
     }
 
     svg {
-        flex-basis: 60%;
+        flex-basis: 70%;
     }
 
     .social {
@@ -178,6 +175,8 @@ const circleFillChance = stickyChance(0.01, 0.01);
 
     .text {
         align-self: center;
+        writing-mode: vertical-lr;
+        text-orientation: upright;
         /* flex-basis: 50%; */
     }
 
@@ -189,5 +188,19 @@ const circleFillChance = stickyChance(0.01, 0.01);
         text-shadow: 0 2px 0 hsl(var(--color-offset)),
             0 4px 0 hsl(var(--color-secondary)),
             0 6px 0 hsl(var(--color-ternary));
+    }
+    @media (max-width: 768px) {
+        .inner {
+            flex-direction: column;
+        }
+        svg {
+            flex-basis: 60%;
+        }
+        .text {
+            text-orientation: unset;
+            writing-mode: unset;
+
+            order: 1;
+        }
     }
 </style>
