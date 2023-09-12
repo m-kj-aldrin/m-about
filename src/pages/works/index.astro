@@ -7,6 +7,7 @@ import filterMans from "src/assets/filter/img/filter5.jpeg";
 import seedPoster from "src/assets/seed/img/seed2.jpeg";
 import loopPoster from "src/assets/gen/posters/loop4.jpeg";
 import draftPoster from "src/assets/draft/img/draft4.jpeg";
+import squaresPoster from "src/assets/squares/even-series-1.13.jpeg"
 ---
 
 <BaseLayout title="Works">
@@ -40,7 +41,18 @@ import draftPoster from "src/assets/draft/img/draft4.jpeg";
                     slot="illustration"
                     width={512}
                     height={512}
-                    style="object-fit: cover;"
+                    style="object-fit: conver;"
+                />
+            </Card>
+        </a>
+        <a href="/works/squares">
+            <Card>
+                <img
+                    src={squaresPoster.src}
+                    slot="illustration"
+                    width={512}
+                    height={512}
+                    style="object-fit: contain;"
                 />
             </Card>
         </a>
