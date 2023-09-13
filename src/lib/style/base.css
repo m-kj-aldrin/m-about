@@ -85,7 +85,7 @@ body {
 body {
   /* border-radius: 4px;
   box-shadow: inset 0 0px 24px 8px hsl(var(--color-primary), 1); */
-  padding: 16px;
+  padding: 8px;
 
   color: hsl(var(--color-dark));
   background-color: hsl(var(--color-light));

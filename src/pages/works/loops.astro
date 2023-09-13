@@ -15,7 +15,9 @@ const posters = await Astro.glob("/src/assets/gen/posters/*").then((files) =>
             videos.map((video, i) => {
                 return (
                     <video
+                        playsinline
                         controls
+                        loop
                         preload="none"
                         poster={posters[i].src}
                         src={video}
@@ -31,12 +33,6 @@ const posters = await Astro.glob("/src/assets/gen/posters/*").then((files) =>
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
-
-        /* align-content: center;
-        justify-content: center;
-        align-items: center;
-        justify-items: center; */
-        /* width: 100%; */
     }
 
     @media (max-width: 1024px) {
