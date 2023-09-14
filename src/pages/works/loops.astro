@@ -21,6 +21,8 @@ const posters = await Astro.glob("/src/assets/gen/posters/*").then((files) =>
                         preload="none"
                         poster={posters[i].src}
                         src={video}
+                        width="512"
+                        height="512"
                     />
                 );
             })
@@ -33,6 +35,12 @@ const posters = await Astro.glob("/src/assets/gen/posters/*").then((files) =>
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 8px;
+    }
+
+    video {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1/1;
     }
 
     @media (max-width: 1024px) {

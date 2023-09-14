@@ -3,7 +3,7 @@
 
 <div class="square">
     <div>m</div>
-    <div></div>
+    <div class="c"></div>
     <div>aldrin</div>
 </div>
 
@@ -16,8 +16,15 @@
 
         font-size: 12px;
         font-weight: 300;
-        opacity: 0.75;
+        opacity: 0.55;
+
+        transition: 250ms ease-in opacity;
     }
+
+    .square:hover {
+        opacity: 1;
+    }
+
     .square:first-child {
         width: 64px;
         background-color: transparent;
@@ -26,7 +33,7 @@
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 1fr 1fr;
 
-        box-shadow: 0 0 24px 8px hsla(var(--color-dark), 0.05);
+        box-shadow: 0 0 16px 8px hsla(var(--color-dark), 0.03);
     }
 
     .square:first-child div:first-child {
@@ -35,10 +42,16 @@
 
     .square:first-child div:nth-child(2) {
         background-color: hsl(var(--color-secondary));
+        transition: 250ms ease-out background-color, 150ms 250ms ease-out transform;
+    }
+    .square:first-child div:nth-child(2):hover {
+        background-color: hsl(var(--color-offset));
+
+        transform: scale(0.5) rotate(45deg);
     }
 
     .square:first-child div {
-        border: 1px hsla(var(--color-dark), 0.2) dashed;
+        border: 1px hsla(var(--color-dark), 0.1) dashed;
         display: grid;
         place-content: center;
     }
