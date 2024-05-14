@@ -29,11 +29,6 @@ const work = re.test(url.pathname);
                 return (
                     <li>
                         <a
-                            onclick={
-                                worksSubDir
-                                    ? "event.preventDefault();history.back()"
-                                    : null
-                            }
                             href={path}
                             aria-current={url.pathname == path ? "page" : null}
                             aria-label={worksSubDir && "back to works page"}
@@ -58,11 +53,6 @@ const work = re.test(url.pathname);
         left: 50%;
 
         background-color: hsla(var(--color-light), 0.9);
-        /* background: linear-gradient(
-      to top right,
-      hsla(var(--color-offset), 0.1) -50%,
-      hsl(var(--color-light), 0.9) 70%
-    ); */
 
         padding: 12px 12px;
 
