@@ -1,4 +1,5 @@
 ---
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
 import GridDisplay from "@lib/layouts/GridDisplay.astro";
 import WorksLayout from "@lib/layouts/WorksLayout.astro";
 const images = await Astro.glob("/src/assets/squares/*").then((files) => {
@@ -6,7 +7,8 @@ const images = await Astro.glob("/src/assets/squares/*").then((files) => {
 });
 ---
 
-<WorksLayout title="sharing squares">
+<!-- <WorksLayout title="sharing squares"> -->
+<BaseLayout title="sharing squares">
     <GridDisplay>
         {
             images.map((img) => {
@@ -21,7 +23,8 @@ const images = await Astro.glob("/src/assets/squares/*").then((files) => {
             })
         }
     </GridDisplay>
-</WorksLayout>
+</BaseLayout>
+<!-- </WorksLayout> -->
 
 <style>
     img {

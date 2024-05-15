@@ -1,12 +1,13 @@
 ---
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
 import GridDisplay from "@lib/layouts/GridDisplay.astro";
-import WorksLayout from "@lib/layouts/WorksLayout.astro";
 const videos = await Astro.glob("/src/assets/gen/video/*").then((files) =>
     files.map((file) => file.default)
 );
 const posters = await Astro.glob("/src/assets/gen/posters/*").then((files) =>
-    files.map((file) => file.default)
+    files.map((file) => {
+        return file.default;
+    })
 );
 ---
 
