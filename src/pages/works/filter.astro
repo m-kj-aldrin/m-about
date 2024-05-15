@@ -1,12 +1,13 @@
 ---
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import GridDisplay from "@lib/layouts/GridDisplay.astro";
 const images = await Astro.glob("/src/assets/filter/img/*").then((files) =>
     files.map((file) => file.default)
 );
 ---
 
 <BaseLayout title="filter">
-    <div class="filter-grid">
+    <GridDisplay>
         {
             images.map((image) => {
                 return (
@@ -19,23 +20,12 @@ const images = await Astro.glob("/src/assets/filter/img/*").then((files) =>
                 );
             })
         }
-    </div>
+    </GridDisplay>
 </BaseLayout>
 
 <style>
     img {
         height: 100%;
         aspect-ratio: 1/1;
-    }
-    .filter-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-
-    @media (max-width: 1024px) {
-        .filter-grid {
-            grid-template-columns: 1fr;
-        }
     }
 </style>

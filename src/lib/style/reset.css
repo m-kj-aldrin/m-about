@@ -30,4 +30,5 @@ svg {
 img,
 video {
     object-fit: cover;
+    display: inline-block;
 }

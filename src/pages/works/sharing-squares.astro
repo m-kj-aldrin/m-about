@@ -1,12 +1,13 @@
 ---
+import GridDisplay from "@lib/layouts/GridDisplay.astro";
 import WorksLayout from "@lib/layouts/WorksLayout.astro";
 const images = await Astro.glob("/src/assets/squares/*").then((files) => {
     return files.map((file) => file.default);
 });
 ---
 
-<WorksLayout title="snap-seed">
-    <div class="draft-grid">
+<WorksLayout title="sharing squares">
+    <GridDisplay>
         {
             images.map((img) => {
                 return (
@@ -19,21 +20,10 @@ const images = await Astro.glob("/src/assets/squares/*").then((files) => {
                 );
             })
         }
-    </div>
+    </GridDisplay>
 </WorksLayout>
 
 <style>
-    .draft-grid {
-        gap: 32px;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (max-width: 1024px) {
-        .draft-grid {
-            grid-template-columns: 1fr;
-        }
-    }
     img {
         height: auto;
         aspect-ratio: 1/1;

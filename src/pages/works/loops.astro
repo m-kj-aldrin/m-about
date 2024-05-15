@@ -1,6 +1,7 @@
 ---
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import GridDisplay from "@lib/layouts/GridDisplay.astro";
 import WorksLayout from "@lib/layouts/WorksLayout.astro";
-import { range } from "@lib/utils/iter";
 const videos = await Astro.glob("/src/assets/gen/video/*").then((files) =>
     files.map((file) => file.default)
 );
@@ -9,8 +10,9 @@ const posters = await Astro.glob("/src/assets/gen/posters/*").then((files) =>
 );
 ---
 
-<WorksLayout title="Loops">
-    <div class="loops-grid">
+<!-- <WorksLayout title="loops"> -->
+<BaseLayout title="loops">
+    <GridDisplay>
         {
             videos.map((video, i) => {
                 return (
@@ -27,25 +29,16 @@ const posters = await Astro.glob("/src/assets/gen/posters/*").then((files) =>
                 );
             })
         }
-    </div>
-</WorksLayout>
+    </GridDisplay>
+</BaseLayout>
+<!-- </WorksLayout> -->
 
 <style>
-    .loops-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-
     video {
         width: 100%;
         height: auto;
         aspect-ratio: 1/1;
-    }
 
-    @media (max-width: 1024px) {
-        .loops-grid {
-            grid-template-columns: 1fr;
-        }
+        object-fit: contain !important;
     }
 </style>

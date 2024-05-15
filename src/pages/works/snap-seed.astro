@@ -1,13 +1,13 @@
 ---
+import GridDisplay from "@lib/layouts/GridDisplay.astro";
 import WorksLayout from "@lib/layouts/WorksLayout.astro";
-import { range } from "@lib/utils/iter";
 const images = await Astro.glob("/src/assets/seed/img/*").then((files) => {
     return files.map((file) => file.default);
 });
 ---
 
 <WorksLayout title="snap-seed">
-    <div class="snap-grid">
+    <GridDisplay>
         {
             images.map((img) => {
                 return (
@@ -20,19 +20,12 @@ const images = await Astro.glob("/src/assets/seed/img/*").then((files) => {
                 );
             })
         }
-    </div>
+    </GridDisplay>
 </WorksLayout>
 
 <style>
-    .snap-grid {
-        display: grid;
-        gap: 8px;
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .snap-grid img {
+    img {
         height: 100%;
-        /* width: 100%; */
         aspect-ratio: 1/1;
     }
 </style>

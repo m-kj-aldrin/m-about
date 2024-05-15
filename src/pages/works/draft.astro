@@ -1,4 +1,5 @@
 ---
+import GridDisplay from "@lib/layouts/GridDisplay.astro";
 import WorksLayout from "@lib/layouts/WorksLayout.astro";
 const images = await Astro.glob("/src/assets/draft/img/*").then((files) => {
     return files.map((file) => file.default);
@@ -6,7 +7,7 @@ const images = await Astro.glob("/src/assets/draft/img/*").then((files) => {
 ---
 
 <WorksLayout title="draft">
-    <div class="draft-grid">
+    <GridDisplay>
         {
             images.map((img) => {
                 return (
@@ -19,25 +20,12 @@ const images = await Astro.glob("/src/assets/draft/img/*").then((files) => {
                 );
             })
         }
-    </div>
+    </GridDisplay>
 </WorksLayout>
 
 <style>
-    .draft-grid {
-        display: grid;
-        gap: 8px;
-        grid-template-columns: repeat(2, 1fr);
-        /* grid-template-columns: repeat(auto-fit, minmax(384px, 1fr)); */
-        /* grid-auto-rows: 384px; */
-    }
-
-    .draft-grid img {
+    img {
         height: 100%;
         width: 100%;
-    }
-    @media (max-width: 1024px) {
-        .draft-grid {
-            grid-template-columns: 1fr;
-        }
     }
 </style>

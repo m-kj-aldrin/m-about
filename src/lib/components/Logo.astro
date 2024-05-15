@@ -2,13 +2,15 @@
 ---
 
 <div class="square">
-    <div>m</div>
+    <div class="s">m</div>
     <div class="c"></div>
     <div>aldrin</div>
 </div>
 
 <style>
     .square {
+        position: absolute;
+
         align-self: flex-start;
         aspect-ratio: 1/1;
         border-radius: 2px;
@@ -16,16 +18,22 @@
 
         font-size: 12px;
         font-weight: 300;
-        opacity: 0.55;
+        /* opacity: 0.55; */
 
         transition: 250ms ease-in opacity;
+
+        /* border: 1px hsla(var(--color-primary), 0.5) solid; */
     }
 
     .square:hover {
         opacity: 1;
     }
 
-    .square:first-child {
+    .s {
+        /* color: hsl(var(--color-ternary)); */
+    }
+
+    .square {
         width: 64px;
         background-color: transparent;
 
@@ -42,16 +50,28 @@
 
     .square:first-child div:nth-child(2) {
         background-color: hsl(var(--color-secondary));
-        transition: 250ms ease-out background-color, 150ms 250ms ease-out transform;
+        /* transition: 250ms ease-out background-color,
+            150ms 250ms ease-out transform; */
     }
-    .square:first-child div:nth-child(2):hover {
+    /* :global(html[data-route="about"]) .square div:nth-child(2){
+        background-color: hsl(var(--color-primary));
+    }
+    :global(html[data-route="works"]) .square div:nth-child(2){
+        background-color: hsl(var(--color-ternary));
+    } */
+    /* .square:first-child div:nth-child(2) {
         background-color: hsl(var(--color-offset));
 
         transform: scale(0.5) rotate(45deg);
-    }
+    } */
+    /* .square:first-child div:nth-child(2):hover {
+        background-color: hsl(var(--color-offset));
+
+        transform: scale(0.5) rotate(45deg);
+    } */
 
     .square:first-child div {
-        border: 1px hsla(var(--color-dark), 0.1) dashed;
+        border: 1px hsla(var(--color-dark), 0.3) dashed;
         display: grid;
         place-content: center;
     }
@@ -60,4 +80,7 @@
         grid-column: span 2;
         border-top: none;
     }
+    /* .square div {
+        border: 1px hsla(var(--color-dark)) solid !important;
+    } */
 </style>

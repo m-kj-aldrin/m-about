@@ -5,7 +5,12 @@ const url = Astro.url;
 
 type TopPaths = "/" | "/works/" | "/about/";
 
-const paths: TopPaths[] = ["/", "/works/", "/about/"];
+// const paths: TopPaths[] = ["/", "/works/", "/about/"];
+const paths: { path: TopPaths; name: string }[] = [
+    { path: "/", name: "home" },
+    { path: "/works/", name: "works" },
+    // { path: "/about/", name: "about" },
+];
 
 type CleanPath = Replace<Exclude<"/", TopPaths>, "/", "">;
 
@@ -16,7 +21,7 @@ const work = re.test(url.pathname);
 <nav>
     <ul>
         {
-            paths.map((path, i) => {
+            paths.map(({ path, name }, i) => {
                 const worksSubDir = work && path == "/works/";
 
                 const iconType: IconTypes =
@@ -32,6 +37,7 @@ const work = re.test(url.pathname);
                             href={path}
                             aria-current={url.pathname == path ? "page" : null}
                             aria-label={worksSubDir && "back to works page"}
+                            title={name}
                         >
                             <Icon name={iconType} />
                         </a>
@@ -46,23 +52,21 @@ const work = re.test(url.pathname);
     a {
         display: block;
         line-height: 0;
+        /* outline: 1px red solid; */
+        transition: color 75ms ease;
     }
     nav {
-        position: fixed;
-        bottom: 32px;
-        left: 50%;
-
         background-color: hsla(var(--color-light), 0.9);
 
-        /* padding: 12px 12px; */
         padding: 6px 16px;
 
         border-radius: 4px;
+        align-self: center;
+        margin-inline: auto;
 
         box-shadow: 0 0 16px 8px hsla(var(--color-dark), 0),
             inset 0 0 12px 2px hsla(var(--color-primary), 0.05);
         border: 1px hsl(var(--color-primary), 0.1) dashed;
-        transform: translate(-50%, 0);
     }
     ul {
         display: flex;

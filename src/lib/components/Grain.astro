@@ -2,42 +2,46 @@
 ---
 
 <div>
-  <svg width="100%" height="100%">
-    <filter id="filter-grain">
-      <feTurbulence
-        baseFrequency="0.4"
-        numOctaves="1"
-        seed="1"
-        type="fractalNoise"
-        result="smal"></feTurbulence>
-      <feTurbulence
-        baseFrequency="0.003"
-        numOctaves="1"
-        seed="1"
-        type="fractalNoise"></feTurbulence>
-      <feComposite in="smal" operator="arithmetic" k1="0.3" k2="0.1" k3="-0.25"
-      ></feComposite>
-      <feColorMatrix type="saturate" values="0"></feColorMatrix>
-    </filter>
-    <rect
-      x="0"
-      y="0"
-      width="100%"
-      height="100%"
-      filter="url(#filter-grain)"
-      opacity="0.5"></rect>
-  </svg>
+    <svg width="100%" height="100%">
+        <filter id="filter-grain">
+            <feTurbulence
+                baseFrequency="0.4"
+                numOctaves="1"
+                seed="1"
+                type="fractalNoise"
+                result="smal"></feTurbulence>
+            <feTurbulence
+                baseFrequency="0.003"
+                numOctaves="1"
+                seed="1"
+                type="fractalNoise"></feTurbulence>
+            <feComposite
+                in="smal"
+                operator="arithmetic"
+                k1="0.3"
+                k2="0.1"
+                k3="-0.25"></feComposite>
+            <feColorMatrix type="saturate" values="0"></feColorMatrix>
+        </filter>
+        <rect
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            filter="url(#filter-grain)"
+            opacity="0.5"></rect>
+    </svg>
 </div>
 
 <style>
-  div {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 100;
-    margin: 8px;
-    border-radius: 8px;
+    div {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 100;
+        margin: 8px;
+        border-radius: 8px;
 
-    box-shadow: inset 0 0px 32px 8px hsl(var(--color-primary), 0.05);
-  }
+        /* box-shadow: inset 0 0px 32px 8px hsl(var(--color-primary), 0.05); */
+    }
 </style>
