@@ -1,8 +1,7 @@
 ---
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
 import GridDisplay from "@lib/layouts/GridDisplay.astro";
-import WorksLayout from "@lib/layouts/WorksLayout.astro";
-const images = await Astro.glob("/src/assets/draft/img/*").then((files) => {
+const images = await Astro.glob("@assets/draft/img/*").then((files) => {
     return files.map((file) => file.default);
 });
 ---
