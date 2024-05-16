@@ -28,8 +28,8 @@ const work = re.test(url.pathname);
                     path == "/"
                         ? "home"
                         : worksSubDir
-                        ? "back"
-                        : (path.replaceAll("/", "") as CleanPath);
+                          ? "back"
+                          : (path.replaceAll("/", "") as CleanPath);
 
                 return (
                     <li>
@@ -64,7 +64,11 @@ const work = re.test(url.pathname);
         align-self: center;
         margin-inline: auto;
 
-        box-shadow: 0 0 16px 8px hsla(var(--color-dark), 0),
+        margin-top: 16px;
+        margin-bottom: 20px;
+
+        box-shadow:
+            0 0 16px 8px hsla(var(--color-dark), 0),
             inset 0 0 12px 2px hsla(var(--color-primary), 0.05);
         border: 1px hsl(var(--color-primary), 0.1) dashed;
     }
