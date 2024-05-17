@@ -86,8 +86,10 @@ const { fullScreen, title } = Astro.props;
         let currentSvgTime = +localStorage.getItem("svgTime");
         let time = null;
         const updateTimeLine = (t: number) => {
+            t /= 1000;
             if (time != null) {
                 let delta = t - time;
+                // console.log(delta);
                 currentSvgTime += delta;
                 localStorage.setItem("svgTime", `${currentSvgTime}`);
             }
