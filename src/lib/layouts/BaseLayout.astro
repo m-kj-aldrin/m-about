@@ -81,6 +81,24 @@ const { fullScreen, title } = Astro.props;
     </body>
 </html>
 
+<script>
+    if (document.documentElement.dataset.route != "home") {
+        let currentSvgTime = +localStorage.getItem("svgTime");
+        let time = null;
+        const updateTimeLine = (t: number) => {
+            if (time != null) {
+                let delta = t - time;
+                currentSvgTime += delta;
+                localStorage.setItem("svgTime", `${currentSvgTime}`);
+            }
+
+            time = t;
+            requestAnimationFrame(updateTimeLine);
+        };
+        requestAnimationFrame(updateTimeLine);
+    }
+</script>
+
 <style>
     html[data-fullscreen] main {
         min-height: 0;
