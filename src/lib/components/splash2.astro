@@ -7,7 +7,11 @@ import Path from "./svg/builtin/path.astro";
 const outerCircleRadi = 320;
 ---
 
-<svg viewBox="-512 -512 1024 1024" fill="none">
+<svg
+    viewBox="-512 -512 1024 1024"
+    fill="none"
+    preserveAspectRatio="xMidYMid slice"
+>
     <g class="illustration" filter="url(#filter-scrible)">
         <g class="shapes">
             <g class="inner" transform="">
@@ -283,13 +287,9 @@ const outerCircleRadi = 320;
 
 <style>
     svg {
-        /* height: 100%; */
-        /* width: 100%; */
-        /* outline: 1px red solid; */
-        /* border: 1px red solid; */
-        overflow: visible;
+        height: 100%;
+        display: block;
         margin-inline: auto;
-        min-width: 640px;
     }
 
     svg .logo {
