@@ -41,8 +41,16 @@ const outerCircleRadi = 320;
                         class="direction"
                         stroke="hsl(var(--color-primary))"
                         stroke-width="2"
-                        transform="rotate(-45)"
+                        transform=""
                     >
+                        <animateTransform
+                            attributeName="transform"
+                            attributeType="XML"
+                            type="rotate"
+                            from="0 0 0"
+                            to="360 0 0"
+                            dur="32s"
+                            repeatCount="indefinite"></animateTransform>
                         <circle
                             r="4"
                             fill="hsl(var(--color-primary))"
@@ -174,16 +182,26 @@ const outerCircleRadi = 320;
                         </G>
                     </G>
                     <g>
-                        <g
-                            transform={`rotate(-45) translate(${outerCircleRadi} 0) translate(64)`}
-                        >
-                            <circle
-                                r="32"
-                                stroke="hsl(var(--color-offset))"
-                                stroke-width="2"
-                                stroke-dasharray="8 1"
+                        <g>
+                            <g
+                                transform={`rotate(-45) translate(${outerCircleRadi} 0) translate(64)`}
                             >
-                            </circle>
+                                <circle
+                                    r="32"
+                                    stroke="hsl(var(--color-offset))"
+                                    stroke-width="2"
+                                    stroke-dasharray="8 1"
+                                >
+                                </circle>
+                            </g>
+                            <animateTransform
+                                attributeName="transform"
+                                attributeType="XML"
+                                type="rotate"
+                                from="0 0 0"
+                                to="-360 0 0"
+                                dur="64s"
+                                repeatCount="indefinite"></animateTransform>
                         </g>
                     </g>
                     <g
@@ -284,6 +302,27 @@ const outerCircleRadi = 320;
         </g>
     </g>
 </svg>
+
+<script>
+    const svg: SVGSVGElement = document.querySelector("main svg");
+
+    let prevTime = +localStorage.getItem("svgTime");
+
+    svg.setCurrentTime(prevTime);
+
+    const ani = (t) => {
+        let svgTime = svg.getCurrentTime();
+        localStorage.setItem("svgTime", `${svgTime}`);
+
+        requestAnimationFrame(ani);
+    };
+    requestAnimationFrame(ani);
+
+    // setInterval(() => {
+    //     let t = svg.getCurrentTime();
+    //     localStorage.setItem("svgTime", `${t}`);
+    // }, 10);
+</script>
 
 <style>
     svg {
