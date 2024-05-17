@@ -12,7 +12,7 @@ export interface Props {
 const { fullScreen, title } = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-route={title} data-fullscreen={fullScreen}>
     <head>
         <meta charset="UTF-8" />
@@ -83,7 +83,7 @@ const { fullScreen, title } = Astro.props;
 
 <style>
     html[data-fullscreen] main {
-        /* min-height: 0; */
+        min-height: 0;
         /* grid-area: 1/1/3; */
     }
 

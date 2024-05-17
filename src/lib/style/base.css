@@ -106,7 +106,7 @@ body {
   /* overflow: hidden; */
 }
 html[data-fullscreen] .wrapper {
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 /* scrollbar */
