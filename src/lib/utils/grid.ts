@@ -1,5 +1,5 @@
 import { range } from "./iter";
-import { vec2 } from "./vector";
+import type { vec2 } from "./vector";
 
 interface Cell {
     x: number

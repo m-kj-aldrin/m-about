@@ -15,14 +15,14 @@ type StrokeOpacity = number;
 export type Vec2 = { x: number; y: number };
 
 export interface SVGProps {
-  fill?: Fill;
-  stroke?: Stroke;
-  ["stroke-width"]?: StrokeWidth;
-  ["stroke-opacity"]?: StrokeOpacity;
-  ["stroke-dasharray"]?: StrokeDashArray;
-  ["stroke-linejoin"]?: StrokeLineJoin;
-  ["stroke-linecap"]?: StrokeLineCap;
-  transform?: Transform;
-  opacity?: Opacity;
-  ["fill-opacity"]?: FillOpacity;
+    fill?: Fill;
+    stroke?: Stroke;
+    ["stroke-width"]?: StrokeWidth;
+    ["stroke-opacity"]?: StrokeOpacity;
+    ["stroke-dasharray"]?: StrokeDashArray;
+    ["stroke-linejoin"]?: StrokeLineJoin;
+    ["stroke-linecap"]?: StrokeLineCap;
+    transform?: Transform;
+    opacity?: Opacity;
+    ["fill-opacity"]?: FillOpacity;
 }
