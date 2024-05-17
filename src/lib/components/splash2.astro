@@ -303,25 +303,25 @@ const outerCircleRadi = 320;
     </g>
 </svg>
 
-<script>
-    const svg: SVGSVGElement = document.querySelector("main svg");
+<script is:inline>
+const svg = document.querySelector("main svg");
 
-    let prevTime = +localStorage.getItem("svgTime");
+let prevTime = +localStorage.getItem("svgTime");
 
-    svg.setCurrentTime(prevTime);
+svg.setCurrentTime(prevTime);
 
-    const ani = (t) => {
-        let svgTime = svg.getCurrentTime();
-        localStorage.setItem("svgTime", `${svgTime}`);
+const ani = (t) => {
+    let svgTime = svg.getCurrentTime();
+    localStorage.setItem("svgTime", `${svgTime}`);
 
-        requestAnimationFrame(ani);
-    };
     requestAnimationFrame(ani);
+};
+requestAnimationFrame(ani);
 
-    // setInterval(() => {
-    //     let t = svg.getCurrentTime();
-    //     localStorage.setItem("svgTime", `${t}`);
-    // }, 10);
+// setInterval(() => {
+//     let t = svg.getCurrentTime();
+//     localStorage.setItem("svgTime", `${t}`);
+// }, 10);
 </script>
 
 <style>
