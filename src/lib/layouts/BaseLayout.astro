@@ -2,7 +2,7 @@
 import Nav from "@lib/components/Nav.astro";
 import "@lib/style/main.css";
 import ViewTransitions from "astro/components/ViewTransitions.astro";
-import { fade } from "astro:transitions";
+import { fade, slide } from "astro:transitions";
 import "@lib/style/transition.css";
 import type {
     TransitionAnimationPair,
@@ -52,6 +52,48 @@ const mySlide: TransitionDirectionalAnimations = {
     backwards: anim,
 };
 
+const EASE_IN_OUT_QUART = "cubic-bezier(0.76, 0, 0.24, 1)";
+const anim2: TransitionDirectionalAnimations = {
+    forwards: {
+        old: [
+            {
+                name: "astroSlideToTop",
+                duration: "200ms",
+                easing: EASE_IN_OUT_QUART,
+                delay: "0ms",
+                fillMode: "both",
+            },
+            {
+                name: "astroFadeOut",
+                duration: "120ms",
+                delay: "90ms",
+                easing: EASE_IN_OUT_QUART,
+                fillMode: "both",
+            },
+        ],
+        new: [
+            {
+                name: "astroFadeIn",
+                duration: "120ms",
+                easing: EASE_IN_OUT_QUART,
+                delay: "180ms",
+                fillMode: "both",
+            },
+            {
+                name: "astroSlideFromBottom",
+                duration: "200ms",
+                easing: EASE_IN_OUT_QUART,
+                fillMode: "both",
+                delay: "180ms",
+            },
+        ],
+    },
+    backwards: {
+        old: [{ name: "astroFadeOut" }, { name: "astroSlideToBottom" }],
+        new: [{ name: "astroFadeIn" }, { name: "astroSlideFromTop" }],
+    },
+};
+
 const { fullScreen, title } = Astro.props;
 ---
 
@@ -80,7 +122,7 @@ const { fullScreen, title } = Astro.props;
             <ViewTransitions fallback={"swap"} />
         </header>
 
-        <main class="wrapper" transition:animate={mySlide}>
+        <main class="wrapper" transition:animate={anim2}>
             <slot />
         </main>
         <!-- <Grain /> -->

@@ -1,35 +1,23 @@
-@keyframes slideOut {
+@keyframes astroSlideFromBottom {
     from {
-        transform: translateY(0px);
-    }
-    to {
-        transform: translateY(-10px);
+        transform: translateX(10px);
     }
 }
 
-@keyframes fadeOut {
+@keyframes astroSlideFromTop {
     from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
+        transform: translateX(-10px);
     }
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
+@keyframes astroSlideToBottom {
     to {
-        opacity: 1;
+        transform: translateX(10px);
     }
 }
 
-@keyframes slideIn {
-    from {
-        transform: translateY(5px);
-    }
+@keyframes astroSlideToTop {
     to {
-        transform: translateY(0px);
+        transform: translateX(-10px);
     }
 }
