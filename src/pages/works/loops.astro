@@ -2,16 +2,15 @@
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
 import GridDisplay from "@lib/layouts/GridDisplay.astro";
 const videos = await Astro.glob("@assets/gen/video/*").then((files) =>
-    files.map((file) => file.default),
+    files.map((file) => file.default)
 );
 const posters = await Astro.glob("@assets/gen/posters/*").then((files) =>
     files.map((file) => {
         return file.default;
-    }),
+    })
 );
 ---
 
-<!-- <WorksLayout title="loops"> -->
 <BaseLayout title="loops">
     <GridDisplay>
         {
@@ -32,7 +31,6 @@ const posters = await Astro.glob("@assets/gen/posters/*").then((files) =>
         }
     </GridDisplay>
 </BaseLayout>
-<!-- </WorksLayout> -->
 
 <style>
     video {

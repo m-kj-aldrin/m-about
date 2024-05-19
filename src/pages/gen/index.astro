@@ -1,0 +1,24 @@
+---
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+
+let pats = [
+    { path: "ani", name: "ani" },
+    { path: "timeline", name: "timeline" },
+    { path: "fit", name: "fit" },
+    { path: "fit-square", name: "fit-square" },
+];
+---
+
+<BaseLayout title="gen design">
+    <ul>
+        {
+            pats.map(({ path, name }) => {
+                return (
+                    <li>
+                        <a href={path}>{name}</a>
+                    </li>
+                );
+            })
+        }
+    </ul>
+</BaseLayout>

@@ -1,24 +1,24 @@
 ---
-import { SVGProps, Vec2 } from "@lib/types/svg";
+import { type SVGProps, type Vec2 } from "@lib/types/svg";
 interface Props extends SVGProps {
-  pos?: Vec2;
-  size?: Vec2;
-  rx?: number;
-  center?: boolean;
+    pos?: Vec2;
+    size?: Vec2;
+    rx?: number;
+    center?: boolean;
 }
 const {
-  rx,
-  pos = { ...{ x: 0, y: 0 } },
-  size = { ...{ x: 8, y: 8 } },
-  center = false,
-  ...rest
+    rx,
+    pos = [0, 0],
+    size = [4, 4],
+    center = false,
+    ...rest
 } = Astro.props;
 ---
 
 <rect
-  rx={rx && rx}
-  width={size.x}
-  height={size.y}
-  x={pos.x - (center && size.x / 2)}
-  y={pos.y - (center && size.y / 2)}
-  {...rest}></rect>
+    rx={rx && rx}
+    width={size[0]}
+    height={size[1]}
+    x={pos[0] - (center && size[0] / 2)}
+    y={pos[1] - (center && size[1] / 2)}
+    {...rest}></rect>

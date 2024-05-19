@@ -1,16 +1,8 @@
 ---
-import Splash2 from "@lib/components/splash2.astro";
+import Splash from "@lib/components/Splash.astro";
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
 ---
 
 <BaseLayout fullScreen={true} title="home">
-    <div class="inner">
-        <Splash2 />
-    </div>
+    <Splash />
 </BaseLayout>
-
-<style>
-    .inner {
-        height: 100%;
-    }
-</style>

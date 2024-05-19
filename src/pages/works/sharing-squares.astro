@@ -6,7 +6,6 @@ const images = await Astro.glob("@assets/squares/*").then((files) => {
 });
 ---
 
-<!-- <WorksLayout title="sharing squares"> -->
 <BaseLayout title="sharing squares">
     <GridDisplay>
         {
@@ -23,7 +22,6 @@ const images = await Astro.glob("@assets/squares/*").then((files) => {
         }
     </GridDisplay>
 </BaseLayout>
-<!-- </WorksLayout> -->
 
 <style>
     img {

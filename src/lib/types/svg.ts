@@ -12,7 +12,7 @@ type Opacity = number;
 type FillOpacity = number;
 type StrokeOpacity = number;
 
-export type Vec2 = { x: number; y: number };
+export type Vec2 = [number, number];
 
 export interface SVGProps {
     fill?: Fill;
