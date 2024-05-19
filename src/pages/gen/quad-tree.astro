@@ -8,6 +8,8 @@ import { frand } from "@lib/utils/stokhos";
 import { irand, pick } from "@lib/utils/stokhos";
 import { chance } from "@lib/utils/stokhos";
 
+export const prerender = false
+
 const bm_chance = (r: number) => chance(r, randn_bm);
 
 function req(width: number, height: number, x: number, y: number, depth = 0) {
