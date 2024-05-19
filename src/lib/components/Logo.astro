@@ -4,26 +4,26 @@
 
 <div class="text">
     <span>Marcus<br />Aldrin</span>
+    <!-- <button popovertarget="about-me">Marcus<br />Aldrin</button>
+    <div popover id="about-me">me me me</div> -->
 </div>
-
-<!-- <div pop></div> -->
 
 <style>
     .text {
-        /* gap: 8px; */
-        /* align-self: center; */
-
         white-space: nowrap;
 
-        /* position: absolute;
-        top: 0; */
         border-radius: 4px;
 
         background-color: hsla(var(--color-offset), 1);
-        /* border: 1px hsl(var(--color-secondary)) solid; */
         padding: 4px 8px;
         font-size: 14px;
+
+        position: relative;
     }
+
+    /* .text:hover {
+        background-color: hsl(var(--color-ternary));
+    } */
 
     .text {
         word-spacing: initial;
@@ -37,15 +37,18 @@
         display: inline-block;
         transform: translate(-1px, 1px);
     }
-
-    /* .text span {
-        word-spacing: initial;
-        transform: translateY(1.2px);
+    /* button {
         display: inline-block;
+        text-align: start;
         text-transform: uppercase;
-        text-shadow:
-            0 2px 0 hsl(var(--color-offset)),
-            0 4px 0 hsl(var(--color-secondary)),
-            0 6px 0 hsl(var(--color-ternary));
+        color: inherit;
+        border: none;
+        font-style: italic;
+        padding: 0;
+        font-size: 14px;
+        font-weight: 200;
+        font-family: inherit;
+        line-height: 0.8;
+        transform: translate(-1px, 1px);
     } */
 </style>

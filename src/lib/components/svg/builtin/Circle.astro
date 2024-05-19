@@ -1,5 +1,7 @@
 ---
-interface Props extends Partial<SVGCircleElement> {
+import type { SVGProps } from "@lib/types/svg";
+
+interface Props extends SVGProps {
     r?: number;
     c?: { x: number; y: number };
 }

@@ -18,6 +18,7 @@ type CleanPath = Replace<Exclude<"/", TopPaths>, "/", "">;
 
 const re = /\/works\/.+/;
 const work = re.test(url.pathname);
+const gen = /\/gen\/.+/.test(url.pathname);
 ---
 
 <nav>
@@ -27,21 +28,24 @@ const work = re.test(url.pathname);
         {
             paths.map(({ path, name }, i) => {
                 const worksSubDir = work && path == "/works/";
+                const genSubDir = gen && path == "/gen/";
 
                 const iconType: IconTypes =
                     path == "/"
                         ? "home"
-                        : worksSubDir
+                        : worksSubDir || genSubDir
                           ? "back"
                           : (path.replaceAll("/", "") as CleanPath);
-                console.log(iconType);
 
                 return (
                     <li>
                         <a
                             href={path}
                             aria-current={url.pathname == path ? "page" : null}
-                            aria-label={worksSubDir && "back to works page"}
+                            aria-label={
+                                (worksSubDir || genSubDir) &&
+                                "back to works page"
+                            }
                             title={name}
                         >
                             <Icon name={iconType} />
@@ -61,7 +65,7 @@ const work = re.test(url.pathname);
         line-height: 0;
         transition: color 75ms ease;
     }
-    span{
+    span {
         font-weight: 200;
         opacity: 0.5;
     }
@@ -104,16 +108,15 @@ const work = re.test(url.pathname);
         color: hsl(var(--color-offset));
     }
 
-    @media (max-width:460px) {
-        nav{
+    @media (max-width: 460px) {
+        nav {
             flex-direction: column;
             gap: 4px;
             border: none;
             box-shadow: none;
         }
-        ul{
+        ul {
             transform: translateY(1px);
         }
-        
     }
 </style>
