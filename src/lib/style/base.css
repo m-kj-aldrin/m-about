@@ -94,6 +94,10 @@ body {
     overflow: hidden scroll;
 }
 
+main{
+    grid-row: 2;
+}
+
 .wrapper {
     width: min(1280px, 100%);
 }
