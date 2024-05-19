@@ -3,15 +3,29 @@
 ---
 
 <div class="text">
-    <span>Marcus<br />Aldrin</span>
-    <!-- <button popovertarget="about-me">Marcus<br />Aldrin</button>
-    <div popover id="about-me">me me me</div> -->
+    <span class="outer">
+        <div class="inner">
+            <!-- <div class="nowrap hidden">
+                <span>Marcus</span>
+                <br />
+                <span>Aldrin</span>
+            </div> -->
+            <div class="smiley">
+                <!-- <div class="eyes">..</div>
+                <div class="smile">&ssmile;</div> -->
+                &#9786;
+            </div>
+            <div class="nowrap">
+                <span>Marcus</span>
+                <br />
+                <span>Aldrin</span>
+            </div>
+        </div>
+    </span>
 </div>
 
 <style>
     .text {
-        white-space: nowrap;
-
         border-radius: 4px;
 
         background-color: hsla(var(--color-offset), 1);
@@ -19,11 +33,13 @@
         font-size: 14px;
 
         position: relative;
+
+        overflow: hidden;
     }
 
-    /* .text:hover {
-        background-color: hsl(var(--color-ternary));
-    } */
+    .nowrap {
+        white-space: nowrap;
+    }
 
     .text {
         word-spacing: initial;
@@ -33,22 +49,85 @@
         font-weight: 200;
         font-style: italic;
     }
-    .text span {
-        display: inline-block;
-        transform: translate(-1px, 1px);
+    .text .outer {
+        overflow: hidden;
+        /* outline: 1px red solid; */
+        display: block;
     }
-    /* button {
+
+    .text .inner {
+        display: grid;
+        grid-template-columns: 1fr;
+        /* outline: 1px black solid; */
+    }
+
+    .text .inner > * {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .text .outer span {
         display: inline-block;
-        text-align: start;
-        text-transform: uppercase;
-        color: inherit;
-        border: none;
-        font-style: italic;
-        padding: 0;
-        font-size: 14px;
-        font-weight: 200;
-        font-family: inherit;
-        line-height: 0.8;
-        transform: translate(-1px, 1px);
-    } */
+        animation-name: wiggle;
+        animation-duration: 5000ms;
+        animation-iteration-count: infinite;
+    }
+
+    .text .outer span:first-of-type {
+        --x: 2px;
+    }
+    .text .outer span:last-of-type {
+        --x: -2px;
+        /* animation-delay: 75ms; */
+    }
+
+    .text .hidden {
+        transform: translateX(-200%);
+    }
+
+    .text .smiley {
+        transform: translateX(-100%);
+        text-align: center;
+        align-self: center;
+        font-size: 28px;
+    }
+    .inner {
+        transform: translateX(100%);
+        animation-name: smiley;
+        animation-duration: 10000ms;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes smiley {
+        0% {
+            transform: translate(0px);
+        }
+        50% {
+            transform: translateX(0px);
+        }
+        51.25% {
+            transform: translateX(100%);
+        }
+        52.5% {
+            transform: translateX(100%);
+        }
+        53.75% {
+            transform: translateX(0px);
+        }
+        100% {
+            transform: translateX(0px);
+        }
+    }
+
+    @keyframes wiggle {
+        40% {
+            transform: translateX(0px);
+        }
+        50% {
+            transform: translateX(var(--x, 0px));
+        }
+        60% {
+            transform: translateX(0px);
+        }
+    }
 </style>

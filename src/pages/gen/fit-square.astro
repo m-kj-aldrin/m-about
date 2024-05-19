@@ -1,8 +1,11 @@
 ---
+import TimeOfRender from "@lib/components/TimeOfRender.astro";
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
 import type { ColorNames } from "@lib/types/colors";
 import { IF, SWITCH } from "@lib/utils/comperator";
 import { bm_chance, chance, pick } from "@lib/utils/stokhos";
+
+export const prerender = false;
 
 const planeWidth = 512;
 const planeHeight = 512;
@@ -128,50 +131,55 @@ const COLORS: ColorNames[] = ["primary", "secondary", "ternary", "offset"];
 <BaseLayout title="fit-square" fullScreen={true}>
     <svg viewBox="-256 -256 512 512">
         <g transform="translate(-256 -256)">
-            {
-                rectangles.map(({ x, y, width, height }) => {
-                    let area = width * height;
-                    let tresh = area > 512;
-                    let dash = pick(["none", "1 2", "2 2", "4 2"]);
-
-                    let colorBase = (colType) => `hsl(var(--color-${colType}))`;
-
-                    let squareColor = colorBase(pick(COLORS));
-                    let circleColor = colorBase(pick(COLORS));
-
-                    let minSize = Math.min(width, height);
-
-                    return (
-                        <g transform={`translate(${x} ${y})`}>
-                            <rect {width} {height} fill={squareColor} />
-                            {IF(
-                                chance(0.25),
-                                <g
-                                    transform={`translate(${width / 2} ${height / 2})`}
-                                >
-                                    {SWITCH({
-                                        circle: (
-                                            <circle
-                                                r={(minSize / 2) * 0.75}
-                                                fill={circleColor}
-                                            />
-                                        ),
-                                        square: (
-                                            <rect
-                                                width={minSize}
-                                                height={minSize}
-                                                x={-minSize / 2}
-                                                y={-minSize / 2}
-                                                fill={circleColor}
-                                            />
-                                        ),
-                                    })(pick(["square", "circle"]))}
-                                </g>
-                            )}
-                        </g>
-                    );
-                })
-            }
+            <text font-size="10" y="1.5ex">
+                <TimeOfRender />
+                <a xlink:href="#">
+                    <tspan font-size="14">&circlearrowright;</tspan>
+                </a>
+            </text>
+            <g transform="translate(256 256) scale(0.85) translate(-256 -256)">
+                {
+                    rectangles.map(({ x, y, width, height }) => {
+                        let area = width * height;
+                        let tresh = area > 512;
+                        let dash = pick(["none", "1 2", "2 2", "4 2"]);
+                        let colorBase = (colType) =>
+                            `hsl(var(--color-${colType}))`;
+                        let squareColor = colorBase(pick(COLORS));
+                        let circleColor = colorBase(pick(COLORS));
+                        let minSize = Math.min(width, height);
+                        return (
+                            <g transform={`translate(${x} ${y})`}>
+                                <rect {width} {height} fill={squareColor} />
+                                {IF(
+                                    chance(0.25),
+                                    <g
+                                        transform={`translate(${width / 2} ${height / 2})`}
+                                    >
+                                        {SWITCH({
+                                            circle: (
+                                                <circle
+                                                    r={(minSize / 2) * 0.75}
+                                                    fill={circleColor}
+                                                />
+                                            ),
+                                            square: (
+                                                <rect
+                                                    width={minSize}
+                                                    height={minSize}
+                                                    x={-minSize / 2}
+                                                    y={-minSize / 2}
+                                                    fill={circleColor}
+                                                />
+                                            ),
+                                        })(pick(["square", "circle"]))}
+                                    </g>
+                                )}
+                            </g>
+                        );
+                    })
+                }
+            </g>
         </g>
     </svg>
 </BaseLayout>

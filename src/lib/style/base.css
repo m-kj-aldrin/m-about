@@ -15,6 +15,9 @@ video {
 a:hover {
     color: hsl(var(--color-offset));
 }
+svg a:hover {
+    fill: hsl(var(--color-offset));
+}
 
 input,
 fieldset,

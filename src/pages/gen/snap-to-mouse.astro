@@ -1,14 +1,13 @@
 ---
-import AnimateTransform from "@lib/components/svg/animations/AnimateTransform.astro";
 import Circle from "@lib/components/svg/builtin/Circle.astro";
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
 ---
 
 <BaseLayout title="timeline" fullScreen={true}>
-    <svg viewBox="-256 -256 512 512" id="svg">
+    <svg id="svg" viewBox="-100 -100 200 200">
         <g transform="" id="circle-parent">
             <g>
-                <Circle r={4} />
+                <Circle r={4} fill="currentColor" />
             </g>
         </g>
     </svg>
@@ -18,8 +17,8 @@ import BaseLayout from "@lib/layouts/BaseLayout.astro";
     svg {
         height: 100%;
         width: 100%;
-        outline: 1px red solid;
-        background-color: white;
+        outline: 1px currentColor solid;
+        cursor: none;
     }
 
     svg circle {
@@ -60,30 +59,31 @@ import BaseLayout from "@lib/layouts/BaseLayout.astro";
 </style>
 
 <script>
-    const svg: SVGSVGElement = document.querySelector("main svg");
+    function attachHandler() {
+        const svg: SVGSVGElement = document.querySelector("main svg");
 
-    const circle: SVGCircleElement = svg.querySelector("#circle");
-    const circleParent: SVGGElement = svg.querySelector("#circle-parent");
+        const circleParent: SVGGElement = svg.querySelector("#circle-parent");
 
-    const animation: SVGAnimateTransformElement = svg.querySelector("#ani");
+        svg.addEventListener("mousemove", (e) => {
+            let x = e.clientX;
+            let y = e.clientY;
+            let box = svg.getBoundingClientRect();
 
-    svg.addEventListener("mousemove", (e) => {
-        let x = e.clientX;
-        let y = e.clientY;
-        let box = svg.getBoundingClientRect();
+            let aspectRatio = box.width / box.height;
 
-        let aspectRatio = box.width / box.height;
+            x -= box.x;
+            y -= box.y;
 
-        x -= box.x;
-        y -= box.y;
+            let fx = x / box.width;
+            let fy = y / box.height;
 
-        let fx = x / box.width;
-        let fy = y / box.height;
+            let svgX = (200 * fx - 100) * (aspectRatio > 1 ? aspectRatio : 1);
+            let svgY = (200 * fy - 100) / (aspectRatio < 1 ? aspectRatio : 1);
 
-        let svgX = (fx * 512 - 256) * aspectRatio;
-        let svgY = fy * 512 - 256;
+            circleParent.style.setProperty("--x", `${svgX}px`);
+            circleParent.style.setProperty("--y", `${svgY}px`);
+        });
+    }
 
-        circleParent.style.setProperty("--x", `${svgX}px`);
-        circleParent.style.setProperty("--y", `${svgY}px`);
-    });
+    document.addEventListener("astro:page-load", attachHandler);
 </script>
