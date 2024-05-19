@@ -43,12 +43,12 @@ const { fullScreen, title } = Astro.props;
     </body>
 </html>
 
-<script>
+<script is:inline>
     let route = document.documentElement.dataset.route;
     if (route != "home" && route != "ani") {
         let currentSvgTime = +localStorage.getItem("svgTime");
         let time = null;
-        const updateTimeLine = (t: number) => {
+        const updateTimeLine = (t) => {
             t /= 1000;
             if (time != null) {
                 let delta = t - time;
