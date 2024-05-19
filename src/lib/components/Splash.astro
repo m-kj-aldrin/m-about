@@ -301,19 +301,25 @@ const outerCircleRadi = 320;
 </svg>
 
 <script is:inline>
-    const svg = document.querySelector("main svg");
+    function setCurrentTime() {
+        const svg = document.querySelector("main svg");
 
-    let prevTime = +localStorage.getItem("svgTime");
+        let prevTime = +localStorage.getItem("svgTime");
 
-    svg.setCurrentTime(prevTime);
+        svg.setCurrentTime(prevTime);
 
-    const ani = (t) => {
-        let svgTime = svg.getCurrentTime();
-        localStorage.setItem("svgTime", `${svgTime}`);
+        const ani = (t) => {
+            let svgTime = svg.getCurrentTime();
+            if (svgTime) {
+                localStorage.setItem("svgTime", `${svgTime}`);
+            }
 
+            requestAnimationFrame(ani);
+        };
         requestAnimationFrame(ani);
-    };
-    requestAnimationFrame(ani);
+    }
+    // setCurrentTime();
+    document.addEventListener("astro:page-load", setCurrentTime);
 </script>
 
 <style>

@@ -75,23 +75,27 @@ const { fullScreen, title } = Astro.props;
 </html>
 
 <script is:inline>
-    let route = document.documentElement.dataset.route;
-    if (route != "home" && route != "ani") {
-        let currentSvgTime = +localStorage.getItem("svgTime");
-        let time = null;
-        const updateTimeLine = (t) => {
-            t /= 1000;
-            if (time != null) {
-                let delta = t - time;
-                currentSvgTime += delta;
-                localStorage.setItem("svgTime", `${currentSvgTime}`);
-            }
+    function updateSvgTime() {
+        let route = document.documentElement.dataset.route;
+        if (route != "home" && route != "ani") {
+            let currentSvgTime = +localStorage.getItem("svgTime");
+            let time = null;
+            const updateTimeLine = (t) => {
+                t /= 1000;
+                if (time != null) {
+                    let delta = t - time;
+                    currentSvgTime += delta;
+                    localStorage.setItem("svgTime", `${currentSvgTime}`);
+                }
 
-            time = t;
+                time = t;
+                requestAnimationFrame(updateTimeLine);
+            };
             requestAnimationFrame(updateTimeLine);
-        };
-        requestAnimationFrame(updateTimeLine);
+        }
     }
+
+    document.addEventListener("astro:page-load", updateSvgTime);
 </script>
 
 <style>
