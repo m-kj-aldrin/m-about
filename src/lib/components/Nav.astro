@@ -1,6 +1,9 @@
 ---
 import Icon, { type IconTypes } from "./Icon.astro";
 import type { Replace } from "../types/util";
+import Logo from "./Logo.astro";
+import Social from "./Social.astro";
+import Social2 from "./Social2.astro";
 const url = Astro.url;
 
 type TopPaths = "/" | "/works/" | "/gen/";
@@ -18,6 +21,8 @@ const work = re.test(url.pathname);
 ---
 
 <nav>
+    <Logo />
+    <span>-</span>
     <ul>
         {
             paths.map(({ path, name }, i) => {
@@ -46,6 +51,8 @@ const work = re.test(url.pathname);
             })
         }
     </ul>
+    <span>-</span>
+    <Social2 />
 </nav>
 
 <style>
@@ -53,6 +60,10 @@ const work = re.test(url.pathname);
         display: block;
         line-height: 0;
         transition: color 75ms ease;
+    }
+    span{
+        font-weight: 200;
+        opacity: 0.5;
     }
     nav {
         background-color: hsla(var(--color-light), 0.9);
@@ -66,18 +77,43 @@ const work = re.test(url.pathname);
         margin-top: 16px;
         margin-bottom: 20px;
 
-        box-shadow:
+        /* box-shadow:
             0 0 16px 8px hsla(var(--color-dark), 0),
-            inset 0 0 12px 2px hsla(var(--color-primary), 0.05);
-        border: 1px hsl(var(--color-primary), 0.1) dashed;
+            inset 0 0 12px 2px hsla(var(--color-primary), 0.05); */
+        box-shadow: 0 0 8px 2px hsla(var(--color-dark), 0.05);
+        border: 1px hsl(var(--color-dark), 0.25) dashed;
+
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        /* gap: 8px; */
+
+        /* flex-direction: column; */
+
+        /* flex-wrap: wrap; */
     }
     ul {
+        /* margin-inline-start: 32px; */
         display: flex;
         gap: 8px;
+        flex-shrink: 0;
     }
 
     [aria-current="page"],
     [aria-label="back to works page"] {
         color: hsl(var(--color-offset));
+    }
+
+    @media (max-width:460px) {
+        nav{
+            flex-direction: column;
+            gap: 4px;
+            border: none;
+            box-shadow: none;
+        }
+        ul{
+            transform: translateY(1px);
+        }
+        
     }
 </style>

@@ -1,4 +1,5 @@
 ---
+import Grain from "@lib/components/Grain.astro";
 import Nav from "@lib/components/Nav.astro";
 import Social from "@lib/components/Social.astro";
 import "@lib/style/main.css";
@@ -31,13 +32,14 @@ const { fullScreen, title } = Astro.props;
     </head>
     <body>
         <header>
-            <Social />
+            <!-- <Social /> -->
             <Nav />
         </header>
 
         <main class="wrapper">
             <slot />
         </main>
+        <!-- <Grain /> -->
     </body>
 </html>
 
