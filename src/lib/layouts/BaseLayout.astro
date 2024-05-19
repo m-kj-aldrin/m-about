@@ -33,7 +33,7 @@ const anim: TransitionAnimationPair = {
     old: [
         {
             name: "slideOut",
-            duration: "400ms",
+            duration: "4000ms",
             easing: "ease",
             fillMode: "forwards",
             delay: "0ms",
@@ -42,7 +42,7 @@ const anim: TransitionAnimationPair = {
             name: "fadeOut",
             duration: "200ms",
             easing: "ease",
-            delay: "200ms",
+            delay: "4000ms",
         },
     ],
 };
@@ -58,33 +58,33 @@ const anim2: TransitionDirectionalAnimations = {
         old: [
             {
                 name: "astroSlideToTop",
-                duration: "200ms",
+                duration: "3000ms",
                 easing: EASE_IN_OUT_QUART,
                 delay: "0ms",
                 fillMode: "both",
             },
-            {
-                name: "astroFadeOut",
-                duration: "120ms",
-                delay: "90ms",
-                easing: EASE_IN_OUT_QUART,
-                fillMode: "both",
-            },
+            // {
+            //     name: "astroFadeOut",
+            //     duration: "120ms",
+            //     delay: "90ms",
+            //     easing: EASE_IN_OUT_QUART,
+            //     fillMode: "both",
+            // },
         ],
         new: [
-            {
-                name: "astroFadeIn",
-                duration: "120ms",
-                easing: EASE_IN_OUT_QUART,
-                delay: "180ms",
-                fillMode: "both",
-            },
+            // {
+            //     name: "astroFadeIn",
+            //     duration: "120ms",
+            //     easing: EASE_IN_OUT_QUART,
+            //     delay: "180ms",
+            //     fillMode: "both",
+            // },
             {
                 name: "astroSlideFromBottom",
-                duration: "200ms",
+                duration: "3000ms",
                 easing: EASE_IN_OUT_QUART,
                 fillMode: "both",
-                delay: "180ms",
+                delay: "3000ms",
             },
         ],
     },
@@ -115,14 +115,14 @@ const { fullScreen, title } = Astro.props;
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
     </head>
-    <body>
+    <body transition:animate="none">
         <header>
             <!-- <Social /> -->
             <Nav />
             <ViewTransitions fallback={"swap"} />
         </header>
 
-        <main class="wrapper" transition:animate={anim2}>
+        <main class="wrapper">
             <slot />
         </main>
         <!-- <Grain /> -->
