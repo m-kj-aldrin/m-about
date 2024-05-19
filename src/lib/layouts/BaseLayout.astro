@@ -1,13 +1,43 @@
 ---
-import Grain from "@lib/components/Grain.astro";
 import Nav from "@lib/components/Nav.astro";
-import Social from "@lib/components/Social.astro";
 import "@lib/style/main.css";
+import ViewTransitions from "astro/components/ViewTransitions.astro";
+import { fade } from "astro:transitions";
+import "@lib/style/transition.css";
+import type {
+    TransitionAnimationPair,
+    TransitionDirectionalAnimations,
+} from "astro";
 
 export interface Props {
     title?: string;
     fullScreen?: boolean;
 }
+
+const anim: TransitionAnimationPair = {
+    new: [
+        {
+            name: "slideIn",
+            duration: "200ms",
+            easing: "ease",
+        },
+    ],
+    old: [
+        {
+            name: "slideOut",
+            duration: "200ms",
+            easing: "ease",
+            fillMode: "forwards",
+            delay: "0ms",
+        },
+        { name: "fadeOut", delay: "200ms", easing: "ease" },
+    ],
+};
+
+const mySlide: TransitionDirectionalAnimations = {
+    forwards: anim,
+    backwards: anim,
+};
 
 const { fullScreen, title } = Astro.props;
 ---
@@ -34,9 +64,10 @@ const { fullScreen, title } = Astro.props;
         <header>
             <!-- <Social /> -->
             <Nav />
+            <ViewTransitions />
         </header>
 
-        <main class="wrapper">
+        <main class="wrapper" transition:animate={mySlide}>
             <slot />
         </main>
         <!-- <Grain /> -->
