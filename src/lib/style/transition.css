@@ -1,0 +1,18 @@
+@keyframes slideOut {
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+}

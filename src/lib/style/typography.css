@@ -13,8 +13,8 @@ h3,
 h4,
 h5,
 p {
-  margin-block-start: 0;
-  margin-block-end: 0.5em;
+    margin-block-start: 0;
+    margin-block-end: 0.5em;
 }
 
 h1,
@@ -22,35 +22,35 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: "Azeret Mono", monospace;
+    font-family: "Azeret Mono", monospace;
 
-  /* font-family: Ringift; */
-  /* font-variant-ligatures: discretionary-ligatures; */
-  font-variant-ligatures: none;
-  overflow-wrap: break-word;
-  line-height: 0.85;
-  font-weight: 100;
-  /* letter-spacing: -1px; */
+    /* font-family: Ringift; */
+    /* font-variant-ligatures: discretionary-ligatures; */
+    font-variant-ligatures: none;
+    overflow-wrap: break-word;
+    line-height: 0.85;
+    font-weight: 100;
+    /* letter-spacing: -1px; */
 }
 
 body {
-  font-family: "Azeret Mono", monospace;
-  font-weight: 100;
-  line-height: 1.4;
+    font-family: "Azeret Mono", monospace;
+    font-weight: 100;
+    line-height: 1.4;
 }
 p {
-  max-width: 40ch;
+    max-width: 40ch;
 }
 
 h1 {
-  font-size: 3.5rem;
+    font-size: 3.5rem;
 }
 h2 {
-  font-size: 2.5rem;
+    font-size: 2.5rem;
 }
 h3 {
-  font-size: 1.75rem;
+    font-size: 1.75rem;
 }
 h4 {
-  font-size: 1.25rem;
+    font-size: 1.25rem;
 }

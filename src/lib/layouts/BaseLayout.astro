@@ -1,13 +1,43 @@
 ---
-import Grain from "@c/Grain.astro";
-import Nav2 from "@lib/components/Nav2.astro";
-import Social from "@lib/components/Social.astro";
+import Nav from "@lib/components/Nav.astro";
 import "@lib/style/main.css";
+import ViewTransitions from "astro/components/ViewTransitions.astro";
+import { fade } from "astro:transitions";
+import "@lib/style/transition.css";
+import type {
+    TransitionAnimationPair,
+    TransitionDirectionalAnimations,
+} from "astro";
 
 export interface Props {
     title?: string;
     fullScreen?: boolean;
 }
+
+const anim: TransitionAnimationPair = {
+    new: [
+        {
+            name: "slideIn",
+            duration: "200ms",
+            easing: "ease",
+        },
+    ],
+    old: [
+        {
+            name: "slideOut",
+            duration: "200ms",
+            easing: "ease",
+            fillMode: "forwards",
+            delay: "0ms",
+        },
+        { name: "fadeOut", delay: "200ms", easing: "ease" },
+    ],
+};
+
+const mySlide: TransitionDirectionalAnimations = {
+    forwards: anim,
+    backwards: anim,
+};
 
 const { fullScreen, title } = Astro.props;
 ---
@@ -32,78 +62,49 @@ const { fullScreen, title } = Astro.props;
     </head>
     <body>
         <header>
-            <!-- <Logo /> -->
-            <Social />
-            <Nav2 />
+            <!-- <Social /> -->
+            <Nav />
+            <ViewTransitions />
         </header>
 
-        <main class="wrapper">
+        <main class="wrapper" transition:animate={mySlide}>
             <slot />
         </main>
-
-        <!-- <Nav /> -->
-
-        <!-- <div class="dot"></div> -->
-
-        <svg style="position: fixed;" width="0" height="0">
-            <filter id="smudge">
-                <!-- <feGaussianBlur stdDeviation="0.5"></feGaussianBlur> -->
-                <feMorphology operator="dilate" radius="0.3"></feMorphology>
-                <feMorphology operator="erode" radius="0.4"></feMorphology>
-            </filter>
-            <filter id="filter-scrible">
-                <feTurbulence seed="2" type="fractalNoise" baseFrequency="2"
-                ></feTurbulence>
-                <feDisplacementMap
-                    in="SourceGraphic"
-                    xChannelSelector="R"
-                    yChannelSelector="G"
-                    scale="8"
-                    result="disp"></feDisplacementMap>
-                <feGaussianBlur stdDeviation="0.5"></feGaussianBlur>
-                <feColorMatrix
-                    type="matrix"
-                    values="
-                1 0 0 0 0
-                0 1 0 0 0
-                0 0 1 0 0
-                0 0 0 1.1 -0.05"
-                ></feColorMatrix>
-                <feComposite
-                    in2="SourceGraphic"
-                    operator="arithmetic"
-                    k1="0.25"
-                    k2="0.30"
-                    k3="0.55"></feComposite>
-            </filter>
-        </svg>
+        <!-- <Grain /> -->
     </body>
 </html>
 
-<script>
-    if (document.documentElement.dataset.route != "home") {
-        let currentSvgTime = +localStorage.getItem("svgTime");
-        let time = null;
-        const updateTimeLine = (t: number) => {
-            t /= 1000;
-            if (time != null) {
-                let delta = t - time;
-                // console.log(delta);
-                currentSvgTime += delta;
-                localStorage.setItem("svgTime", `${currentSvgTime}`);
-            }
+<script is:inline>
+    let id = null;
+    function updateSvgTime() {
+        if (id) {
+            cancelAnimationFrame(id);
+        }
+        let route = document.documentElement.dataset.route;
+        if (route != "home" && route != "ani") {
+            let currentSvgTime = +localStorage.getItem("svgTime");
+            let time = null;
+            const updateTimeLine = (t) => {
+                t /= 1000;
+                if (time != null) {
+                    let delta = t - time;
+                    currentSvgTime += delta;
+                    localStorage.setItem("svgTime", `${currentSvgTime}`);
+                }
 
-            time = t;
+                time = t;
+                id = requestAnimationFrame(updateTimeLine);
+            };
             requestAnimationFrame(updateTimeLine);
-        };
-        requestAnimationFrame(updateTimeLine);
+        }
     }
+
+    document.addEventListener("astro:page-load", updateSvgTime);
 </script>
 
 <style>
     html[data-fullscreen] main {
         min-height: 0;
-        /* grid-area: 1/1/3; */
     }
 
     header {
@@ -113,45 +114,5 @@ const { fullScreen, title } = Astro.props;
         z-index: 100;
 
         position: relative;
-    }
-
-    main {
-        /* grid-area: 2/1; */
-    }
-
-    .dot {
-        --color: var(--color-secondary);
-        --offset: 16px;
-        position: fixed;
-        right: var(--offset);
-        bottom: var(--offset);
-
-        width: 8px;
-        aspect-ratio: 1/1;
-
-        /* box-shadow: 0 0 16px 0px hsla(var(--color), 0.9); */
-
-        cursor: not-allowed;
-    }
-
-    .dot::before,
-    .dot::after {
-        content: "";
-        position: absolute;
-        width: 200%;
-        height: 200%;
-        left: -50%;
-        top: -50%;
-
-        border-radius: 50%;
-    }
-
-    .dot::before {
-        background-color: hsla(var(--color-light), 0.5);
-        box-shadow: 0 0 16px 0px hsla(var(--color), 0.4);
-    }
-    .dot::after {
-        background-color: hsl(var(--color));
-        transform: scale(0.5);
     }
 </style>

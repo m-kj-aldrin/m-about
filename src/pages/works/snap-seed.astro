@@ -6,7 +6,6 @@ const images = await Astro.glob("@assets/seed/img/*").then((files) => {
 });
 ---
 
-<!-- <WorksLayout title="snap-seed"> -->
 <BaseLayout title="seed of snaps">
     <GridDisplay>
         {
@@ -23,7 +22,6 @@ const images = await Astro.glob("@assets/seed/img/*").then((files) => {
         }
     </GridDisplay>
 </BaseLayout>
-<!-- </WorksLayout> -->
 
 <style>
     img {

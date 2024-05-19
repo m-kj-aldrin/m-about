@@ -3,14 +3,18 @@ import Icon from "./Icon.astro";
 ---
 
 <div class="text">
-    <p>
-        <span>Marcus<br>Aldrin</span>
-    </p>
+    <!-- <p>
+        <span>Marcus<br />Aldrin</span>
+    </p> -->
     <div class="social">
-        <a href="mailto:marcus@urminne.xyz" title="say hello :)">
+        <a href="mailto:marcus@m-aldrin.space" title="say hello :)">
             <Icon name="mail" />
         </a>
-        <a href="https://github.com/m-kj-aldrin" target="_blank" title="my github place">
+        <a
+            href="https://github.com/m-kj-aldrin"
+            target="_blank"
+            title="my github place"
+        >
             <Icon name="github" />
         </a>
     </div>
@@ -18,47 +22,30 @@ import Icon from "./Icon.astro";
 
 <style>
     .social {
-        /* margin-block-start: 10px; */
         display: flex;
-        /* flex-direction: column; */
         gap: 8px;
         line-height: 0;
     }
 
     .social a {
-        /* outline: 1px red solid; */
         width: 20px;
     }
 
     .text p {
-        /* outline: 1px blue solid; */
         line-height: 1;
     }
 
     .text {
-        /* display: flex; */
         gap: 8px;
         align-self: center;
-        /* writing-mode: vertical-lr;
-        text-orientation: upright; */
 
         white-space: nowrap;
 
         position: absolute;
         top: 0;
-        /* left: 0; */
-
-        /* padding: 32px 16px; */
         border-radius: 4px;
 
         background-color: hsla(var(--color-light), 0.4);
-    }
-
-    @media (min-width: 1536px) {
-        .text {
-            /* writing-mode: vertical-lr;
-            text-orientation: upright; */
-        }
     }
 
     .text span {
@@ -66,7 +53,8 @@ import Icon from "./Icon.astro";
         transform: translateY(1.2px);
         display: inline-block;
         text-transform: uppercase;
-        text-shadow: 0 2px 0 hsl(var(--color-offset)),
+        text-shadow:
+            0 2px 0 hsl(var(--color-offset)),
             0 4px 0 hsl(var(--color-secondary)),
             0 6px 0 hsl(var(--color-ternary));
     }

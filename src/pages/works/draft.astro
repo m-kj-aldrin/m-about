@@ -6,7 +6,6 @@ const images = await Astro.glob("@assets/draft/img/*").then((files) => {
 });
 ---
 
-<!-- <WorksLayout title="draft"> -->
 <BaseLayout title="illustration drafts">
     <GridDisplay>
         {
@@ -23,12 +22,10 @@ const images = await Astro.glob("@assets/draft/img/*").then((files) => {
         }
     </GridDisplay>
 </BaseLayout>
-<!-- </WorksLayout> -->
 
 <style>
     img {
         height: 100%;
-        /* width: 100%; */
         aspect-ratio: 1/1;
     }
 </style>

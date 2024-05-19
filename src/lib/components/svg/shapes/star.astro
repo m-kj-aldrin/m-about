@@ -1,24 +1,26 @@
 ---
 import { range } from "@lib/utils/iter";
 interface Props {
-  n?: number;
-  width?: number;
-  offset?: number;
-  phase?: number;
+    n?: number;
+    width?: number;
+    offset?: number;
+    phase?: number;
 }
 
 const { n = 3, width = 0, phase = 0 } = Astro.props;
 ---
 
 {
-  range(n).map((x, i) => {
-    const rotStep = 360 / n;
-    return (
-      <>
-        <g transform={`rotate(${rotStep * i + phase}) translate(${width})`}>
-          <slot />
-        </g>
-      </>
-    );
-  })
+    range(n).map((x, i) => {
+        const rotStep = 360 / n;
+        return (
+            <>
+                <g
+                    transform={`rotate(${rotStep * i + phase}) translate(${width})`}
+                >
+                    <slot />
+                </g>
+            </>
+        );
+    })
 }

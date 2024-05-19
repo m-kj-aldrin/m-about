@@ -28,7 +28,8 @@ svg {
 }
 
 img,
-video {
+video,
+svg {
     object-fit: cover;
     display: inline-block;
 }

@@ -1,0 +1,26 @@
+---
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+
+let pats = [
+    { path: "spiral", name: "spiral" },
+    { path: "snap-to-mouse", name: "snap and glide" },
+    { path: "quad-tree", name: "quad tree" },
+    { path: "fit-square", name: "fit square" },
+];
+---
+
+<BaseLayout title="gen design">
+    <ul>
+        {
+            pats.map(({ path, name }) => {
+                return (
+                    <li>
+                        <h2>
+                            <a href={path}>{name}</a>
+                        </h2>
+                    </li>
+                );
+            })
+        }
+    </ul>
+</BaseLayout>

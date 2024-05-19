@@ -1,0 +1,193 @@
+---
+import TimeOfRender from "@lib/components/TimeOfRender.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import type { ColorNames } from "@lib/types/colors";
+import { IF, SWITCH } from "@lib/utils/comperator";
+import { bm_chance, chance, pick } from "@lib/utils/stokhos";
+
+export const prerender = false;
+
+const planeWidth = 512;
+const planeHeight = 512;
+const gridCellSize = 12; // Define a smaller grid cell size for more granularity
+
+// Define valid widths and heights
+const validWidths = [2, 2, 2, 16, 128, 256];
+const validHeights = [2, 4, 8, 16, 64, 128];
+
+// Initialize the grid
+const gridWidth = Math.ceil(planeWidth / gridCellSize);
+const gridHeight = Math.ceil(planeHeight / gridCellSize);
+const grid = Array.from({ length: gridHeight }, () =>
+    Array(gridWidth).fill(false)
+);
+
+// Helper function to get a random element from an array
+function getRandomElement(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// Helper function to check if a rectangle fits in the grid
+function canPlaceRectangle(gridX, gridY, rectWidth, rectHeight) {
+    if (
+        gridX + rectWidth > grid[0].length ||
+        gridY + rectHeight > grid.length
+    ) {
+        return false;
+    }
+
+    for (let i = gridY; i < gridY + rectHeight; i++) {
+        for (let j = gridX; j < gridX + rectWidth; j++) {
+            if (grid[i][j]) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+// Helper function to mark the grid with a rectangle
+function markGrid(gridX, gridY, rectWidth, rectHeight) {
+    for (let i = gridY; i < gridY + rectHeight; i++) {
+        for (let j = gridX; j < gridX + rectWidth; j++) {
+            grid[i][j] = true;
+        }
+    }
+}
+
+// Function to place rectangles on the plane
+function placeRectangles(planeWidth, planeHeight, validWidths, validHeights) {
+    const rectangles = [];
+
+    for (let y = 0; y < planeHeight; y += gridCellSize) {
+        for (let x = 0; x < planeWidth; x += gridCellSize) {
+            const gridX = Math.floor(x / gridCellSize);
+            const gridY = Math.floor(y / gridCellSize);
+
+            if (!grid[gridY][gridX]) {
+                let placed = false;
+
+                // Randomly select rectangle size
+                let height = getRandomElement(validHeights);
+                let width = getRandomElement(validWidths);
+                const rectGridWidth = Math.ceil(width / gridCellSize);
+                const rectGridHeight = Math.ceil(height / gridCellSize);
+
+                if (
+                    canPlaceRectangle(
+                        gridX,
+                        gridY,
+                        rectGridWidth,
+                        rectGridHeight
+                    )
+                ) {
+                    rectangles.push({ x, y, width, height });
+                    markGrid(gridX, gridY, rectGridWidth, rectGridHeight);
+                    placed = true;
+                }
+
+                // If not placed, try different sizes systematically
+                if (!placed) {
+                    for (let h of validHeights) {
+                        for (let w of validWidths) {
+                            const gridWidth = Math.ceil(w / gridCellSize);
+                            const gridHeight = Math.ceil(h / gridCellSize);
+
+                            if (
+                                canPlaceRectangle(
+                                    gridX,
+                                    gridY,
+                                    gridWidth,
+                                    gridHeight
+                                )
+                            ) {
+                                rectangles.push({ x, y, width: w, height: h });
+                                markGrid(gridX, gridY, gridWidth, gridHeight);
+                                placed = true;
+                                break;
+                            }
+                        }
+                        if (placed) break;
+                    }
+                }
+            }
+        }
+    }
+
+    return rectangles;
+}
+
+const rectangles = placeRectangles(
+    planeWidth,
+    planeHeight,
+    validWidths,
+    validHeights
+);
+
+const COLORS: ColorNames[] = ["primary", "secondary", "ternary", "offset"];
+---
+
+<BaseLayout title="fit-square" fullScreen={true}>
+    <svg viewBox="-256 -256 512 512">
+        <g transform="translate(-256 -256)">
+            <text font-size="10" y="1.5ex">
+                <TimeOfRender />
+                <a xlink:href="#">
+                    <tspan font-size="14">&circlearrowright;</tspan>
+                </a>
+            </text>
+            <g transform="translate(256 256) scale(0.85) translate(-256 -256)">
+                {
+                    rectangles.map(({ x, y, width, height }) => {
+                        let area = width * height;
+                        let tresh = area > 512;
+                        let dash = pick(["none", "1 2", "2 2", "4 2"]);
+                        let colorBase = (colType) =>
+                            `hsl(var(--color-${colType}))`;
+                        let squareColor = colorBase(pick(COLORS));
+                        let circleColor = colorBase(pick(COLORS));
+                        let minSize = Math.min(width, height);
+                        return (
+                            <g transform={`translate(${x} ${y})`}>
+                                <rect {width} {height} fill={squareColor} />
+                                {IF(
+                                    chance(0.25),
+                                    <g
+                                        transform={`translate(${width / 2} ${height / 2})`}
+                                    >
+                                        {SWITCH({
+                                            circle: (
+                                                <circle
+                                                    r={(minSize / 2) * 0.75}
+                                                    fill={circleColor}
+                                                />
+                                            ),
+                                            square: (
+                                                <rect
+                                                    width={minSize}
+                                                    height={minSize}
+                                                    x={-minSize / 2}
+                                                    y={-minSize / 2}
+                                                    fill={circleColor}
+                                                />
+                                            ),
+                                        })(pick(["square", "circle"]))}
+                                    </g>
+                                )}
+                            </g>
+                        );
+                    })
+                }
+            </g>
+        </g>
+    </svg>
+</BaseLayout>
+
+<style>
+    svg {
+        height: 100%;
+        width: 100%;
+        padding: 32px;
+    }
+</style>

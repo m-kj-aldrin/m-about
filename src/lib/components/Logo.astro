@@ -1,86 +1,133 @@
 ---
+
 ---
 
-<div class="square">
-    <div class="s">m</div>
-    <div class="c"></div>
-    <div>aldrin</div>
+<div class="text">
+    <span class="outer">
+        <div class="inner">
+            <!-- <div class="nowrap hidden">
+                <span>Marcus</span>
+                <br />
+                <span>Aldrin</span>
+            </div> -->
+            <div class="smiley">
+                <!-- <div class="eyes">..</div>
+                <div class="smile">&ssmile;</div> -->
+                &#9786;
+            </div>
+            <div class="nowrap">
+                <span>Marcus</span>
+                <br />
+                <span>Aldrin</span>
+            </div>
+        </div>
+    </span>
 </div>
 
 <style>
-    .square {
-        position: absolute;
+    .text {
+        border-radius: 4px;
 
-        align-self: flex-start;
-        aspect-ratio: 1/1;
-        border-radius: 2px;
-        line-height: 1;
+        background-color: hsla(var(--color-offset), 1);
+        padding: 4px 8px;
+        font-size: 14px;
 
-        font-size: 12px;
-        font-weight: 300;
-        /* opacity: 0.55; */
+        position: relative;
 
-        transition: 250ms ease-in opacity;
-
-        /* border: 1px hsla(var(--color-primary), 0.5) solid; */
+        overflow: hidden;
     }
 
-    .square:hover {
-        opacity: 1;
+    .nowrap {
+        white-space: nowrap;
     }
 
-    .s {
-        /* color: hsl(var(--color-ternary)); */
+    .text {
+        word-spacing: initial;
+        text-transform: uppercase;
+        line-height: 0.8;
+        color: hsl(var(--color-light));
+        font-weight: 200;
+        font-style: italic;
+    }
+    .text .outer {
+        overflow: hidden;
+        /* outline: 1px red solid; */
+        display: block;
     }
 
-    .square {
-        width: 64px;
-        background-color: transparent;
-
+    .text .inner {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-
-        box-shadow: 0 0 16px 8px hsla(var(--color-dark), 0.03);
+        grid-template-columns: 1fr;
+        /* outline: 1px black solid; */
     }
 
-    .square:first-child div:first-child {
-        border-right: none;
+    .text .inner > * {
+        grid-column: 1;
+        grid-row: 1;
     }
 
-    .square:first-child div:nth-child(2) {
-        background-color: hsl(var(--color-secondary));
-        /* transition: 250ms ease-out background-color,
-            150ms 250ms ease-out transform; */
-    }
-    /* :global(html[data-route="about"]) .square div:nth-child(2){
-        background-color: hsl(var(--color-primary));
-    }
-    :global(html[data-route="works"]) .square div:nth-child(2){
-        background-color: hsl(var(--color-ternary));
-    } */
-    /* .square:first-child div:nth-child(2) {
-        background-color: hsl(var(--color-offset));
-
-        transform: scale(0.5) rotate(45deg);
-    } */
-    /* .square:first-child div:nth-child(2):hover {
-        background-color: hsl(var(--color-offset));
-
-        transform: scale(0.5) rotate(45deg);
-    } */
-
-    .square:first-child div {
-        border: 1px hsla(var(--color-dark), 0.3) dashed;
-        display: grid;
-        place-content: center;
+    .text .outer span {
+        display: inline-block;
+        animation-name: wiggle;
+        animation-duration: 5000ms;
+        animation-iteration-count: infinite;
     }
 
-    .square:first-child div:last-child {
-        grid-column: span 2;
-        border-top: none;
+    .text .outer span:first-of-type {
+        --x: 2px;
     }
-    /* .square div {
-        border: 1px hsla(var(--color-dark)) solid !important;
-    } */
+    .text .outer span:last-of-type {
+        --x: -2px;
+        /* animation-delay: 75ms; */
+    }
+
+    .text .hidden {
+        transform: translateX(-200%);
+    }
+
+    .text .smiley {
+        transform: translateX(-100%);
+        text-align: center;
+        align-self: center;
+        font-size: 28px;
+    }
+    .inner {
+        transform: translateX(100%);
+        animation-name: smiley;
+        animation-duration: 10000ms;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes smiley {
+        0% {
+            transform: translate(0px);
+        }
+        50% {
+            transform: translateX(0px);
+        }
+        51.25% {
+            transform: translateX(100%);
+        }
+        52.5% {
+            transform: translateX(100%);
+        }
+        53.75% {
+            transform: translateX(0px);
+        }
+        100% {
+            transform: translateX(0px);
+        }
+    }
+
+    @keyframes wiggle {
+        40% {
+            transform: translateX(0px);
+        }
+        50% {
+            transform: translateX(var(--x, 0px));
+        }
+        60% {
+            transform: translateX(0px);
+        }
+    }
 </style>
