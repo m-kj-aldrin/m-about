@@ -20,17 +20,30 @@ const anim: TransitionAnimationPair = {
             name: "slideIn",
             duration: "200ms",
             easing: "ease",
+            delay: "400ms",
+        },
+        {
+            name: "fadeIn",
+            duration: "200ms",
+            easing: "ease",
+            fillMode: "both",
+            delay: "200ms",
         },
     ],
     old: [
         {
             name: "slideOut",
-            duration: "200ms",
+            duration: "400ms",
             easing: "ease",
             fillMode: "forwards",
             delay: "0ms",
         },
-        { name: "fadeOut", delay: "200ms", easing: "ease" },
+        {
+            name: "fadeOut",
+            duration: "200ms",
+            easing: "ease",
+            delay: "200ms",
+        },
     ],
 };
 
@@ -64,7 +77,7 @@ const { fullScreen, title } = Astro.props;
         <header>
             <!-- <Social /> -->
             <Nav />
-            <ViewTransitions />
+            <ViewTransitions fallback={"swap"} />
         </header>
 
         <main class="wrapper" transition:animate={mySlide}>
