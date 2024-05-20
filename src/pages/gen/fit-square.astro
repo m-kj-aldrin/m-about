@@ -7,27 +7,41 @@ import { bm_chance, chance, pick } from "@lib/utils/stokhos";
 
 export const prerender = false;
 
+const params = Astro.url.searchParams;
+
+let paramCellSize = +params.get("gridCellSize") || 4;
+
+let w = `[${params.get("validWidths")?.trim().replaceAll(" ", ",")}]`;
+let h = `[${params.get("validHeights")?.trim().replaceAll(" ", ",")}]`;
+let gap = params.get("gap") ?? 2;
+
+let paramWidths = [4, 16, 32, 64, 128, 256];
+let paramHeights = [4, 16, 64, 256];
+try {
+    paramWidths = JSON.parse(w);
+} catch {}
+
+try {
+    paramHeights = JSON.parse(h);
+} catch {}
+
 const planeWidth = 512;
 const planeHeight = 512;
-const gridCellSize = 12; // Define a smaller grid cell size for more granularity
+const gridCellSize = paramCellSize;
 
-// Define valid widths and heights
-const validWidths = [2, 2, 2, 16, 128, 256];
-const validHeights = [2, 4, 8, 16, 64, 128];
+const validWidths = paramWidths;
+const validHeights = paramHeights;
 
-// Initialize the grid
 const gridWidth = Math.ceil(planeWidth / gridCellSize);
 const gridHeight = Math.ceil(planeHeight / gridCellSize);
 const grid = Array.from({ length: gridHeight }, () =>
     Array(gridWidth).fill(false)
 );
 
-// Helper function to get a random element from an array
 function getRandomElement(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// Helper function to check if a rectangle fits in the grid
 function canPlaceRectangle(gridX, gridY, rectWidth, rectHeight) {
     if (
         gridX + rectWidth > grid[0].length ||
@@ -47,7 +61,6 @@ function canPlaceRectangle(gridX, gridY, rectWidth, rectHeight) {
     return true;
 }
 
-// Helper function to mark the grid with a rectangle
 function markGrid(gridX, gridY, rectWidth, rectHeight) {
     for (let i = gridY; i < gridY + rectHeight; i++) {
         for (let j = gridX; j < gridX + rectWidth; j++) {
@@ -56,7 +69,6 @@ function markGrid(gridX, gridY, rectWidth, rectHeight) {
     }
 }
 
-// Function to place rectangles on the plane
 function placeRectangles(planeWidth, planeHeight, validWidths, validHeights) {
     const rectangles = [];
 
@@ -68,7 +80,6 @@ function placeRectangles(planeWidth, planeHeight, validWidths, validHeights) {
             if (!grid[gridY][gridX]) {
                 let placed = false;
 
-                // Randomly select rectangle size
                 let height = getRandomElement(validHeights);
                 let width = getRandomElement(validWidths);
                 const rectGridWidth = Math.ceil(width / gridCellSize);
@@ -87,7 +98,6 @@ function placeRectangles(planeWidth, planeHeight, validWidths, validHeights) {
                     placed = true;
                 }
 
-                // If not placed, try different sizes systematically
                 if (!placed) {
                     for (let h of validHeights) {
                         for (let w of validWidths) {
@@ -128,65 +138,140 @@ const rectangles = placeRectangles(
 const COLORS: ColorNames[] = ["primary", "secondary", "ternary", "offset"];
 ---
 
+<script>
+    let gapRange = document.querySelector(
+        'form input[name="gap"]'
+    ) as HTMLInputElement;
+    gapRange.addEventListener("input", (e) => {
+        if (!(e.target instanceof HTMLInputElement)) return;
+        let value = e.target.value;
+        document
+            .querySelector("#graphic")
+            .style.setProperty("--grid-gap", value);
+    });
+</script>
+
 <BaseLayout title="fit-square" fullScreen={true}>
-    <svg viewBox="-256 -256 512 512">
-        <g transform="translate(-256 -256)">
-            <text font-size="10" y="1.5ex">
-                <TimeOfRender />
-                <a xlink:href="#">
-                    <tspan font-size="14">&circlearrowright;</tspan>
-                </a>
-            </text>
-            <g transform="translate(256 256) scale(0.85) translate(-256 -256)">
-                {
-                    rectangles.map(({ x, y, width, height }) => {
-                        let area = width * height;
-                        let tresh = area > 512;
-                        let dash = pick(["none", "1 2", "2 2", "4 2"]);
-                        let colorBase = (colType) =>
-                            `hsl(var(--color-${colType}))`;
-                        let squareColor = colorBase(pick(COLORS));
-                        let circleColor = colorBase(pick(COLORS));
-                        let minSize = Math.min(width, height);
-                        return (
-                            <g transform={`translate(${x} ${y})`}>
-                                <rect {width} {height} fill={squareColor} />
-                                {IF(
-                                    chance(0.25),
+    <div id="graphic" style={`--grid-gap:${gap}`}>
+        <form method="get">
+            <label>
+                grid cell size:&nbsp;
+                <input
+                    type="number"
+                    name="gridCellSize"
+                    value={paramCellSize}
+                    min="1"
+                />
+            </label>
+            <label>
+                valid widths:&nbsp;
+                <input
+                    type="text"
+                    name="validWidths"
+                    value={validWidths.join(" ")}
+                />
+            </label>
+            <label>
+                valid heights:&nbsp;
+                <input
+                    type="text"
+                    name="validHeights"
+                    value={validHeights.join(" ")}
+                />
+            </label>
+            <label>
+                gap:
+                <input
+                    transition:persist="grid-gap-range"
+                    type="range"
+                    name="gap"
+                    min="0"
+                    max="8"
+                    value={gap}
+                />
+            </label>
+            <input type="submit" value={"new"} />
+        </form>
+        <span>
+            <TimeOfRender />
+        </span>
+        <svg viewBox="-256 -256 512 512">
+            <g transform="translate(-256 -256)">
+                <g>
+                    {
+                        rectangles.map(({ x, y, width, height }) => {
+                            let colorBase = (colType) =>
+                                `hsl(var(--color-${colType}))`;
+                            let squareColor = colorBase(pick(COLORS));
+                            let circleColor = colorBase(pick(COLORS));
+                            let minSize = Math.min(width, height);
+
+                            return (
+                                <g transform={`translate(${x} ${y})`}>
                                     <g
-                                        transform={`translate(${width / 2} ${height / 2})`}
+                                        class="cell"
+                                        style={`--w:${width};--h:${height}`}
                                     >
-                                        {SWITCH({
-                                            circle: (
-                                                <circle
-                                                    r={(minSize / 2) * 0.75}
-                                                    fill={circleColor}
-                                                />
-                                            ),
-                                            square: (
-                                                <rect
-                                                    width={minSize}
-                                                    height={minSize}
-                                                    x={-minSize / 2}
-                                                    y={-minSize / 2}
-                                                    fill={circleColor}
-                                                />
-                                            ),
-                                        })(pick(["square", "circle"]))}
+                                        <rect
+                                            {width}
+                                            {height}
+                                            fill={squareColor}
+                                        />
+                                        {IF(
+                                            chance(0.25),
+                                            <g
+                                                transform={`translate(${width / 2} ${height / 2})`}
+                                            >
+                                                {SWITCH({
+                                                    circle: (
+                                                        <circle
+                                                            r={
+                                                                (minSize / 2) *
+                                                                0.75
+                                                            }
+                                                            fill={circleColor}
+                                                        />
+                                                    ),
+                                                    square: (
+                                                        <rect
+                                                            width={minSize}
+                                                            height={minSize}
+                                                            x={-minSize / 2}
+                                                            y={-minSize / 2}
+                                                            fill={circleColor}
+                                                        />
+                                                    ),
+                                                })(pick(["square", "circle"]))}
+                                            </g>
+                                        )}
                                     </g>
-                                )}
-                            </g>
-                        );
-                    })
-                }
+                                </g>
+                            );
+                        })
+                    }
+                </g>
             </g>
-        </g>
-    </svg>
+        </svg>
+    </div>
 </BaseLayout>
 
 <style>
-    svg {
+    div {
+        display: flex;
+        flex-direction: column;
         height: 100%;
-        width: 100%;
+
+        align-items: center;
+        margin-inline: auto;
+        gap: 4px;
+    }
+    svg {
+        padding: 4px;
+    }
+    svg .cell {
+        transform: scale(
+            calc((var(--w) - var(--grid-gap)) / var(--w)),
+            calc((var(--h) - var(--grid-gap)) / var(--h))
+        );
     }
 </style>

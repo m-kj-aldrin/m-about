@@ -37,8 +37,24 @@ form {
     width: max-content;
 }
 
-button {
+input {
+    accent-color: hsl(var(--color-secondary));
+}
+
+input:focus {
+    outline-color: hsl(var(--color-offset));
+}
+
+button,
+input[type="submit"] {
     cursor: pointer;
+    color: currentColor;
+    background-color: hsl(var(--color-light));
+}
+
+:is(input[type="submit"]):hover {
+    background-color: hsl(var(--color-dark));
+    color: hsl(var(--color-light));
 }
 
 button:hover {
@@ -94,7 +110,7 @@ body {
     overflow: hidden scroll;
 }
 
-main{
+main {
     grid-row: 2;
 }
 
