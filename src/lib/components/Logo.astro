@@ -5,16 +5,7 @@
 <div class="text">
     <span class="outer">
         <div class="inner">
-            <!-- <div class="nowrap hidden">
-                <span>Marcus</span>
-                <br />
-                <span>Aldrin</span>
-            </div> -->
-            <div class="smiley">
-                <!-- <div class="eyes">..</div>
-                <div class="smile">&ssmile;</div> -->
-                &#9786;
-            </div>
+            <div class="smiley">&#9786;</div>
             <div class="nowrap">
                 <span>Marcus</span>
                 <br />
@@ -33,8 +24,6 @@
         font-size: 14px;
 
         position: relative;
-
-        overflow: hidden;
     }
 
     .nowrap {
@@ -51,14 +40,13 @@
     }
     .text .outer {
         overflow: hidden;
-        /* outline: 1px red solid; */
         display: block;
+        padding-inline: 2px;
     }
 
     .text .inner {
         display: grid;
         grid-template-columns: 1fr;
-        /* outline: 1px black solid; */
     }
 
     .text .inner > * {
@@ -78,11 +66,6 @@
     }
     .text .outer span:last-of-type {
         --x: -2px;
-        /* animation-delay: 75ms; */
-    }
-
-    .text .hidden {
-        transform: translateX(-200%);
     }
 
     .text .smiley {
@@ -92,31 +75,15 @@
         font-size: 28px;
     }
     .inner {
-        transform: translateX(100%);
-        animation-name: smiley;
-        animation-duration: 10000ms;
-        animation-iteration-count: infinite;
+        transition-property: transform;
+        transition-duration: 125ms;
+        transition-timing-function: ease;
     }
-
-    @keyframes smiley {
-        0% {
-            transform: translate(0px);
-        }
-        50% {
-            transform: translateX(0px);
-        }
-        51.25% {
-            transform: translateX(100%);
-        }
-        52.5% {
-            transform: translateX(100%);
-        }
-        53.75% {
-            transform: translateX(0px);
-        }
-        100% {
-            transform: translateX(0px);
-        }
+    .text {
+        cursor: help;
+    }
+    .text:hover .inner {
+        transform: translateX(calc(100% + 2px));
     }
 
     @keyframes wiggle {

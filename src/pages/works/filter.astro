@@ -1,33 +1,15 @@
 ---
+import OmptimizedPortfolioImages from "@lib/components/OmptimizedPortfolioImages.astro";
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
 import GridDisplay from "@lib/layouts/GridDisplay.astro";
-const images = await Astro.glob("@assets/filter/img/*").then((files) =>
-    files.map((file) => file.default),
-);
 
-console.log(images);
+const images = await Astro.glob<{ default: ImageMetadata }>(
+    "@assets/filter/img/*"
+);
 ---
 
 <BaseLayout title="filter">
     <GridDisplay>
-        {
-            images.map((image) => {
-                return (
-                    <img
-                        src={image.src}
-                        width={1024}
-                        height={1024}
-                        loading="lazy"
-                    />
-                );
-            })
-        }
+        <OmptimizedPortfolioImages {images} />
     </GridDisplay>
 </BaseLayout>
-
-<style>
-    img {
-        height: 100%;
-        aspect-ratio: 1/1;
-    }
-</style>

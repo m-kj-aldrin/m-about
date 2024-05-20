@@ -7,6 +7,9 @@ export default defineConfig({
     experimental: {
         clientPrerender: true,
     },
+    // prefetch: {
+    //     defaultStrategy: "load",
+    // },
     output: "hybrid",
     adapter: netlify(),
 });
