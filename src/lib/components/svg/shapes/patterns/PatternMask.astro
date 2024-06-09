@@ -10,7 +10,7 @@ interface Props {
 const { name, scale = [1, 1], width, height, rotate = 0, ...attrs } = Astro.props;
 ---
 
-<svg>
+<svg transition:persist={true}>
   <defs>
     <pattern
       {...attrs}
