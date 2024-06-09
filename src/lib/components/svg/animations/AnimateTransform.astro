@@ -1,0 +1,59 @@
+---
+type TransformType = "rotate" | "translate" | "scale";
+type BeginType =
+    | number
+    | `${string}.begin`
+    | `${string}.end`
+    | `${string}.click`
+    | `${string}.mouseover`
+    | `${string}.mousedown`
+    | `${string}.mouseup`;
+
+interface Props {
+    type: TransformType;
+    from?: string;
+    to?: string;
+    values?: string;
+    dur: number;
+    repeatCount?: number | "indefinite";
+    calcMode?: "linear" | "paced" | "discrete";
+    begin?: BeginType;
+    fill?: "remove" | "freeze";
+    id?: string;
+    accumulate?: "none" | "sum";
+    additive?: "replace" | "sum";
+}
+
+const {
+    type,
+    from,
+    to,
+    dur: _dur,
+    repeatCount,
+    calcMode,
+    values,
+    begin,
+    fill,
+    id,
+    accumulate,
+    additive,
+} = Astro.props as Props;
+
+const dur = `${_dur}ms`;
+---
+
+<animateTransform
+    attributeName="transform"
+    attributeType="XML"
+    {additive}
+    {accumulate}
+    {type}
+    {from}
+    {to}
+    {dur}
+    {repeatCount}
+    {calcMode}
+    {values}
+    {begin}
+    {fill}
+    {id}></animateTransform>

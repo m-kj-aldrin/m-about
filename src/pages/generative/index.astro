@@ -1,0 +1,36 @@
+---
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="generative">
+  <div class="links">
+    <a href="fit-square">
+      <span>&RightArrow;</span>
+      <h2>fit square</h2>
+    </a>
+  </div>
+</BaseLayout>
+
+<style>
+  a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  span {
+    font-size: 1.5rem;
+    transform: translateY(-1px);
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    margin-inline: auto;
+  }
+
+  h2 {
+    margin: 0;
+  }
+</style>

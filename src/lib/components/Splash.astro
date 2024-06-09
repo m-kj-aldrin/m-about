@@ -1,0 +1,315 @@
+---
+import AnimateTransform from "@lib/components/svg/animations/AnimateTransform.astro";
+import G from "./svg/builtin/G.astro";
+import Circle from "./svg/builtin/Circle.astro";
+import Rect from "./svg/builtin/Rect.astro";
+import Path from "@lib/components/svg/builtin/Path.astro";
+import Star from "./svg/shapes/star.astro";
+import SignEngine from "./svg/shapes/SignEngine.astro";
+const outerCircleRadi = 320;
+---
+
+<svg viewBox="-512 -512 1024 1024" fill="none" preserveAspectRatio="xMidYMid slice">
+  <g class="illustration">
+    <g class="shapes">
+      <g class="inner" transform="">
+        <!-- MAIN YELLOW CIRCLE -->
+        <g stroke="hsl(var(--color-secondary))">
+          <circle cx="0" cy="0" r="128" stroke-width="4"></circle>
+          <Circle
+            stroke="hsl(var(--color-dark))"
+            r={144}
+            stroke-dasharray={"1,16"}
+            stroke-width={outerCircleRadi}
+            stroke-opacity={0.03}
+            fill="none"
+          />
+          <G transform="translate(-64)">
+            <Circle r={8} stroke-width={1} fill="none" />
+            <Circle fill="hsl(var(--color-secondary))" stroke="none" r={2} stroke-width={1} />
+          </G>
+        </g>
+        <!-- SPOKE -->
+        <g class="spoke">
+          <g class="direction" stroke="hsl(var(--color-primary))" stroke-width="2" transform="">
+            <animateTransform
+              attributeName="transform"
+              attributeType="XML"
+              type="rotate"
+              from="0 0 0"
+              to="360 0 0"
+              dur="32s"
+              repeatCount="indefinite"></animateTransform>
+            <circle r="4" fill="hsl(var(--color-primary))" stroke="none"></circle>
+            <G translate={[128 - 4, 0]} color="hsl(var(--color-primary))" stroke-width={1}>
+              <Circle r={1} />
+              <Circle cx={7.5} r={1} />
+              <path d={`M0,0 h${outerCircleRadi - 40 - 64 - 3}`}></path>
+              <g transform={`translate(${outerCircleRadi - 60 - 64} 0)`}>
+                <Circle r="4" stroke="currentColor" fill="none" />
+                <Circle
+                  r="32"
+                  stroke="none"
+                  fill="hsl(var(--color-secondary))"
+                  fill-opacity="0.2"
+                />
+              </g>
+            </G>
+          </g>
+        </g>
+        <!-- DASH & BEND -->
+        <g transform="translate(64 0)">
+          <!-- GREEN DASH -->
+          <g class="green-dash" stroke="hsl(var(--color-ternary))" stroke-width="2">
+            <path d={`M0,0 h${outerCircleRadi - 64}`} stroke-dasharray="4"></path>
+            <g transform=`translate(${outerCircleRadi - 64} 0) rotate(45) translate(-4 -4)`>
+              <rect width="8" height="8" fill="hsl(var(--color-ternary))"></rect>
+            </g>
+          </g>
+          <!-- YELLOW BEND -->
+          <g class="yellow-bend" transform="translate(192 0)" stroke-width="2">
+            <!-- rx ry x-axis-rotation large-arc-flag sweep-flag dx dy -->
+            <path d="M0,0 a92,92 0 0 1 -92,92 h-32" stroke="hsl(var(--color-secondary))"></path>
+            <circle r="4" fill="hsl(var(--color-secondary))"></circle>
+            <g transform="translate(-128 92)">
+              <g transform="translate(-32)">
+                <path d="M0,0 h-64" stroke="hsl(var(--color-ternary))"></path>
+                <circle cx="-64" r="4" fill="hsl(var(--color-ternary))"></circle>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g
+          class="mask-circles"
+          fill="hsl(var(--color-light))"
+          opacity="0.8"
+          stroke-opacity="0.2"
+          stroke-dasharray="4"
+          stroke="hsl(var(--color-primary))"
+        >
+          <g transform="rotate(-45) translate(128 0)">
+            <circle r="32"></circle>
+          </g>
+          <g transform="translate(128 0)">
+            <circle r="16"></circle>
+          </g>
+          <g transform="rotate(45) translate(128 0)">
+            <circle r="8"></circle>
+          </g>
+        </g>
+      </g>
+      <g class="outer">
+        <!-- MAIN BLUE CIRCLE -->
+        <G color="hsl(var(--color-offset))" stroke-width={1}>
+          <Circle stroke="currentColor" fill="none" r={outerCircleRadi} stroke-dasharray={"8,4"} />
+        </G>
+        <!-- Cubic -->
+        <!-- C x1 y1, x2 y2, x y -->
+        <!-- S x2 y2, x y -->
+        <!-- Quad -->
+        <!-- Q x1 y1, x y -->
+        <!-- T x y -->
+        <!-- OUTER CIRCLES -->
+        <g class="outer-circles">
+          <!-- DOUBBLE RECT -->
+          <G stroke="hsl(var(--color-ternary))" stroke-width={2}>
+            <G transform={`rotate(${-145}) translate(${outerCircleRadi})`}>
+              <G transform={`rotate(45) translate(-9) rotate(-1)`}>
+                <G transform="translate(-6 -6)">
+                  <Circle r={6} fill="none" />
+                  <Rect fill="none" width={96} height={96} center={true} />
+                </G>
+                <Circle r={8} fill="none" />
+                <Rect
+                  fill="hsl(var(--color-ternary))"
+                  fill-opacity={0.5}
+                  width={96}
+                  height={96}
+                  center={true}
+                />
+              </G>
+            </G>
+          </G>
+          <g>
+            <g>
+              <g transform={`rotate(-45) translate(${outerCircleRadi} 0) translate(64)`}>
+                <circle
+                  r="32"
+                  stroke="hsl(var(--color-offset))"
+                  stroke-width="2"
+                  stroke-dasharray="8 1"
+                >
+                </circle>
+              </g>
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from="0 0 0"
+                to="-360 0 0"
+                dur="64s"
+                repeatCount="indefinite"></animateTransform>
+            </g>
+          </g>
+          <g transform={`rotate(-45) translate(${outerCircleRadi}) translate(64)`}> </g>
+        </g>
+      </g>
+    </g>
+
+    <!-- HOOK -->
+    <G stroke="hsl(var(--color-dark))" stroke-width={1}>
+      <G translate={[0, 64]}>
+        <Rect
+          center={true}
+          transform="rotate(45)"
+          fill="currentColor"
+          stroke="none"
+          width={4}
+          height={4}
+        />
+        <Path
+          d={[
+            { c: "m" },
+            { c: "v", p: { dy: outerCircleRadi - 64 } },
+            { c: "a", p: { dx: 109 } },
+            { c: "v", p: { dy: -72 } },
+          ]}
+          stroke-dasharray={"8,4"}
+          stroke-linecap="round"
+        />
+        <Circle cx={109} cy={182} r={2} fill="none" />
+      </G>
+    </G>
+
+    <g transform="translate(113 378)">
+      <g class="star-fall" transform="">
+        <g class="star" color="hsl(var(--color-offset))" stroke-width="1" stroke-dasharray="4 2">
+          <Path d={[{ c: "C", p: { x1: 0, y1: 0, x2: -64, y2: -128, x: -256, y: -224 } }]} />
+          <G translate={[-256, -224]} stroke-dasharray={"0"}>
+            <Circle r={4} fill="currentColor" />
+            <G>
+              <Star n={4} width={5} phase={-14}>
+                <Path d={[{ c: "h", p: { dx: 16 } }]} />
+                <AnimateTransform
+                  type="translate"
+                  dur={5000}
+                  values="0 0;4 0;0 0"
+                  repeatCount="indefinite"
+                  additive="sum"
+                />
+              </Star>
+              <AnimateTransform
+                type="rotate"
+                dur={20000}
+                from="0"
+                to="360"
+                repeatCount="indefinite"
+              />
+            </G>
+          </G>
+          <AnimateTransform
+            type="rotate"
+            dur={10000}
+            values="0 0 0;-3 -96 -112;0 0 0"
+            repeatCount="indefinite"
+          />
+          <AnimateTransform
+            additive="sum"
+            type="translate"
+            dur={15000}
+            values="0 0;-6 -4;0 0"
+            repeatCount="indefinite"
+          />
+          <AnimateTransform
+            type="rotate"
+            dur={7000}
+            values="0 0 0;2 -32 -32;0 0 0"
+            repeatCount="indefinite"
+            additive="sum"
+          />
+          <AnimateTransform
+            additive="sum"
+            type="translate"
+            dur={5000}
+            values="0 0;0 -2;0 0"
+            repeatCount="indefinite"
+          />
+        </g>
+      </g>
+    </g>
+
+    <g transform="
+            translate(30
+            150)">
+      <g transform="scale(0.8)">
+        <g class="star" transform="translate(127 83)">
+          <Star n={6}>
+            <Path d={[{ c: "m" }, { c: "v", p: { dy: 16 } }]} stroke="hsl(var(--color-primary))" />
+            <Circle cx={16} r={1} fill="hsl(var(--color-dark))" fill-opacity={0.5} />
+          </Star>
+        </g>
+        <g
+          fill="hsl(var(--color-dark))"
+          fill-opacity="0.04"
+          stroke="currentColor"
+          stroke-opacity="0.3"
+          stroke-dasharray="4 1"
+        >
+          <SignEngine />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
+
+<script>
+  let aniId = 0;
+  let svg = document.querySelector("main svg") as SVGSVGElement;
+  function updateTime() {
+    cancelAnimationFrame(aniId);
+
+    // svg = document.querySelector("main svg") as SVGSVGElement;
+    if (!svg) return;
+    let prevTime = +(localStorage.getItem("svgTime") ?? 0);
+    svg.setCurrentTime(prevTime);
+
+    const ani = (t: number) => {
+      let svgTime = svg.getCurrentTime();
+      if (svgTime) {
+        localStorage.setItem("svgTime", `${svgTime}`);
+      }
+
+      aniId = requestAnimationFrame(ani);
+    };
+    aniId = requestAnimationFrame(ani);
+  }
+
+  function setCurrentTime() {
+    let _svg = document.querySelector("main svg") as SVGSVGElement;
+    if (!_svg) return;
+    svg = _svg;
+
+    let prevTime = +(localStorage.getItem("svgTime") ?? 0);
+
+    svg.setCurrentTime(prevTime);
+  }
+
+  updateTime();
+
+  document.addEventListener("astro:page-load", (e) => {
+    setCurrentTime();
+  });
+</script>
+
+<style>
+  svg {
+    height: 100%;
+    display: block;
+    margin-inline: auto;
+    overflow: visible;
+  }
+
+  svg g.illustration {
+    transition: transform 225ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+</style>

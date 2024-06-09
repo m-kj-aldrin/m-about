@@ -1,0 +1,60 @@
+html,
+body {
+  height: 100%;
+}
+
+html {
+  overflow: hidden;
+  padding: 4px;
+  background-color: hsl(var(--color-light));
+}
+
+body {
+  overflow: hidden scroll;
+  padding: 16px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  background-color: hsl(var(--color-light));
+
+  box-shadow: 0 0 8px 0px inset hsl(0 0% 0% / 0.075);
+  border-radius: 4px;
+}
+
+main {
+  width: 100%;
+}
+
+#site-header,
+main {
+  max-width: 1280px;
+  align-self: center;
+}
+
+main {
+  flex-grow: 1;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: black;
+  border-radius: 4px;
+}
+
+img,
+vide {
+  border-radius: 2px;
+}
+
+a:hover {
+  color: hsl(var(--color-offset));
+}
+svg a:hover {
+  fill: hsl(var(--color-offset));
+}

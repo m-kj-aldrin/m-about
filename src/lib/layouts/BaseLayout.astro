@@ -1,0 +1,39 @@
+---
+import "@styles/main.css";
+
+import ViewTransitions from "astro/components/ViewTransitions.astro";
+import Nav from "@lib/components/Nav.astro";
+import { fade } from "astro:transitions";
+import SiteHeader from "@lib/components/SiteHeader.astro";
+import Main from "@lib/components/Main.astro";
+
+interface Props {
+  title: string;
+  fullScreen?: boolean;
+}
+
+const { title, fullScreen } = Astro.props;
+---
+
+<html lang="en" transition:animate={fade({ duration: 300 })} data-fullscreen={fullScreen}>
+  <head>
+    <ViewTransitions fallback={"swap"} />
+
+    <meta charset="utf-8" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+  </head>
+  <body>
+    <SiteHeader>
+      <Nav />
+    </SiteHeader>
+    <Main>
+      <slot />
+    </Main>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+---
+import Grid from "@lib/components/Grid.astro";
+import OmptimizedPortfolioImages from "@lib/components/OmptimizedPortfolioImages.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+const images = await Astro.glob<{ default: ImageMetadata }>("@assets/draft/img/*");
+---
+
+<BaseLayout title="illustration drafts">
+  <Grid>
+    <OmptimizedPortfolioImages {images} />
+  </Grid>
+</BaseLayout>

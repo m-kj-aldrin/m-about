@@ -1,0 +1,38 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import Home from "./svg/icons/Home.astro";
+import Work from "./svg/icons/Work.astro";
+import Generative from "./svg/icons/Generative.astro";
+import Back from "./svg/icons/Back.astro";
+import Email from "./svg/icons/Email.astro";
+import Github from "./svg/icons/Github.astro";
+
+export type IconTypes = "home" | "work" | "back" | "generative" | "mail" | "github" | "about";
+
+interface Props extends HTMLAttributes<"svg"> {
+  name: IconTypes;
+}
+
+const { name, ...atrs } = Astro.props;
+---
+
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+  {
+    () => {
+      switch (name) {
+        case "home":
+          return <Home />;
+        case "work":
+          return <Work />;
+        case "generative":
+          return <Generative />;
+        case "back":
+          return <Back />;
+        case "mail":
+          return <Email />;
+        case "github":
+          return <Github />;
+      }
+    }
+  }
+</svg>

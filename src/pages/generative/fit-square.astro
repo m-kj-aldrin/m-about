@@ -1,0 +1,322 @@
+---
+import Circle from "@lib/components/svg/builtin/Circle.astro";
+import G from "@lib/components/svg/builtin/G.astro";
+import Path from "@lib/components/svg/builtin/Path.astro";
+import Rect from "@lib/components/svg/builtin/Rect.astro";
+import PatternMask from "@lib/components/svg/shapes/patterns/PatternMask.astro";
+import type { NamedCssColor } from "@lib/components/svg/types";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import { IF } from "@lib/util/comperator";
+import { range } from "@lib/util/iter";
+import { chance, pick, rand } from "@lib/util/stokhos";
+
+export const prerender = false;
+
+interface GridCell {
+  index: { i: number; x: number; y: number };
+  marked: boolean;
+  width: number;
+  height: number;
+  requestedWidth: number;
+  requestedHeight: number;
+  xclip: boolean;
+  yclip: boolean;
+}
+
+let [gridW, gridH] = [9, 24];
+let size = gridW * gridH;
+
+let widths = [1, 3, 8];
+let heights = [1, 2];
+
+function ratioOfConstantDiff(size: number, constant: number) {
+  return (size - constant) / size;
+}
+
+function coordFromIndex(gridW: number) {
+  return function (i: number) {
+    return {
+      x: i % gridW,
+      y: Math.floor(i / gridW),
+    };
+  };
+}
+
+function cellFromCoord<T extends any[]>(buffer: T, gridW: number) {
+  return function (i: number, offset = [0, 0]) {
+    i += offset[0] + offset[1] * gridW;
+    return buffer[i];
+  };
+}
+
+function markArea(buffer: GridCell[], cell: GridCell, width: number, height: number) {
+  let stop = false;
+
+  for (let y = 0; y < height; y++) {
+    if (stop) {
+      break;
+    }
+
+    for (let x = 0; x < width; x++) {
+      let sampleCell = cellFromCoord(buffer, gridW)(cell.index.i, [x, y]);
+
+      if (sampleCell.marked) {
+        width = x;
+
+        if (chance(0.5)) {
+          height = y + 1;
+          stop = true;
+        }
+
+        break;
+      }
+
+      sampleCell.marked = true;
+    }
+  }
+
+  if (width + cell.index.x == gridW) {
+    cell.xclip = true;
+  } else if (cell.index.x == 0) {
+    cell.xclip = true;
+  }
+  cell.marked = true;
+  cell.width = width;
+  cell.height = height;
+}
+
+let vert_buffer = range<GridCell>(size, (i) => {
+  let x = i % gridW;
+  let y = Math.floor(i / gridW);
+
+  return {
+    index: { i, x, y },
+    marked: false,
+    width: 0,
+    height: 0,
+    requestedWidth: 0,
+    requestedHeight: 0,
+    xclip: false,
+    yclip: false,
+  };
+});
+
+for (let i = 0; i < vert_buffer.length; i++) {
+  const cell = vert_buffer[i];
+
+  if (cell.marked) {
+    continue;
+  }
+
+  let { x, y } = coordFromIndex(gridW)(i);
+
+  let mark_width = pick(widths);
+  let mark_height = pick(heights);
+
+  if (chance(0.9)) {
+    mark_height = mark_width;
+  }
+
+  cell.requestedWidth = mark_width;
+  cell.requestedHeight = mark_height;
+
+  mark_width = Math.min(gridW - x, mark_width);
+  mark_height = Math.min(gridH - y, mark_height);
+
+  markArea(vert_buffer, cell, mark_width, mark_height);
+}
+
+const marked_buffer: (GridCell & {
+  color: NamedCssColor;
+  isSquare: boolean;
+})[] = vert_buffer
+  .filter((cell) => cell.width && cell.height)
+  .map((cell, i) => {
+    cell.index.i = i;
+    return {
+      ...cell,
+      color: pick<NamedCssColor[]>(["orange", "orangered", "darkslateblue"]),
+      isSquare: cell.width == cell.height,
+    };
+  });
+
+let frameSize = 512;
+
+let cellWidth = frameSize / gridW;
+let cellHeight = frameSize / gridH;
+
+let m = Math.min(cellWidth, cellHeight);
+
+cellWidth = m;
+cellHeight = m;
+
+let gridGap = 2.5;
+let centerTranslate: [number, number] = [
+  (-cellWidth * gridW) / 2 + gridGap,
+  (-cellHeight * gridH) / 2 + gridGap,
+];
+---
+
+<BaseLayout title="fit-rect-2" fullScreen={true}>
+  <PatternMask width={16} height={8} scale={[1, 1]} rotate={-45} name="lines">
+    <Path
+      stroke-width={1}
+      d={[
+        { c: "m", p: { dy: 1 } },
+        { c: "h", p: { dx: 16 } },
+        { c: "M", p: { y: 5 } },
+        { c: "h", p: { dx: 16 } },
+      ]}
+    />
+  </PatternMask>
+  <PatternMask width={16} height={16} scale={[0.25, 0.25]} name="dots">
+    <circle r={4} cx="4" cy="4" fill="white"></circle>
+    <circle r={4} cx="12" cy="12" fill="white"></circle>
+  </PatternMask>
+  <svg viewBox="-256 -256 512 512">
+    <G scale={[1, 1]}>
+      <G translate={centerTranslate}>
+        {
+          marked_buffer.map(
+            ({ width, height, index: { x, y }, color, isSquare, requestedWidth, xclip }) => {
+              y = gridH - y;
+              y -= height;
+              let translate: [number, number] = [x * cellWidth, y * cellHeight];
+              let strokeOpacity = 0.15;
+
+              let fillOpacity = 0.45;
+              let lines = false;
+              if (isSquare && width > 2 && chance(0.75)) {
+                lines = true;
+                strokeOpacity = 0.05;
+                fillOpacity = 1;
+              }
+
+              [width, height] = [width * cellWidth, height * cellHeight];
+              let scale: [number, number] = [
+                ratioOfConstantDiff(width, gridGap),
+                ratioOfConstantDiff(height, gridGap),
+              ];
+              let offsetRot = rand(-0.125, 0.125);
+              let offsetTranslate = [rand(-0.25, 0.25), rand(-0.25, 0.25)];
+              let fill = lines ? "none" : "currentColor";
+
+              let mask = null;
+              if (isSquare && !lines && chance(0.7)) {
+                mask = "url(#mask-lines)";
+                strokeOpacity = 0.65;
+                fillOpacity = 0.95;
+              } else if (chance(0.5)) {
+                fill = "none";
+                strokeOpacity = 0.35;
+              } else if (chance(0.125)) {
+                fillOpacity = 0.55;
+              } else if (chance(0.5)) {
+                mask = "url(#mask-dots)";
+              }
+              return (
+                <G {translate} {scale} {color}>
+                  {xclip && (
+                    <Rect
+                      width={requestedWidth * cellWidth}
+                      x={x == 0 ? -(requestedWidth * cellWidth - width) : null}
+                      height={height}
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-dasharray={"4,1"}
+                      stroke-opacity={strokeOpacity / 2}
+                    />
+                  )}
+                  <Rect
+                    rotate={offsetRot}
+                    translate={offsetTranslate}
+                    {width}
+                    {height}
+                    rx={pick([0.25, 0.5])}
+                    stroke="currentColor"
+                    stroke-opacity={strokeOpacity}
+                    {fill}
+                    fill-opacity={fillOpacity}
+                    {mask}
+                  />
+                  {IF(lines, () => {
+                    let x = rand(0, width * (3 / 4));
+                    let y = rand(0, height * (3 / 4));
+                    return (
+                      <G>
+                        <G fill={color} stroke-opacity={0.05}>
+                          <Path
+                            d={[
+                              { c: "m" },
+                              { c: "L", p: { x, y } },
+                              { c: "L", p: { x: 0, y: height } },
+                              { c: "z" },
+                            ]}
+                            fill={chance(0.5) ? "none" : "currentColor"}
+                            fill-opacity={pick([0.04, 0.03, 0.08])}
+                          />
+                          <Path
+                            d={[
+                              { c: "m", p: { dx: width } },
+                              { c: "L", p: { x, y } },
+                              { c: "L", p: { x: 0, y: 0 } },
+                              { c: "z" },
+                            ]}
+                            fill={chance(0.5) ? "none" : "currentColor"}
+                            fill-opacity={pick([0.04, 0.03, 0.08])}
+                          />
+                          <Path
+                            d={[
+                              { c: "m", p: { dx: width, dy: height } },
+                              { c: "L", p: { x, y } },
+                              { c: "L", p: { x: width, y: 0 } },
+                              { c: "z" },
+                            ]}
+                            fill={chance(0.5) ? "none" : "currentColor"}
+                            fill-opacity={pick([0.04, 0.03, 0.08])}
+                          />
+                          <Path
+                            d={[
+                              { c: "m", p: { dy: height } },
+                              { c: "L", p: { x, y } },
+                              { c: "L", p: { x: width, y: height } },
+                              { c: "z" },
+                            ]}
+                            fill={chance(0.5) ? "none" : "currentColor"}
+                            fill-opacity={pick([0.04, 0.03, 0.08])}
+                          />
+                        </G>
+                        <Circle cx={x} cy={y} r={1} fill-opacity={0.05} />
+                      </G>
+                    );
+                  })}
+                </G>
+              );
+            }
+          )
+        }
+      </G>
+    </G>
+  </svg>
+</BaseLayout>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  svg rect {
+    transition-property: fill-opacity;
+    transition-duration: 165ms;
+    transition-timing-function: ease;
+    transition-delay: 75ms;
+  }
+
+  svg rect:hover {
+    fill-opacity: 0.65;
+    transition-duration: 125ms;
+    transition-delay: 0ms;
+  }
+</style>
