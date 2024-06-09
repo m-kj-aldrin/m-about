@@ -12,6 +12,8 @@ import { chance, pick, rand } from "@lib/util/stokhos";
 
 export const prerender = false;
 
+let params = Astro.url.searchParams;
+
 interface GridCell {
   index: { i: number; x: number; y: number };
   marked: boolean;
@@ -23,7 +25,11 @@ interface GridCell {
   yclip: boolean;
 }
 
-let [gridW, gridH] = [9, 24];
+// let [gridW, gridH] = [9, 24];
+
+let gridW = +(params.get("width") ?? 9);
+let gridH = +(params.get("height") ?? 24);
+
 let size = gridW * gridH;
 
 let widths = [1, 3, 8];
@@ -173,137 +179,155 @@ let centerTranslate: [number, number] = [
     <circle r={4} cx="4" cy="4" fill="white"></circle>
     <circle r={4} cx="12" cy="12" fill="white"></circle>
   </PatternMask>
-  <svg viewBox="-256 -256 512 512">
-    <G scale={[1, 1]}>
-      <G translate={centerTranslate}>
-        {
-          marked_buffer.map(
-            ({ width, height, index: { x, y }, color, isSquare, requestedWidth, xclip }) => {
-              y = gridH - y;
-              y -= height;
-              let translate: [number, number] = [x * cellWidth, y * cellHeight];
-              let strokeOpacity = 0.15;
-
-              let fillOpacity = 0.45;
-              let lines = false;
-              if (isSquare && width > 2 && chance(0.75)) {
-                lines = true;
-                strokeOpacity = 0.05;
-                fillOpacity = 1;
-              }
-
-              [width, height] = [width * cellWidth, height * cellHeight];
-              let scale: [number, number] = [
-                ratioOfConstantDiff(width, gridGap),
-                ratioOfConstantDiff(height, gridGap),
-              ];
-              let offsetRot = rand(-0.125, 0.125);
-              let offsetTranslate = [rand(-0.25, 0.25), rand(-0.25, 0.25)];
-              let fill = lines ? "none" : "currentColor";
-
-              let mask = null;
-              if (isSquare && !lines && chance(0.7)) {
-                mask = "url(#mask-lines)";
-                strokeOpacity = 0.65;
-                fillOpacity = 0.95;
-              } else if (chance(0.5)) {
-                fill = "none";
-                strokeOpacity = 0.35;
-              } else if (chance(0.125)) {
-                fillOpacity = 0.55;
-              } else if (chance(0.5)) {
-                mask = "url(#mask-dots)";
-              }
-              return (
-                <G {translate} {scale} {color}>
-                  {xclip && (
+  <div id="illustration">
+    <form action="">
+      <label>
+        number of cells along x-axis
+        <input type="number" name="width" value={gridW} />
+      </label>
+      <br />
+      <label>
+        number of cells along y-axis
+        <input type="number" name="height" value={gridH} />
+      </label>
+      <input type="submit" value="regenerate" />
+    </form>
+    <svg viewBox="-256 -256 512 512">
+      <G scale={[1, 1]}>
+        <G translate={centerTranslate}>
+          {
+            marked_buffer.map(
+              ({ width, height, index: { x, y }, color, isSquare, requestedWidth, xclip }) => {
+                y = gridH - y;
+                y -= height;
+                let translate: [number, number] = [x * cellWidth, y * cellHeight];
+                let strokeOpacity = 0.15;
+                let fillOpacity = 0.45;
+                let lines = false;
+                if (isSquare && width > 2 && chance(0.75)) {
+                  lines = true;
+                  strokeOpacity = 0.05;
+                  fillOpacity = 1;
+                }
+                [width, height] = [width * cellWidth, height * cellHeight];
+                let scale: [number, number] = [
+                  ratioOfConstantDiff(width, gridGap),
+                  ratioOfConstantDiff(height, gridGap),
+                ];
+                let offsetRot = rand(-0.125, 0.125);
+                let offsetTranslate = [rand(-0.25, 0.25), rand(-0.25, 0.25)];
+                let fill = lines ? "none" : "currentColor";
+                let mask = null;
+                if (isSquare && !lines && chance(0.7)) {
+                  mask = "url(#mask-lines)";
+                  strokeOpacity = 0.65;
+                  fillOpacity = 0.95;
+                } else if (chance(0.5)) {
+                  fill = "none";
+                  strokeOpacity = 0.35;
+                } else if (chance(0.125)) {
+                  fillOpacity = 0.55;
+                } else if (chance(0.5)) {
+                  mask = "url(#mask-dots)";
+                }
+                return (
+                  <G {translate} {scale} {color}>
+                    {xclip && (
+                      <Rect
+                        width={requestedWidth * cellWidth}
+                        x={x == 0 ? -(requestedWidth * cellWidth - width) : null}
+                        height={height}
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-dasharray={"4,1"}
+                        stroke-opacity={strokeOpacity / 2}
+                      />
+                    )}
                     <Rect
-                      width={requestedWidth * cellWidth}
-                      x={x == 0 ? -(requestedWidth * cellWidth - width) : null}
-                      height={height}
-                      fill="none"
+                      rotate={offsetRot}
+                      translate={offsetTranslate}
+                      {width}
+                      {height}
+                      rx={pick([0.25, 0.5])}
                       stroke="currentColor"
-                      stroke-dasharray={"4,1"}
-                      stroke-opacity={strokeOpacity / 2}
+                      stroke-opacity={strokeOpacity}
+                      {fill}
+                      fill-opacity={fillOpacity}
+                      {mask}
                     />
-                  )}
-                  <Rect
-                    rotate={offsetRot}
-                    translate={offsetTranslate}
-                    {width}
-                    {height}
-                    rx={pick([0.25, 0.5])}
-                    stroke="currentColor"
-                    stroke-opacity={strokeOpacity}
-                    {fill}
-                    fill-opacity={fillOpacity}
-                    {mask}
-                  />
-                  {IF(lines, () => {
-                    let x = rand(0, width * (3 / 4));
-                    let y = rand(0, height * (3 / 4));
-                    return (
-                      <G>
-                        <G fill={color} stroke-opacity={0.05}>
-                          <Path
-                            d={[
-                              { c: "m" },
-                              { c: "L", p: { x, y } },
-                              { c: "L", p: { x: 0, y: height } },
-                              { c: "z" },
-                            ]}
-                            fill={chance(0.5) ? "none" : "currentColor"}
-                            fill-opacity={pick([0.04, 0.03, 0.08])}
-                          />
-                          <Path
-                            d={[
-                              { c: "m", p: { dx: width } },
-                              { c: "L", p: { x, y } },
-                              { c: "L", p: { x: 0, y: 0 } },
-                              { c: "z" },
-                            ]}
-                            fill={chance(0.5) ? "none" : "currentColor"}
-                            fill-opacity={pick([0.04, 0.03, 0.08])}
-                          />
-                          <Path
-                            d={[
-                              { c: "m", p: { dx: width, dy: height } },
-                              { c: "L", p: { x, y } },
-                              { c: "L", p: { x: width, y: 0 } },
-                              { c: "z" },
-                            ]}
-                            fill={chance(0.5) ? "none" : "currentColor"}
-                            fill-opacity={pick([0.04, 0.03, 0.08])}
-                          />
-                          <Path
-                            d={[
-                              { c: "m", p: { dy: height } },
-                              { c: "L", p: { x, y } },
-                              { c: "L", p: { x: width, y: height } },
-                              { c: "z" },
-                            ]}
-                            fill={chance(0.5) ? "none" : "currentColor"}
-                            fill-opacity={pick([0.04, 0.03, 0.08])}
-                          />
+                    {IF(lines, () => {
+                      let x = rand(0, width * (3 / 4));
+                      let y = rand(0, height * (3 / 4));
+                      return (
+                        <G>
+                          <G fill={color} stroke-opacity={0.05}>
+                            <Path
+                              d={[
+                                { c: "m" },
+                                { c: "L", p: { x, y } },
+                                { c: "L", p: { x: 0, y: height } },
+                                { c: "z" },
+                              ]}
+                              fill={chance(0.5) ? "none" : "currentColor"}
+                              fill-opacity={pick([0.04, 0.03, 0.08])}
+                            />
+                            <Path
+                              d={[
+                                { c: "m", p: { dx: width } },
+                                { c: "L", p: { x, y } },
+                                { c: "L", p: { x: 0, y: 0 } },
+                                { c: "z" },
+                              ]}
+                              fill={chance(0.5) ? "none" : "currentColor"}
+                              fill-opacity={pick([0.04, 0.03, 0.08])}
+                            />
+                            <Path
+                              d={[
+                                { c: "m", p: { dx: width, dy: height } },
+                                { c: "L", p: { x, y } },
+                                { c: "L", p: { x: width, y: 0 } },
+                                { c: "z" },
+                              ]}
+                              fill={chance(0.5) ? "none" : "currentColor"}
+                              fill-opacity={pick([0.04, 0.03, 0.08])}
+                            />
+                            <Path
+                              d={[
+                                { c: "m", p: { dy: height } },
+                                { c: "L", p: { x, y } },
+                                { c: "L", p: { x: width, y: height } },
+                                { c: "z" },
+                              ]}
+                              fill={chance(0.5) ? "none" : "currentColor"}
+                              fill-opacity={pick([0.04, 0.03, 0.08])}
+                            />
+                          </G>
+                          <Circle cx={x} cy={y} r={1} fill-opacity={0.05} />
                         </G>
-                        <Circle cx={x} cy={y} r={1} fill-opacity={0.05} />
-                      </G>
-                    );
-                  })}
-                </G>
-              );
-            }
-          )
-        }
+                      );
+                    })}
+                  </G>
+                );
+              }
+            )
+          }
+        </G>
       </G>
-    </G>
-  </svg>
+    </svg>
+  </div>
 </BaseLayout>
 
 <style>
+  #illustration {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 4px;
+  }
   svg {
     width: 100%;
-    height: 100%;
+    min-height: 0;
+    flex-grow: 1;
     overflow: visible;
   }
 

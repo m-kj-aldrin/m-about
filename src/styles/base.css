@@ -58,3 +58,22 @@ a:hover {
 svg a:hover {
   fill: hsl(var(--color-offset));
 }
+
+input {
+  font-family: inherit;
+  font-weight: inherit;
+  color: inherit;
+  border: 1px currentColor solid;
+  border-radius: 2px;
+  background-color: transparent;
+}
+
+button,
+input[type="submit"] {
+  cursor: pointer;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  color: hsl(var(--color-offset));
+}
