@@ -3,13 +3,13 @@
 ---
 
 <div class="grid">
-    <slot />
+  <slot />
 </div>
 
 <style>
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(384px, 1fr));
-        gap: 4px;
-    }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 384px), 1fr));
+    gap: 4px;
+  }
 </style>
