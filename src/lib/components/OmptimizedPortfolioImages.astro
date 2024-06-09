@@ -2,32 +2,73 @@
 import { Picture } from "astro:assets";
 
 interface Props {
-    images: { default: ImageMetadata }[];
+  images: { default: ImageMetadata }[];
+  component?: {
+    factory: (_props: Record<string, any>) => any;
+    slot?: string;
+  };
 }
 
-const { images } = Astro.props as Props;
-let widths = [240, 540, 720];
+const { images, component: { factory: Component, slot: componentSlot } = {} } =
+  Astro.props as Props;
+let widths = (imgSize: number) => [240, 540, 720, imgSize];
 let sizes = (imgSize: number) =>
-    `(max-width:360px) 240px, (max-width:720px) 540px, (max-width:960px) 720px, ${imgSize}px`;
+  `(max-width:360px) 240px, (max-width:720px) 540px, (max-width:960px) 720px, ${imgSize}px`;
+
+let dev = import.meta.env.DEV;
 ---
 
 {
-    images.map((img) => {
-        return (
-            <Picture
-                src={img.default}
-                {widths}
-                sizes={sizes(img.default.width)}
+  images.map(({ default: img }) => {
+    {
+      if (dev) {
+        if (Component) {
+          return (
+            <Component>
+              <img
+                slot={componentSlot}
+                src={img.src}
+                width={img.width}
+                height={img.height}
                 alt=""
-            />
+              />
+            </Component>
+          );
+        }
+        return <img src={img.src} width={img.width} height={img.height} alt="" />;
+      } else {
+        if (Component) {
+          return (
+            <Component>
+              <Picture
+                slot={componentSlot}
+                formats={["avif", "webp"]}
+                src={img}
+                widths={widths(img.width)}
+                sizes={sizes(img.width)}
+                alt=""
+              />
+            </Component>
+          );
+        }
+        return (
+          <Picture
+            formats={["avif", "webp"]}
+            src={img}
+            widths={widths(img.width)}
+            sizes={sizes(img.width)}
+            alt=""
+          />
         );
-    })
+      }
+    }
+  })
 }
 
 <style>
-    img {
-        width: 100%;
-        height: 100%;
-        aspect-ratio: 1/1;
-    }
+  img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1/1;
+  }
 </style>

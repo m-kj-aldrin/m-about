@@ -1,12 +1,21 @@
 ---
-import type { SVGProps } from "@lib/types/svg";
+import type { HTMLAttributes } from "astro/types";
+import transformString, { type Transform } from "./transformString";
+import type { CssColors } from "../types";
 
-interface Props extends SVGProps {
-    r?: number;
-    c?: { x: number; y: number };
+interface Props extends Transform, Omit<HTMLAttributes<"circle">, "rotate" | "scale"> {
+  fill?: CssColors;
+  stroke?: CssColors;
+  color?: CssColors;
 }
 
-const { c = { ...{ x: 0, y: 0 } }, r = 2, ...t } = Astro.props;
+const { scale, rotate, translate, fill = "currentColor", ...attrs } = Astro.props;
+
+let transform: string | undefined = "";
+
+if (!attrs["transform"]) {
+  transform = transformString({ scale, rotate, translate });
+}
 ---
 
-<circle cx={c.x} cy={c.y} r={r} {...t}></circle>
+<circle {...attrs} {fill} {transform}></circle>

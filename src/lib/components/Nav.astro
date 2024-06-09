@@ -1,112 +1,151 @@
 ---
 import Icon, { type IconTypes } from "./Icon.astro";
-import type { Replace } from "../types/util";
-import Logo from "./Logo.astro";
-import Social2 from "./Social2.astro";
+
 const url = Astro.url;
 
-type TopPaths = "/" | "/works/" | "/gen/";
+type TopPaths = "/" | "/work/" | "/generative/";
 
-const paths: { path: TopPaths; name: string }[] = [
-    { path: "/", name: "home" },
-    { path: "/works/", name: "works" },
-    { path: "/gen/", name: "gen" },
+const paths: { path: TopPaths; name: IconTypes }[] = [
+  { path: "/", name: "home" },
+  { path: "/work/", name: "work" },
+  { path: "/generative/", name: "generative" },
 ];
-
-type CleanPath = Replace<Exclude<"/", TopPaths>, "/", "">;
 
 const re = /\/works\/.+/;
 const work = re.test(url.pathname);
 const gen = /\/gen\/.+/.test(url.pathname);
 ---
 
-<nav>
-    <Logo />
-    <span>-</span>
-    <ul>
-        {
-            paths.map(({ path, name }, i) => {
-                const worksSubDir = work && path == "/works/";
-                const genSubDir = gen && path == "/gen/";
+<nav id="main-nav">
+  <div class="links">
+    {
+      paths.map(({ name, path }) => {
+        const worksSubDir = work && path == "/work/";
+        const genSubDir = gen && path == "/generative/";
 
-                const iconType: IconTypes =
-                    path == "/"
-                        ? "home"
-                        : worksSubDir || genSubDir
-                          ? "back"
-                          : (path.replaceAll("/", "") as CleanPath);
+        // const iconType: IconTypes = path == "/" ? "home" : worksSubDir || genSubDir ? "back" : name;
 
-                return (
-                    <li>
-                        <a
-                            href={path}
-                            aria-current={url.pathname == path ? "page" : null}
-                            aria-label={
-                                (worksSubDir || genSubDir) &&
-                                "back to works page"
-                            }
-                            title={name}
-                        >
-                            <Icon name={iconType} />
-                        </a>
-                    </li>
-                );
-            })
-        }
-    </ul>
-    <span>-</span>
-    <Social2 />
+        return (
+          <a
+            href={path}
+            aria-current={url.pathname == path ? "page" : null}
+            icon-variant={worksSubDir || genSubDir}
+            title={name}
+          >
+            <Icon transition:persist={false} {name} />
+          </a>
+        );
+      })
+    }
+  </div>
 </nav>
 
+<script>
+  import { manifest } from "astro:ssr-manifest";
+
+  const mainHeader = document.getElementById("site-header");
+
+  let keyframes: Keyframe[] = [
+    { transform: "scale(1,0)", offset: 0 },
+    { transform: "scale(1,0.5)", offset: 0.25 },
+    { transform: "scale(1,1)", offset: 1 },
+  ];
+  let keyFramesOption: KeyframeAnimationOptions = {
+    duration: 3000,
+    easing: "ease",
+    delay: 0,
+    fill: "both",
+    pseudoElement: "::before",
+  };
+
+  let loadAnimation: Animation;
+
+  if (mainHeader) {
+    document.addEventListener("astro:before-preparation", () => {
+      loadAnimation = mainHeader.animate(keyframes, keyFramesOption);
+    });
+    document.addEventListener("astro:after-swap", () => {
+      //@ts-ignore
+      let timeFraction = loadAnimation.currentTime / 3000;
+      loadAnimation.cancel();
+      if (!timeFraction) return;
+      loadAnimation = mainHeader.animate(
+        [{ transform: "scale(1,0)" }, { transform: "scale(1,1)" }],
+        {
+          ...keyFramesOption,
+          duration: 400,
+          delay: 0,
+        }
+      );
+      loadAnimation.currentTime = timeFraction * 400;
+      loadAnimation.reverse();
+    });
+    document.addEventListener("astro:after-swap", () => {
+      const pathName = location.pathname;
+
+      const previousAnchor = mainHeader.querySelector("a[aria-current='page']");
+      if (previousAnchor) {
+        previousAnchor.removeAttribute("aria-current");
+      }
+
+      const currentAnchor = mainHeader.querySelector(`a[href='${pathName}']`);
+      if (currentAnchor) {
+        currentAnchor.ariaCurrent = "page";
+      }
+    });
+    document.addEventListener("astro:page-load", (e) => {
+      const pathname = location.pathname;
+      const test = /(\/work\/|\/generative\/).+/;
+      if (test.test(pathname)) {
+        let parentDir = "";
+        if (pathname.includes("generative")) {
+          parentDir = "generative";
+        } else if (pathname.includes("work")) {
+          parentDir = "work";
+        }
+        let el = mainHeader.querySelector(`a[title='${parentDir}']`);
+        el?.toggleAttribute("icon-variant", true);
+      } else {
+        let el = mainHeader.querySelector(`a[icon-variant]`);
+        el?.removeAttribute("icon-variant");
+      }
+    });
+  }
+</script>
+
 <style>
-    a {
-        display: block;
-        line-height: 0;
-        transition: color 75ms ease;
-    }
-    span {
-        font-weight: 200;
-        opacity: 0.5;
-    }
-    nav {
-        background-color: hsla(var(--color-light), 0.9);
+  nav {
+    display: flex;
+    overflow: visible;
+    z-index: 10;
+  }
 
-        padding: 6px 16px;
+  .links {
+    margin-inline-start: auto;
+    display: flex;
+    gap: 8px;
+  }
 
-        border-radius: 4px;
-        align-self: center;
-        margin-inline: auto;
+  a[aria-current="page"] {
+    color: hsl(var(--color-offset));
+  }
 
-        margin-top: 16px;
-        margin-bottom: 20px;
+  a {
+    display: block;
+    line-height: 0;
+    transition: color 75ms ease;
+  }
+  span {
+    font-weight: 200;
+    opacity: 0.5;
+  }
+  ul {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
 
-        box-shadow: 0 0 8px 2px hsla(var(--color-dark), 0.05);
-        border: 1px hsl(var(--color-dark), 0.25) dashed;
-
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-    ul {
-        display: flex;
-        gap: 8px;
-        flex-shrink: 0;
-    }
-
-    [aria-current="page"],
-    [aria-label="back to works page"] {
-        color: hsl(var(--color-offset));
-    }
-
-    @media (max-width: 460px) {
-        nav {
-            flex-direction: column;
-            gap: 4px;
-            border: none;
-            box-shadow: none;
-        }
-        ul {
-            transform: translateY(1px);
-        }
-    }
+  [aria-current="page"] {
+    color: hsl(var(--color-offset));
+  }
 </style>

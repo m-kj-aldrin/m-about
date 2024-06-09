@@ -1,0 +1,40 @@
+---
+interface Props {
+  square?: boolean;
+}
+
+const { square } = Astro.props;
+---
+
+<article class="card" data-square={square}>
+  <div>
+    <slot name="info" />
+  </div>
+  <slot name="picture" />
+</article>
+
+<style>
+  article {
+    overflow: hidden;
+
+    padding: 8px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    box-shadow: 0 0 8px 0px hsl(0 0% 0% / 0.05);
+    border: 1px hsl(0 0% 0% / 0.05) solid;
+    border-radius: 2px;
+  }
+
+  article[data-square] {
+    aspect-ratio: 1/1;
+  }
+
+  article :global(img) {
+    flex-grow: 1;
+    min-height: 0;
+    width: 100%;
+  }
+</style>

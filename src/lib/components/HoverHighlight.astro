@@ -1,0 +1,24 @@
+---
+
+---
+
+<div>
+  <slot />
+</div>
+
+<style>
+  div {
+    display: contents;
+  }
+
+  div :global(> *) {
+    transition: 125ms ease opacity;
+  }
+
+  div:has(*:hover) :global(> *) {
+    opacity: 0.6;
+  }
+  div:has(*:hover) :global(> *:hover) {
+    opacity: 1;
+  }
+</style>

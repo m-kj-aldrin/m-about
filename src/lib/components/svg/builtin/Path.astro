@@ -1,0 +1,109 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import type { Transform } from "./transformString";
+import transformString from "./transformString";
+import type { CssColors } from "../types";
+import type { Command } from "./types";
+export type CommandList = Command[];
+
+interface Props extends Transform, Omit<HTMLAttributes<"path">, "rotate" | "scale" | "d"> {
+  d?: CommandList;
+  fill?: CssColors;
+  stroke?: CssColors;
+  color?: CssColors;
+}
+
+const {
+  d: _d,
+  scale,
+  rotate,
+  translate,
+  stroke = "currentColor",
+  fill = "none",
+  ...attrs
+} = Astro.props;
+
+let transform: string | undefined = "";
+if (!attrs["transform"]) {
+  transform = transformString({ scale, rotate, translate });
+}
+
+if (!(_d?.[0].c == "m" || _d?.[0].c == "M")) {
+  _d?.splice(0, 0, { c: "M" });
+}
+
+let d = "";
+
+if (_d) {
+  d = _d.reduce((prev, curr) => {
+    let commandString = "";
+
+    switch (curr.c) {
+      case "m": {
+        let { dx: x = 0, dy: y = 0 } = curr.p ?? { dx: 0, dy: 0 };
+        commandString = `m${x},${y}`;
+        break;
+      }
+      case "M": {
+        let { x = 0, y = 0 } = curr.p ?? { x: 0, y: 0 };
+        commandString = `M${x},${y}`;
+        break;
+      }
+      case "l": {
+        let { dx: x, dy: y } = curr.p;
+        commandString = `l${x},${y}`;
+        break;
+      }
+      case "L": {
+        let { x, y } = curr.p;
+        commandString = `L${x},${y}`;
+        break;
+      }
+      case "h": {
+        let { dx: x } = curr.p;
+        commandString = `h${x}`;
+        break;
+      }
+      case "v": {
+        let { dy: y } = curr.p;
+        commandString = `v${y}`;
+        break;
+      }
+      case "c": {
+        let { dx1, dy1, dx2, dy2, dx, dy } = curr.p;
+        commandString = `c${dx1},${dy1} ${dx2},${dy2} ${dx},${dy}`;
+        break;
+      }
+      case "C": {
+        let { x1, y1, x2, y2, x, y } = curr.p;
+        commandString = `C${x1},${y1} ${x2},${y2} ${x},${y}`;
+        break;
+      }
+      case "a": {
+        let {
+          rx = 1,
+          ry = rx,
+          rotation = 0,
+          largeArc = 0,
+          sweep = 0,
+          dx: x = 0,
+          dy: y = 0,
+        } = curr.p;
+        commandString = `a${rx},${ry} ${rotation} ${+largeArc} ${+sweep} ${x},${y}`;
+        break;
+      }
+      case "A": {
+        let { rx = 1, ry = rx, rotation = 0, largeArc = 0, sweep = 0, x = 0, y = 0 } = curr.p;
+        commandString = `A${rx},${ry} ${rotation} ${+largeArc} ${+sweep} ${x},${y}`;
+        break;
+      }
+    }
+    if (prev) {
+      return `${prev} ${commandString}`;
+    }
+    return commandString;
+  }, "");
+}
+---
+
+<path {d} {stroke} {fill} {...attrs} {transform}></path>

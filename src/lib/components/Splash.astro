@@ -1,339 +1,315 @@
 ---
+import AnimateTransform from "@lib/components/svg/animations/AnimateTransform.astro";
 import G from "./svg/builtin/G.astro";
-import Star from "./svg/shapes/star.astro";
 import Circle from "./svg/builtin/Circle.astro";
 import Rect from "./svg/builtin/Rect.astro";
-import Path from "./svg/builtin/path.astro";
+import Path from "@lib/components/svg/builtin/Path.astro";
+import Star from "./svg/shapes/star.astro";
+import SignEngine from "./svg/shapes/SignEngine.astro";
 const outerCircleRadi = 320;
 ---
 
-<svg
-    viewBox="-512 -512 1024 1024"
-    fill="none"
-    preserveAspectRatio="xMidYMid slice"
->
-    <g class="illustration" filter="">
-        <g class="shapes">
-            <g class="inner" transform="">
-                <!-- MAIN YELLOW CIRCLE -->
-                <g stroke="hsl(var(--color-secondary))">
-                    <circle cx="0" cy="0" r="128" stroke-width="4"></circle>
-                    <Circle
-                        stroke="hsl(var(--color-dark))"
-                        r={144}
-                        stroke-dasharray={[1, 16]}
-                        stroke-width={outerCircleRadi}
-                        stroke-opacity={0.03}
-                    />
-                    <G transform="translate(-64)">
-                        <Circle r={8} stroke-width={1} />
-                        <Circle
-                            fill="hsl(var(--color-secondary))"
-                            stroke="none"
-                            r={2}
-                            stroke-width={1}
-                        />
-                    </G>
-                </g>
-                <!-- SPOKE -->
-                <g class="spoke">
-                    <g
-                        class="direction"
-                        stroke="hsl(var(--color-primary))"
-                        stroke-width="2"
-                        transform=""
-                    >
-                        <animateTransform
-                            attributeName="transform"
-                            attributeType="XML"
-                            type="rotate"
-                            from="0 0 0"
-                            to="360 0 0"
-                            dur="32s"
-                            repeatCount="indefinite"></animateTransform>
-                        <circle
-                            r="4"
-                            fill="hsl(var(--color-primary))"
-                            stroke="none"></circle>
-                        <g transform="translate(-16 -16)">
-                            <rect width="32" height="32"></rect>
-                        </g>
-                        <g transform="translate(32,0)">
-                            <path d={`M0,0 h${outerCircleRadi - 32 - 64}`}
-                            ></path>
-                            <g
-                                transform={`translate(${
-                                    outerCircleRadi - 32 - 64
-                                } 0)`}
-                            >
-                                <circle
-                                    r="4"
-                                    stroke="none"
-                                    fill="hsl(var(--color-primary))"></circle>
-                                <circle
-                                    r="32"
-                                    stroke="none"
-                                    fill="hsl(var(--color-secondary))"
-                                    fill-opacity="0.2"></circle>
-                            </g>
-                        </g>
-                    </g>
-                </g>
-                <!-- DASH & BEND -->
-                <g transform="translate(64 0)">
-                    <!-- GREEN DASH -->
-                    <g
-                        class="green-dash"
-                        stroke="hsl(var(--color-ternary))"
-                        stroke-width="2"
-                    >
-                        <path
-                            d={`M0,0 h${outerCircleRadi - 64}`}
-                            stroke-dasharray="4"></path>
-                        <g
-                            transform=`translate(${outerCircleRadi - 64} 0) rotate(45) translate(-4 -4)`
-                        >
-                            <rect
-                                width="8"
-                                height="8"
-                                fill="hsl(var(--color-ternary))"></rect>
-                        </g>
-                    </g>
-                    <!-- YELLOW BEND -->
-                    <g
-                        class="yellow-bend"
-                        transform="translate(192 0)"
-                        stroke-width="2"
-                    >
-                        <!-- rx ry x-axis-rotation large-arc-flag sweep-flag dx dy -->
-                        <path
-                            d="M0,0 a92,92 0 0 1 -92,92 h-32"
-                            stroke="hsl(var(--color-secondary))"></path>
-                        <circle r="4" fill="hsl(var(--color-secondary))"
-                        ></circle>
-                        <g transform="translate(-128 92)">
-                            <g transform="translate(-32)">
-                                <path
-                                    d="M0,0 h-64"
-                                    stroke="hsl(var(--color-ternary))"></path>
-                                <circle
-                                    cx="-64"
-                                    r="4"
-                                    fill="hsl(var(--color-ternary))"></circle>
-                            </g>
-                        </g>
-                    </g>
-                </g>
-                <g
-                    class="mask-circles"
-                    fill="hsl(var(--color-light))"
-                    opacity="0.8"
-                    stroke-opacity="0.2"
-                    stroke-dasharray="4"
-                    stroke="hsl(var(--color-primary))"
-                >
-                    <g transform="rotate(-45) translate(128 0)">
-                        <circle r="32"></circle>
-                    </g>
-                    <g transform="translate(128 0)">
-                        <circle r="16"></circle>
-                    </g>
-                    <g transform="rotate(45) translate(128 0)">
-                        <circle r="8"></circle>
-                    </g>
-                </g>
-            </g>
-            <g class="outer">
-                <!-- MAIN BLUE CIRCLE -->
-                <G stroke="hsl(var(--color-offset))" stroke-width={1}>
-                    <Circle r={outerCircleRadi} stroke-dasharray={[8, 4]} />
-                </G>
-                <!-- Cubic -->
-                <!-- C x1 y1, x2 y2, x y -->
-                <!-- S x2 y2, x y -->
-                <!-- Quad -->
-                <!-- Q x1 y1, x y -->
-                <!-- T x y -->
-                <!-- OUTER CIRCLES -->
-                <g class="outer-circles">
-                    <!-- DOUBBLE RECT -->
-                    <G stroke="hsl(var(--color-ternary))" stroke-width={2}>
-                        <G
-                            transform={`rotate(${-145}) translate(${outerCircleRadi})`}
-                        >
-                            <G
-                                transform={`rotate(45) translate(-9) rotate(-1)`}
-                            >
-                                <G transform="translate(-6 -6)">
-                                    <Circle r={6} />
-                                    <Rect size={[96, 96]} center={true} />
-                                </G>
-                                <Circle r={8} />
-                                <Rect
-                                    fill="hsl(var(--color-ternary))"
-                                    fill-opacity={0.5}
-                                    size={[96, 96]}
-                                    center={true}
-                                />
-                            </G>
-                        </G>
-                    </G>
-                    <g>
-                        <g>
-                            <g
-                                transform={`rotate(-45) translate(${outerCircleRadi} 0) translate(64)`}
-                            >
-                                <circle
-                                    r="32"
-                                    stroke="hsl(var(--color-offset))"
-                                    stroke-width="2"
-                                    stroke-dasharray="8 1"
-                                >
-                                </circle>
-                            </g>
-                            <animateTransform
-                                attributeName="transform"
-                                attributeType="XML"
-                                type="rotate"
-                                from="0 0 0"
-                                to="-360 0 0"
-                                dur="64s"
-                                repeatCount="indefinite"></animateTransform>
-                        </g>
-                    </g>
-                    <g
-                        transform={`rotate(-45) translate(${outerCircleRadi}) translate(64)`}
-                    >
-                    </g>
-                </g>
-            </g>
+<svg viewBox="-512 -512 1024 1024" fill="none" preserveAspectRatio="xMidYMid slice">
+  <g class="illustration">
+    <g class="shapes">
+      <g class="inner" transform="">
+        <!-- MAIN YELLOW CIRCLE -->
+        <g stroke="hsl(var(--color-secondary))">
+          <circle cx="0" cy="0" r="128" stroke-width="4"></circle>
+          <Circle
+            stroke="hsl(var(--color-dark))"
+            r={144}
+            stroke-dasharray={"1,16"}
+            stroke-width={outerCircleRadi}
+            stroke-opacity={0.03}
+            fill="none"
+          />
+          <G transform="translate(-64)">
+            <Circle r={8} stroke-width={1} fill="none" />
+            <Circle fill="hsl(var(--color-secondary))" stroke="none" r={2} stroke-width={1} />
+          </G>
         </g>
-
-        <!-- HOOK -->
-        <G stroke="hsl(var(--color-dark))" stroke-width={1}>
-            <G transform="translate(0 64)">
-                <Rect
-                    center={true}
-                    transform="rotate(45)"
-                    fill="currentColor"
-                    stroke="none"
-                    size={[4, 4]}
+        <!-- SPOKE -->
+        <g class="spoke">
+          <g class="direction" stroke="hsl(var(--color-primary))" stroke-width="2" transform="">
+            <animateTransform
+              attributeName="transform"
+              attributeType="XML"
+              type="rotate"
+              from="0 0 0"
+              to="360 0 0"
+              dur="32s"
+              repeatCount="indefinite"></animateTransform>
+            <circle r="4" fill="hsl(var(--color-primary))" stroke="none"></circle>
+            <G translate={[128 - 4, 0]} color="hsl(var(--color-primary))" stroke-width={1}>
+              <Circle r={1} />
+              <Circle cx={7.5} r={1} />
+              <path d={`M0,0 h${outerCircleRadi - 40 - 64 - 3}`}></path>
+              <g transform={`translate(${outerCircleRadi - 60 - 64} 0)`}>
+                <Circle r="4" stroke="currentColor" fill="none" />
+                <Circle
+                  r="32"
+                  stroke="none"
+                  fill="hsl(var(--color-secondary))"
+                  fill-opacity="0.2"
                 />
-                <Path
-                    d={`v${outerCircleRadi - 64} a1,1 0 0 0 109,0 v-72`}
-                    stroke-dasharray={[8, 4]}
-                    stroke-linecap="round"
-                />
-                <Circle c={{ x: 109, y: 182 }} r={2} />
+              </g>
             </G>
+          </g>
+        </g>
+        <!-- DASH & BEND -->
+        <g transform="translate(64 0)">
+          <!-- GREEN DASH -->
+          <g class="green-dash" stroke="hsl(var(--color-ternary))" stroke-width="2">
+            <path d={`M0,0 h${outerCircleRadi - 64}`} stroke-dasharray="4"></path>
+            <g transform=`translate(${outerCircleRadi - 64} 0) rotate(45) translate(-4 -4)`>
+              <rect width="8" height="8" fill="hsl(var(--color-ternary))"></rect>
+            </g>
+          </g>
+          <!-- YELLOW BEND -->
+          <g class="yellow-bend" transform="translate(192 0)" stroke-width="2">
+            <!-- rx ry x-axis-rotation large-arc-flag sweep-flag dx dy -->
+            <path d="M0,0 a92,92 0 0 1 -92,92 h-32" stroke="hsl(var(--color-secondary))"></path>
+            <circle r="4" fill="hsl(var(--color-secondary))"></circle>
+            <g transform="translate(-128 92)">
+              <g transform="translate(-32)">
+                <path d="M0,0 h-64" stroke="hsl(var(--color-ternary))"></path>
+                <circle cx="-64" r="4" fill="hsl(var(--color-ternary))"></circle>
+              </g>
+            </g>
+          </g>
+        </g>
+        <g
+          class="mask-circles"
+          fill="hsl(var(--color-light))"
+          opacity="0.8"
+          stroke-opacity="0.2"
+          stroke-dasharray="4"
+          stroke="hsl(var(--color-primary))"
+        >
+          <g transform="rotate(-45) translate(128 0)">
+            <circle r="32"></circle>
+          </g>
+          <g transform="translate(128 0)">
+            <circle r="16"></circle>
+          </g>
+          <g transform="rotate(45) translate(128 0)">
+            <circle r="8"></circle>
+          </g>
+        </g>
+      </g>
+      <g class="outer">
+        <!-- MAIN BLUE CIRCLE -->
+        <G color="hsl(var(--color-offset))" stroke-width={1}>
+          <Circle stroke="currentColor" fill="none" r={outerCircleRadi} stroke-dasharray={"8,4"} />
         </G>
-
-        <g transform="translate(113 378)">
-            <g class="star-fall" transform="">
-                <g
-                    class="star"
-                    stroke="hsl(var(--color-offset))"
-                    stroke-width="1"
-                    stroke-dasharray="4 2"
+        <!-- Cubic -->
+        <!-- C x1 y1, x2 y2, x y -->
+        <!-- S x2 y2, x y -->
+        <!-- Quad -->
+        <!-- Q x1 y1, x y -->
+        <!-- T x y -->
+        <!-- OUTER CIRCLES -->
+        <g class="outer-circles">
+          <!-- DOUBBLE RECT -->
+          <G stroke="hsl(var(--color-ternary))" stroke-width={2}>
+            <G transform={`rotate(${-145}) translate(${outerCircleRadi})`}>
+              <G transform={`rotate(45) translate(-9) rotate(-1)`}>
+                <G transform="translate(-6 -6)">
+                  <Circle r={6} fill="none" />
+                  <Rect fill="none" width={96} height={96} center={true} />
+                </G>
+                <Circle r={8} fill="none" />
+                <Rect
+                  fill="hsl(var(--color-ternary))"
+                  fill-opacity={0.5}
+                  width={96}
+                  height={96}
+                  center={true}
+                />
+              </G>
+            </G>
+          </G>
+          <g>
+            <g>
+              <g transform={`rotate(-45) translate(${outerCircleRadi} 0) translate(64)`}>
+                <circle
+                  r="32"
+                  stroke="hsl(var(--color-offset))"
+                  stroke-width="2"
+                  stroke-dasharray="8 1"
                 >
-                    <Path d="C0,0 -64,-128 -256,-224" />
-                    <G transform="translate(-256 -224)" stroke-dasharray={[0]}>
-                        <Circle r={4} fill="hsl(var(--color-light))" />
-                        <Star n={4} width={5} phase={-14}>
-                            <path d="M0,0 h16"></path>
-                        </Star>
-                    </G>
-                </g>
+                </circle>
+              </g>
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from="0 0 0"
+                to="-360 0 0"
+                dur="64s"
+                repeatCount="indefinite"></animateTransform>
             </g>
+          </g>
+          <g transform={`rotate(-45) translate(${outerCircleRadi}) translate(64)`}> </g>
         </g>
-
-        <g transform="translate(30 150)">
-            <g transform="scale(0.8)">
-                <g class="star" transform="translate(127 83)">
-                    <Star n={6}>
-                        <Path d="v16" stroke="hsl(var(--color-primary))" />
-                        <Circle
-                            c={{ x: 16 }}
-                            r={1}
-                            fill="hsl(var(--color-dark))"
-                            fill-opacity={0.5}
-                        />
-                    </Star>
-                </g>
-                <g
-                    fill="hsl(var(--color-dark))"
-                    fill-opacity="0.04"
-                    stroke="currentColor"
-                    stroke-opacity="0.3"
-                    stroke-dasharray="4 1"
-                >
-                    <path
-                        d="M11.3676 33.8984V34.2849C8.66176 36.5269 7.50213 40.2377 7.50213 43.6393C7.50213 49.9786 11.5222 54.9264 18.0934 54.9264C22.6547 54.9264 26.2882 52.3752 26.2882 47.5047C26.2882 31.038 3.40476 25.1625 3.40476 11.8654C3.40476 3.36139 11.1356 0.269043 18.48 0.269043C25.0512 0.269043 32.0863 2.89754 32.0863 10.5511C32.0863 15.4216 28.6848 20.8332 23.4278 21.1424L23.3504 20.9105C25.5151 18.9778 26.1336 15.267 26.1336 12.4838C26.1336 6.76299 23.4278 0.732895 16.8565 0.732895C13.3776 0.732895 9.04831 1.73791 9.04831 6.06721C9.04831 20.292 32.9367 28.4095 32.9367 42.557C32.9367 51.5248 24.5101 55.3129 16.7019 55.3129C9.66678 55.3129 0.621643 52.6844 0.621643 44.1032C0.621643 38.4596 4.95094 33.8211 10.6718 33.8211L11.1356 33.8984C11.213 33.8984 11.2903 33.8984 11.3676 33.8984Z"
-                    ></path>
-                    <path
-                        d="M42.6028 7.07222C42.6028 4.52103 44.7674 2.27907 47.3186 2.27907C49.9471 2.27907 52.1117 4.44372 52.1117 7.07222C52.1117 9.70072 50.0244 12.02 47.3186 12.02C44.6128 12.02 42.6028 9.70072 42.6028 7.07222ZM57.8326 54.9264H37.655V54.6172C43.1439 54.6172 44.0716 53.1483 44.0716 48.0459V23.4617C44.0716 17.6635 43.6851 16.5812 37.655 16.5812V16.272H46.8548C49.6379 16.272 51.416 17.8182 51.416 20.6786V48.0459C51.416 53.1483 52.3437 54.6172 57.8326 54.6172V54.9264Z"
-                    ></path>
-                    <path
-                        d="M78.2071 40.2377C76.2744 40.2377 74.2644 40.0058 72.3316 39.5419C71.9451 39.4646 69.9351 38.7689 69.8578 38.7689C69.0847 38.7689 67.3839 38.9235 67.3839 40.0831C67.3839 45.0309 94.5193 44.0258 94.5193 58.2507C94.5193 67.2958 84.933 70.1562 77.5113 70.1562C71.172 70.1562 60.1168 67.9143 60.1168 59.7969C60.1168 53.071 67.7704 50.9063 73.2593 50.9063C69.7804 49.9786 64.0596 48.4325 64.0596 43.9485C64.0596 41.0881 66.3789 38.6142 69.2393 38.4596C65.1419 36.5269 61.9723 32.8161 61.9723 28.1002C61.9723 19.5189 70.8628 15.9627 78.2071 15.9627C80.4491 15.9627 82.6137 16.1947 84.7784 16.8131C84.7784 13.7981 86.0153 9.5461 89.7261 9.5461C92.6639 9.5461 93.7462 12.4065 93.7462 14.8804C93.7462 15.3443 93.7462 15.7308 93.6689 16.1947L93.5143 16.3493C92.5092 15.1897 91.1177 14.5712 89.5715 14.5712C87.7934 14.5712 86.0153 15.1897 85.3195 16.9678C90.2673 18.5912 94.5966 22.534 94.5966 28.1002C94.5966 36.7588 85.5515 40.2377 78.2071 40.2377ZM77.434 39.9285C84.1599 39.9285 87.2522 32.5841 87.2522 26.8633C87.2522 21.8382 84.933 16.272 79.1348 16.272C72.4863 16.272 69.2393 24.2348 69.2393 29.8783C69.2393 34.9807 71.7132 39.9285 77.434 39.9285ZM73.6459 50.9836C69.7804 51.3702 67.3839 55.2356 67.3839 58.8691C67.3839 66.0589 74.1097 69.3832 80.4491 69.3832C84.4691 69.3832 89.185 67.9916 89.185 63.1211C89.185 54.6945 80.0625 52.8391 73.6459 50.9836Z"
-                    ></path>
-                    <path
-                        d="M117.137 54.9264H96.9593V54.6172C102.448 54.6172 103.376 53.1483 103.376 48.0459V23.4617C103.376 17.6635 102.989 16.5812 96.9593 16.5812V16.272H106.159C109.02 16.272 110.72 17.8955 110.72 20.7559C113.271 17.7408 118.142 16.1174 122.007 16.1174C127.342 16.1174 132.444 19.3643 132.444 25.1625V48.0459C132.444 53.1483 133.372 54.6172 138.861 54.6172V54.9264H118.683V54.6172C125.1 54.6172 125.1 51.4475 125.1 46.1132V25.3944C125.1 21.6063 123.244 17.3543 118.838 17.3543C116.055 17.3543 112.498 19.1324 110.72 21.297V48.7417C110.72 53.5348 112.344 54.6172 117.137 54.6172V54.9264Z"
-                    ></path>
-                    <path
-                        d="M34.9468 124.504H0.621643V124.195C7.57944 124.195 7.03828 121.412 7.03828 115.305V79.5878C7.03828 73.4804 7.57944 70.6973 0.621643 70.6973V70.3881H31.236C31.8544 70.3881 32.9367 70.4654 33.5552 70.1561H33.6325L34.4056 84.9221H34.0964C33.6325 78.4282 29.9217 70.6973 22.5001 70.6973H20.7993C13.8415 70.6973 14.3826 73.4031 14.3826 79.5878V93.3488H17.243C22.2681 93.3488 26.1336 91.8799 26.1336 86.1591H26.4428V100.848H26.1336C26.1336 93.4261 19.9489 93.658 14.3826 93.658V115.305C14.3826 124.504 15.1557 124.195 23.8143 124.195C31.236 124.195 34.9468 116.464 35.4106 109.97H35.7199L34.9468 124.504Z"
-                    ></path>
-                    <path
-                        d="M38.8231 124.504V124.195C44.1574 124.195 45.2397 122.803 45.2397 117.624V93.0395C45.2397 87.7825 45.0851 86.1591 39.2869 86.1591H38.8231V85.8498H48.0228C50.806 85.8498 52.5841 87.4733 52.5841 90.3337C55.2126 87.3187 59.9284 85.6952 63.8712 85.6952C69.2055 85.6952 74.3079 88.9422 74.3079 94.7403V112.18V141.199C74.3079 153.182 79.9514 163.464 93.0166 163.464C98.8921 163.464 109.638 159.985 109.638 152.718C109.638 138.493 84.5126 147.383 84.5126 137.642C84.5126 134.782 86.8319 132.308 89.6923 132.154C85.595 130.221 82.4253 126.51 82.4253 121.794C82.4253 113.213 91.3158 109.657 98.6601 109.657C100.902 109.657 103.067 109.889 105.231 110.507C105.231 107.492 106.468 103.24 110.179 103.24C113.117 103.24 114.199 106.1 114.199 108.574C114.199 109.038 114.199 109.425 114.122 109.889L113.967 110.043C112.962 108.884 111.571 108.265 110.025 108.265C108.246 108.265 106.468 108.884 105.773 110.662C110.72 112.285 115.05 116.228 115.05 121.794C115.05 130.453 106.004 133.932 98.6601 133.932C96.7274 133.932 94.6401 133.777 92.7847 133.236C92.4754 133.159 90.3881 132.463 90.3108 132.463C89.5377 132.463 87.8369 132.617 87.8369 133.777C87.8369 135.246 90.3108 135.71 91.3931 135.942C98.8921 137.411 114.972 136.792 114.972 147.847C114.972 159.134 101.443 163.85 92.0889 163.85C77.8641 163.85 66.9635 155.423 66.9635 140.503V112.18V94.9723C66.9635 91.1841 65.1081 86.9321 60.7015 86.9321C57.8411 86.9321 54.4395 88.6329 52.5841 90.8749V117.624C52.5841 122.803 53.6664 124.195 59.0007 124.195V124.504H38.8231ZM97.8871 133.622C104.613 133.622 107.705 126.278 107.705 120.557C107.705 115.532 105.386 109.966 99.5878 109.966C92.9393 109.966 89.6923 117.929 89.6923 123.572C89.6923 128.675 92.1662 133.622 97.8871 133.622Z"
-                    ></path>
-                    <path
-                        d="M139.064 148.62H118.886V148.311C124.375 148.311 125.303 146.842 125.303 141.74V117.156C125.303 111.357 124.916 110.275 118.886 110.275V109.966H128.086C130.869 109.966 132.647 111.512 132.647 114.372V141.74C132.647 146.842 133.575 148.311 139.064 148.311V148.62Z"
-                    ></path>
-                    <path
-                        d="M160.771 148.62H140.593V148.311C146.082 148.311 147.01 146.842 147.01 141.74V117.156C147.01 111.357 146.623 110.275 140.593 110.275V109.966H149.793C152.653 109.966 154.354 111.589 154.354 114.45C156.905 111.435 161.776 109.811 165.641 109.811C170.975 109.811 176.078 113.058 176.078 118.856V141.74C176.078 146.842 177.005 148.311 182.494 148.311V148.62H162.317V148.311C168.733 148.311 168.733 145.141 168.733 139.807V119.088C168.733 115.3 166.878 111.048 162.471 111.048C159.688 111.048 156.132 112.826 154.354 114.991V142.436C154.354 147.229 155.977 148.311 160.771 148.311V148.62Z"
-                    ></path>
-                    <path
-                        d="M213.708 139.498H213.94C212.858 145.528 207.137 148.698 201.416 148.698C190.516 148.698 184.795 139.575 184.795 129.525C184.795 119.707 190.361 109.734 201.262 109.734C207.91 109.734 213.631 113.677 213.631 120.789C213.631 130.221 204.741 135.014 196.314 135.014C195.232 135.014 194.227 134.937 193.222 134.782C194.768 140.889 198.633 146.301 205.436 146.301C209.611 146.301 212.935 143.595 213.708 139.498ZM193.144 134.473C193.608 134.55 194.149 134.55 194.613 134.55C202.885 134.55 206.828 125.969 206.828 118.779C206.828 115.764 205.9 110.043 201.88 110.043C194.458 110.043 192.371 121.794 192.371 127.36C192.371 129.757 192.603 132.154 193.144 134.473Z"
-                    ></path>
-                </g>
-            </g>
-        </g>
+      </g>
     </g>
+
+    <!-- HOOK -->
+    <G stroke="hsl(var(--color-dark))" stroke-width={1}>
+      <G translate={[0, 64]}>
+        <Rect
+          center={true}
+          transform="rotate(45)"
+          fill="currentColor"
+          stroke="none"
+          width={4}
+          height={4}
+        />
+        <Path
+          d={[
+            { c: "m" },
+            { c: "v", p: { dy: outerCircleRadi - 64 } },
+            { c: "a", p: { dx: 109 } },
+            { c: "v", p: { dy: -72 } },
+          ]}
+          stroke-dasharray={"8,4"}
+          stroke-linecap="round"
+        />
+        <Circle cx={109} cy={182} r={2} fill="none" />
+      </G>
+    </G>
+
+    <g transform="translate(113 378)">
+      <g class="star-fall" transform="">
+        <g class="star" color="hsl(var(--color-offset))" stroke-width="1" stroke-dasharray="4 2">
+          <Path d={[{ c: "C", p: { x1: 0, y1: 0, x2: -64, y2: -128, x: -256, y: -224 } }]} />
+          <G translate={[-256, -224]} stroke-dasharray={"0"}>
+            <Circle r={4} fill="currentColor" />
+            <G>
+              <Star n={4} width={5} phase={-14}>
+                <Path d={[{ c: "h", p: { dx: 16 } }]} />
+                <AnimateTransform
+                  type="translate"
+                  dur={5000}
+                  values="0 0;4 0;0 0"
+                  repeatCount="indefinite"
+                  additive="sum"
+                />
+              </Star>
+              <AnimateTransform
+                type="rotate"
+                dur={20000}
+                from="0"
+                to="360"
+                repeatCount="indefinite"
+              />
+            </G>
+          </G>
+          <AnimateTransform
+            type="rotate"
+            dur={10000}
+            values="0 0 0;-3 -96 -112;0 0 0"
+            repeatCount="indefinite"
+          />
+          <AnimateTransform
+            additive="sum"
+            type="translate"
+            dur={15000}
+            values="0 0;-6 -4;0 0"
+            repeatCount="indefinite"
+          />
+          <AnimateTransform
+            type="rotate"
+            dur={7000}
+            values="0 0 0;2 -32 -32;0 0 0"
+            repeatCount="indefinite"
+            additive="sum"
+          />
+          <AnimateTransform
+            additive="sum"
+            type="translate"
+            dur={5000}
+            values="0 0;0 -2;0 0"
+            repeatCount="indefinite"
+          />
+        </g>
+      </g>
+    </g>
+
+    <g transform="
+            translate(30
+            150)">
+      <g transform="scale(0.8)">
+        <g class="star" transform="translate(127 83)">
+          <Star n={6}>
+            <Path d={[{ c: "m" }, { c: "v", p: { dy: 16 } }]} stroke="hsl(var(--color-primary))" />
+            <Circle cx={16} r={1} fill="hsl(var(--color-dark))" fill-opacity={0.5} />
+          </Star>
+        </g>
+        <g
+          fill="hsl(var(--color-dark))"
+          fill-opacity="0.04"
+          stroke="currentColor"
+          stroke-opacity="0.3"
+          stroke-dasharray="4 1"
+        >
+          <SignEngine />
+        </g>
+      </g>
+    </g>
+  </g>
 </svg>
 
-<script is:inline>
-    function setCurrentTime() {
-        const svg = document.querySelector("main svg");
+<script>
+  let aniId = 0;
+  let svg = document.querySelector("main svg") as SVGSVGElement;
+  function updateTime() {
+    cancelAnimationFrame(aniId);
 
-        let prevTime = +localStorage.getItem("svgTime");
+    // svg = document.querySelector("main svg") as SVGSVGElement;
+    if (!svg) return;
+    let prevTime = +(localStorage.getItem("svgTime") ?? 0);
+    svg.setCurrentTime(prevTime);
 
-        svg.setCurrentTime(prevTime);
+    const ani = (t: number) => {
+      let svgTime = svg.getCurrentTime();
+      if (svgTime) {
+        localStorage.setItem("svgTime", `${svgTime}`);
+      }
 
-        const ani = (t) => {
-            let svgTime = svg.getCurrentTime();
-            if (svgTime) {
-                localStorage.setItem("svgTime", `${svgTime}`);
-            }
+      aniId = requestAnimationFrame(ani);
+    };
+    aniId = requestAnimationFrame(ani);
+  }
 
-            requestAnimationFrame(ani);
-        };
-        requestAnimationFrame(ani);
-    }
-    // setCurrentTime();
-    document.addEventListener("astro:page-load", setCurrentTime);
+  function setCurrentTime() {
+    let _svg = document.querySelector("main svg") as SVGSVGElement;
+    if (!_svg) return;
+    svg = _svg;
+
+    let prevTime = +(localStorage.getItem("svgTime") ?? 0);
+
+    svg.setCurrentTime(prevTime);
+  }
+
+  updateTime();
+
+  document.addEventListener("astro:page-load", (e) => {
+    setCurrentTime();
+  });
 </script>
 
 <style>
-    svg {
-        height: 100%;
-        display: block;
-        margin-inline: auto;
-        overflow: visible;
-    }
+  svg {
+    height: 100%;
+    display: block;
+    margin-inline: auto;
+    overflow: visible;
+  }
 
-    svg .logo {
-    }
-
-    svg g.illustration {
-        transition: transform 225ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+  svg g.illustration {
+    transition: transform 225ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
 </style>

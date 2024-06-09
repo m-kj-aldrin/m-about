@@ -1,0 +1,43 @@
+---
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import Grid from "@lib/components/Grid.astro";
+
+const videos = await Astro.glob("@assets/loops/video/*").then((files) =>
+  files.map((file) => file.default)
+);
+const posters = await Astro.glob("@assets/loops/posters/*").then((files) =>
+  files.map((file) => {
+    return file.default;
+  })
+);
+---
+
+<BaseLayout title="loops">
+  <Grid>
+    {
+      videos.map((video, i) => {
+        return (
+          <video
+            playsinline
+            controls
+            loop
+            preload="none"
+            poster={posters[i].src}
+            src={video}
+            width="512"
+            height="512"
+          />
+        );
+      })
+    }
+  </Grid>
+</BaseLayout>
+
+<style>
+  video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    object-fit: contain !important;
+  }
+</style>

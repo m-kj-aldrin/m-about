@@ -1,8 +1,15 @@
 ---
-import Splash from "@lib/components/Splash.astro";
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import Splash from "@lib/components/Splash.astro";
 ---
 
-<BaseLayout fullScreen={true} title="home">
-    <Splash />
+<BaseLayout title="home" fullScreen={true}>
+  <Splash />
 </BaseLayout>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>
