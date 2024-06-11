@@ -27,8 +27,8 @@ interface GridCell {
 
 // let [gridW, gridH] = [9, 24];
 
-let gridW = +(params.get("width") ?? 9);
-let gridH = +(params.get("height") ?? 24);
+let gridW = +(params.get("width") ?? 32);
+let gridH = +(params.get("height") ?? 48);
 
 let size = gridW * gridH;
 
@@ -322,7 +322,7 @@ let centerTranslate: [number, number] = [
     display: flex;
     flex-direction: column;
     height: 100%;
-    gap: 4px;
+    gap: 16px;
   }
   svg {
     width: 100%;

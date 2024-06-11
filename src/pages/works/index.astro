@@ -1,0 +1,244 @@
+---
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import Video from "@lib/components/Video.astro";
+import { Image } from "astro:assets";
+
+import glitterDonut from "@assets/works/glitter-donut.mp4";
+
+import mans from "@assets/works/mans.jpeg";
+import ulv from "@assets/works/ulv.png";
+import filedStudies from "@assets/works/field-studies.jpg";
+
+import tickles from "@assets/works/tickles.mp4";
+
+import blockMan from "@assets/works/block-man.jpg";
+import towers from "@assets/works/towers.jpeg";
+import orangeLook from "@assets/works/orange-look.jpeg";
+import blink from "@assets/works/blink.mp4";
+
+import flowField from "@assets/works/flow-field.jpeg";
+
+import stackingCells from "@assets/works/stacking-cells.mp4";
+import lines from "@assets/works/lines.mp4";
+
+import tubules from "@assets/works/tubules.mp4";
+
+import vormHole from "@assets/works/vorm-hole.mp4";
+import anna from "@assets/works/anna.jpeg";
+import jag from "@assets/works/jag.jpeg";
+import view from "@assets/works/view.jpeg";
+import munn from "@assets/works/munn.jpeg";
+import pyra from "@assets/works/pyra.png";
+import even from "@assets/works/even.png";
+
+let widths = (imgSize: number) => [720, imgSize];
+let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
+---
+
+<BaseLayout title="works">
+  <div class="flow">
+    <Video src={glitterDonut} />
+    <div class="grid-left">
+      <Image
+        format="webp"
+        format="webp"
+        src={mans}
+        alt="mans"
+        widths={widths(mans.width)}
+        sizes={sizes(mans.width)}
+      />
+      <Image
+        format="webp"
+        src={ulv}
+        alt="ulv"
+        widths={widths(ulv.width)}
+        sizes={sizes(ulv.width)}
+      />
+      <div class="crop-container">
+        <Image
+          format="webp"
+          src={filedStudies}
+          alt="filed studies"
+          widths={widths(filedStudies.width)}
+          sizes={sizes(filedStudies.width)}
+        />
+      </div>
+    </div>
+    <Video src={tickles} />
+    <div class="grid-two">
+      <div class="crop-container">
+        <Image
+          format="webp"
+          src={blockMan}
+          alt="block man"
+          widths={widths(blockMan.width)}
+          sizes={sizes(blockMan.width)}
+        />
+      </div>
+      <Image
+        format="webp"
+        src={towers}
+        alt="towers"
+        widths={widths(towers.width)}
+        sizes={sizes(towers.width)}
+      />
+      <Image
+        format="webp"
+        src={orangeLook}
+        alt="orange look"
+        widths={widths(orangeLook.width)}
+        sizes={sizes(orangeLook.width)}
+      />
+      <Video src={blink} />
+    </div>
+    <Image
+      format="webp"
+      src={flowField}
+      alt="flow field"
+      widths={widths(flowField.width)}
+      sizes={sizes(flowField.width)}
+    />
+    <div class="grid-three">
+      <Video src={stackingCells} />
+      <Video src={lines} />
+    </div>
+    <Video src={tubules} />
+    <div class="grid-vert">
+      <Video src={vormHole} />
+      <div class="crop-container">
+        <Image
+          format="webp"
+          src={anna}
+          alt="anna"
+          widths={widths(anna.width)}
+          sizes={sizes(anna.width)}
+        />
+      </div>
+      <Image
+        format="webp"
+        src={jag}
+        alt="jag"
+        widths={widths(jag.width)}
+        sizes={sizes(jag.width)}
+      />
+      <Image
+        format="webp"
+        src={view}
+        alt="view"
+        widths={widths(view.width)}
+        sizes={sizes(view.width)}
+      />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  [class*="grid"] {
+    width: 100%;
+    display: grid;
+
+    grid-auto-flow: dense;
+    gap: 32px;
+  }
+  [class*="grid"] > * {
+    min-width: 0 !important;
+    min-height: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .crop-container {
+    overflow: hidden;
+    display: grid;
+    place-content: center;
+    /* border: 1px red solid; */
+    > * {
+      /* height: 100%; */
+      max-width: initial !important;
+    }
+    > [alt="block man"] {
+      min-width: 100%;
+      min-height: 100%;
+      transform-origin: center center;
+      transform: rotate(-90deg) scale(-1, 1) scale(0.75);
+    }
+    > [alt="anna"] {
+      transform: scale(-1, 1) translate(5%, 0%);
+    }
+  }
+  .grid-left {
+    grid-template-rows: 736px 480px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  }
+  .grid-left > :first-child {
+    grid-column-end: span 2;
+    grid-row-end: span 2;
+  }
+  .grid-two {
+    grid-template-rows: 480px 480px 480px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  }
+  .grid-two > :first-child {
+    grid-column-end: span 2;
+  }
+  .grid-two > :nth-child(3) {
+    grid-column-end: span 2;
+    grid-row-end: span 3;
+  }
+  .grid-two > :nth-child(2) {
+    grid-row-end: span 2;
+  }
+  .grid-two > :nth-child(4) {
+    grid-row-end: span 2;
+  }
+  .grid-three {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  }
+
+  .grid-vert {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    grid-template-rows: 480px 480px 480px;
+  }
+  .grid-vert > :nth-child(1) {
+    grid-column-end: span 2;
+    /* grid-row-end: span 2; */
+  }
+  .grid-vert > :nth-child(2) {
+    grid-column-end: span 1;
+    grid-row-end: span 2;
+  }
+  .grid-vert > :nth-child(3) {
+    grid-column-end: span 1;
+    grid-row-end: span 2;
+  }
+  .grid-vert > :nth-child(4) {
+    grid-column-end: span 2;
+    /* grid-row-end: span 2; */
+  }
+  .grid-vert > :nth-child(5) {
+    /* grid-column: 1/-1; */
+  }
+
+  @media (max-width: 896px) {
+    [class*="grid"] {
+      grid-template-columns: 1fr !important;
+      grid-template-rows: unset !important;
+      > * {
+        grid-column: 1/-1 !important;
+        grid-row-end: span 1 !important;
+        aspect-ratio: 1/1;
+      }
+    }
+    .crop-container {
+      > [alt="block man"] {
+        transform: initial !important;
+        transform: translateY(15%) !important;
+      }
+    }
+  }
+</style>

@@ -3,7 +3,7 @@
 ---
 
 <div class="text">
-  <div class="nowrap">
+  <div>
     <span>Marcus</span>
     <br />
     <span>Aldrin</span>
@@ -14,7 +14,10 @@
   .text {
     border-radius: 4px;
 
-    background-color: hsla(var(--color-offset), 1);
+    /* background-color: hsla(var(--color-offset), 1); */
+    /* background-color: hsla(var(--color-dark), 1); */
+    /* color: inherit; */
+    background-color: currentColor;
     padding: 6px 10px;
     font-size: 14px;
 
@@ -22,16 +25,18 @@
 
     word-spacing: initial;
     text-transform: uppercase;
-    line-height: 0.85;
-    color: hsl(var(--color-light));
-    font-weight: 200;
+    line-height: 0.9;
+    font-weight: 500;
     font-style: italic;
-
-    cursor: help;
+    white-space: nowrap;
   }
 
-  .nowrap {
-    white-space: nowrap;
-    transform: translateY(1px);
+  .text > div > :last-child {
+    letter-spacing: 0.2ex;
+  }
+
+  .text > div {
+    color: hsl(var(--color-light));
+    /* transform: translateY(1px); */
   }
 </style>
