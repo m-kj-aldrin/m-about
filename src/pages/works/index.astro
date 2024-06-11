@@ -30,28 +30,74 @@ import view from "@assets/works/view.jpeg";
 import munn from "@assets/works/munn.jpeg";
 import pyra from "@assets/works/pyra.png";
 import even from "@assets/works/even.png";
+
+let widths = (imgSize: number) => [720, imgSize];
+let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
 ---
 
 <BaseLayout title="works">
   <div class="flow">
     <Video src={glitterDonut} />
     <div class="grid-left">
-      <Image src={mans} alt="mans" />
-      <Image src={ulv} alt="ulv" />
+      <Image
+        format="webp"
+        format="webp"
+        src={mans}
+        alt="mans"
+        widths={widths(mans.width)}
+        sizes={sizes(mans.width)}
+      />
+      <Image
+        format="webp"
+        src={ulv}
+        alt="ulv"
+        widths={widths(ulv.width)}
+        sizes={sizes(ulv.width)}
+      />
       <div class="crop-container">
-        <Image src={filedStudies} alt="filed studies" />
+        <Image
+          format="webp"
+          src={filedStudies}
+          alt="filed studies"
+          widths={widths(filedStudies.width)}
+          sizes={sizes(filedStudies.width)}
+        />
       </div>
     </div>
     <Video src={tickles} />
     <div class="grid-two">
       <div class="crop-container">
-        <Image src={blockMan} alt="block man" />
+        <Image
+          format="webp"
+          src={blockMan}
+          alt="block man"
+          widths={widths(blockMan.width)}
+          sizes={sizes(blockMan.width)}
+        />
       </div>
-      <Image src={towers} alt="towers" />
-      <Image src={orangeLook} alt="orange look" />
+      <Image
+        format="webp"
+        src={towers}
+        alt="towers"
+        widths={widths(towers.width)}
+        sizes={sizes(towers.width)}
+      />
+      <Image
+        format="webp"
+        src={orangeLook}
+        alt="orange look"
+        widths={widths(orangeLook.width)}
+        sizes={sizes(orangeLook.width)}
+      />
       <Video src={blink} />
     </div>
-    <Image src={flowField} alt="flow field" />
+    <Image
+      format="webp"
+      src={flowField}
+      alt="flow field"
+      widths={widths(flowField.width)}
+      sizes={sizes(flowField.width)}
+    />
     <div class="grid-three">
       <Video src={stackingCells} />
       <Video src={lines} />
@@ -60,10 +106,28 @@ import even from "@assets/works/even.png";
     <div class="grid-vert">
       <Video src={vormHole} />
       <div class="crop-container">
-        <Image src={anna} alt="anna" />
+        <Image
+          format="webp"
+          src={anna}
+          alt="anna"
+          widths={widths(anna.width)}
+          sizes={sizes(anna.width)}
+        />
       </div>
-      <Image src={jag} alt="jag" />
-      <Image src={view} alt="view" />
+      <Image
+        format="webp"
+        src={jag}
+        alt="jag"
+        widths={widths(jag.width)}
+        sizes={sizes(jag.width)}
+      />
+      <Image
+        format="webp"
+        src={view}
+        alt="view"
+        widths={widths(view.width)}
+        sizes={sizes(view.width)}
+      />
     </div>
   </div>
 </BaseLayout>
