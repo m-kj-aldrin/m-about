@@ -9,10 +9,6 @@ html {
   background-color: hsl(var(--color-light)); */
 }
 
-html:not([data-fullscreen]) body {
-  gap: 128px;
-}
-
 body {
   overflow: hidden scroll;
   padding: 32px;
@@ -24,6 +20,11 @@ body {
 
   /* box-shadow: 0 0 8px 0px inset hsl(0 0% 0% / 0.075); */
   border-radius: 4px;
+  gap: 32px;
+}
+
+html:not([data-fullscreen]) body {
+  gap: 128px;
 }
 
 main {
@@ -32,7 +33,7 @@ main {
 
 #site-header,
 main {
-  max-width: 1280px;
+  max-width: 1024px;
   align-self: center;
 }
 

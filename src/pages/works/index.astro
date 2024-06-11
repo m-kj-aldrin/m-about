@@ -30,7 +30,6 @@ import view from "@assets/works/view.jpeg";
 import munn from "@assets/works/munn.jpeg";
 import pyra from "@assets/works/pyra.png";
 import even from "@assets/works/even.png";
-
 ---
 
 <BaseLayout title="works">
@@ -70,23 +69,6 @@ import even from "@assets/works/even.png";
 </BaseLayout>
 
 <style>
-  @media (max-width: 896px) {
-    [class*="grid"] {
-      grid-template-columns: 1fr !important;
-      grid-template-rows: unset !important;
-      > * {
-        grid-column: 1/-1 !important;
-        grid-row-end: span 1 !important;
-        aspect-ratio: 1/1;
-      }
-    }
-    .crop-container {
-      > [alt="block man"] {
-        transform: initial !important;
-        transform: translateY(15%) !important;
-      }
-    }
-  }
   .flow {
     display: flex;
     flex-direction: column;
@@ -112,6 +94,7 @@ import even from "@assets/works/even.png";
     place-content: center;
     /* border: 1px red solid; */
     > * {
+      /* height: 100%; */
       max-width: initial !important;
     }
     > [alt="block man"] {
@@ -175,5 +158,23 @@ import even from "@assets/works/even.png";
   }
   .grid-vert > :nth-child(5) {
     /* grid-column: 1/-1; */
+  }
+
+  @media (max-width: 896px) {
+    [class*="grid"] {
+      grid-template-columns: 1fr !important;
+      grid-template-rows: unset !important;
+      > * {
+        grid-column: 1/-1 !important;
+        grid-row-end: span 1 !important;
+        aspect-ratio: 1/1;
+      }
+    }
+    .crop-container {
+      > [alt="block man"] {
+        transform: initial !important;
+        transform: translateY(15%) !important;
+      }
+    }
   }
 </style>
