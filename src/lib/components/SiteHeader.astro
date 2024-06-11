@@ -1,17 +1,29 @@
 ---
 import Logo from "./Logo.astro";
 import Social from "./Social.astro";
+const { pathname } = Astro.url;
 ---
 
-<header transition:persist="site-nav-parent" transition:animate="none" id="site-header">
-  <Logo />
-  <span>-</span>
+<header transition:animate="none">
+  <a href="/" aria-current={pathname == "/" ? "page" : null}>
+    <Logo />
+  </a>
+  <span class="dot">&#9679;</span>
   <slot />
-  <span>-</span>
+  <span class="dot">&#9679;</span>
   <Social />
 </header>
 
 <style>
+  a {
+    text-decoration: none;
+  }
+  a[aria-current="page"] {
+    color: hsl(var(--color-offset));
+  }
+  .dot {
+    font-size: 8px;
+  }
   header {
     position: relative;
     contain: paint;
@@ -26,7 +38,7 @@ import Social from "./Social.astro";
 
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 32px;
   }
 
   header::before {

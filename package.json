@@ -13,6 +13,7 @@
     "@astrojs/check": "^0.7.0",
     "@astrojs/netlify": "^5.2.1",
     "@fontsource-variable/azeret-mono": "^5.0.21",
+    "@fontsource-variable/inter": "^5.0.18",
     "astro": "latest",
     "typescript": "^5.4.5"
   }

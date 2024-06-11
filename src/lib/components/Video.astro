@@ -1,0 +1,13 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"video"> {
+  controls?: boolean;
+  loop?: boolean;
+  src: string;
+}
+
+const { src, controls = false, loop = true, ...attrs } = Astro.props;
+---
+
+<video {src} {controls} {loop} autoplay={loop} muted={loop} {...attrs}></video>

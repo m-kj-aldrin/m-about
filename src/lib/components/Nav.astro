@@ -3,12 +3,12 @@ import Icon, { type IconTypes } from "./Icon.astro";
 
 const url = Astro.url;
 
-type TopPaths = "/" | "/work/" | "/generative/";
+type TopPaths = "/" | "/works/" | "/generative/";
 
-const paths: { path: TopPaths; name: IconTypes }[] = [
-  { path: "/", name: "home" },
-  { path: "/work/", name: "work" },
-  { path: "/generative/", name: "generative" },
+const paths: { path: TopPaths; name: string }[] = [
+  // { path: "/", name: "home" },
+  { path: "/works/", name: "works" },
+  { path: "/generative/", name: "directives" },
 ];
 
 const re = /\/works\/.+/;
@@ -20,10 +20,8 @@ const gen = /\/gen\/.+/.test(url.pathname);
   <div class="links">
     {
       paths.map(({ name, path }) => {
-        const worksSubDir = work && path == "/work/";
+        const worksSubDir = work && path == "/works/";
         const genSubDir = gen && path == "/generative/";
-
-        // const iconType: IconTypes = path == "/" ? "home" : worksSubDir || genSubDir ? "back" : name;
 
         return (
           <a
@@ -32,7 +30,7 @@ const gen = /\/gen\/.+/.test(url.pathname);
             icon-variant={worksSubDir || genSubDir}
             title={name}
           >
-            <Icon transition:persist={false} {name} />
+            {name}
           </a>
         );
       })
@@ -41,76 +39,74 @@ const gen = /\/gen\/.+/.test(url.pathname);
 </nav>
 
 <script>
-  import { manifest } from "astro:ssr-manifest";
+  // const mainHeader = document.getElementById("site-header");
 
-  const mainHeader = document.getElementById("site-header");
+  // let keyframes: Keyframe[] = [
+  //   { transform: "scale(1,0)", offset: 0 },
+  //   { transform: "scale(1,0.5)", offset: 0.25 },
+  //   { transform: "scale(1,1)", offset: 1 },
+  // ];
+  // let keyFramesOption: KeyframeAnimationOptions = {
+  //   duration: 3000,
+  //   easing: "ease",
+  //   delay: 0,
+  //   fill: "both",
+  //   pseudoElement: "::before",
+  // };
 
-  let keyframes: Keyframe[] = [
-    { transform: "scale(1,0)", offset: 0 },
-    { transform: "scale(1,0.5)", offset: 0.25 },
-    { transform: "scale(1,1)", offset: 1 },
-  ];
-  let keyFramesOption: KeyframeAnimationOptions = {
-    duration: 3000,
-    easing: "ease",
-    delay: 0,
-    fill: "both",
-    pseudoElement: "::before",
-  };
+  // let loadAnimation: Animation;
 
-  let loadAnimation: Animation;
+  // if (mainHeader) {
+  //   document.addEventListener("astro:before-preparation", () => {
+  //     loadAnimation = mainHeader.animate(keyframes, keyFramesOption);
+  //   });
+  //   document.addEventListener("astro:after-swap", () => {
+  //     //@ts-ignore
+  //     let timeFraction = loadAnimation.currentTime / 3000;
+  //     loadAnimation.cancel();
+  //     if (!timeFraction) return;
+  //     loadAnimation = mainHeader.animate(
+  //       [{ transform: "scale(1,0)" }, { transform: "scale(1,1)" }],
+  //       {
+  //         ...keyFramesOption,
+  //         duration: 400,
+  //         delay: 0,
+  //       }
+  //     );
+  //     loadAnimation.currentTime = timeFraction * 400;
+  //     loadAnimation.reverse();
+  //   });
+  //   document.addEventListener("astro:after-swap", () => {
+  //     const pathName = location.pathname;
 
-  if (mainHeader) {
-    document.addEventListener("astro:before-preparation", () => {
-      loadAnimation = mainHeader.animate(keyframes, keyFramesOption);
-    });
-    document.addEventListener("astro:after-swap", () => {
-      //@ts-ignore
-      let timeFraction = loadAnimation.currentTime / 3000;
-      loadAnimation.cancel();
-      if (!timeFraction) return;
-      loadAnimation = mainHeader.animate(
-        [{ transform: "scale(1,0)" }, { transform: "scale(1,1)" }],
-        {
-          ...keyFramesOption,
-          duration: 400,
-          delay: 0,
-        }
-      );
-      loadAnimation.currentTime = timeFraction * 400;
-      loadAnimation.reverse();
-    });
-    document.addEventListener("astro:after-swap", () => {
-      const pathName = location.pathname;
+  //     const previousAnchor = mainHeader.querySelector("a[aria-current='page']");
+  //     if (previousAnchor) {
+  //       previousAnchor.removeAttribute("aria-current");
+  //     }
 
-      const previousAnchor = mainHeader.querySelector("a[aria-current='page']");
-      if (previousAnchor) {
-        previousAnchor.removeAttribute("aria-current");
-      }
-
-      const currentAnchor = mainHeader.querySelector(`a[href='${pathName}']`);
-      if (currentAnchor) {
-        currentAnchor.ariaCurrent = "page";
-      }
-    });
-    document.addEventListener("astro:page-load", (e) => {
-      const pathname = location.pathname;
-      const test = /(\/work\/|\/generative\/).+/;
-      if (test.test(pathname)) {
-        let parentDir = "";
-        if (pathname.includes("generative")) {
-          parentDir = "generative";
-        } else if (pathname.includes("work")) {
-          parentDir = "work";
-        }
-        let el = mainHeader.querySelector(`a[title='${parentDir}']`);
-        el?.toggleAttribute("icon-variant", true);
-      } else {
-        let el = mainHeader.querySelector(`a[icon-variant]`);
-        el?.removeAttribute("icon-variant");
-      }
-    });
-  }
+  //     const currentAnchor = mainHeader.querySelector(`a[href='${pathName}']`);
+  //     if (currentAnchor) {
+  //       currentAnchor.ariaCurrent = "page";
+  //     }
+  //   });
+  //   document.addEventListener("astro:page-load", (e) => {
+  //     const pathname = location.pathname;
+  //     const test = /(\/work\/|\/generative\/).+/;
+  //     if (test.test(pathname)) {
+  //       let parentDir = "";
+  //       if (pathname.includes("generative")) {
+  //         parentDir = "generative";
+  //       } else if (pathname.includes("work")) {
+  //         parentDir = "work";
+  //       }
+  //       let el = mainHeader.querySelector(`a[title='${parentDir}']`);
+  //       el?.toggleAttribute("icon-variant", true);
+  //     } else {
+  //       let el = mainHeader.querySelector(`a[icon-variant]`);
+  //       el?.removeAttribute("icon-variant");
+  //     }
+  //   });
+  // }
 </script>
 
 <style>
@@ -131,9 +127,10 @@ const gen = /\/gen\/.+/.test(url.pathname);
   }
 
   a {
-    display: block;
-    line-height: 0;
+    /* display: block; */
+    /* line-height: 0; */
     transition: color 75ms ease;
+  text-transform: uppercase
   }
   span {
     font-weight: 200;

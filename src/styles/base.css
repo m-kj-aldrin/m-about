@@ -5,21 +5,24 @@ body {
 
 html {
   overflow: hidden;
-  padding: 4px;
-  background-color: hsl(var(--color-light));
+  /* padding: 4px;
+  background-color: hsl(var(--color-light)); */
+}
+
+html:not([data-fullscreen]) body {
+  gap: 128px;
 }
 
 body {
   overflow: hidden scroll;
-  padding: 16px;
+  padding: 32px;
 
   display: flex;
   flex-direction: column;
-  gap: 16px;
 
   background-color: hsl(var(--color-light));
 
-  box-shadow: 0 0 8px 0px inset hsl(0 0% 0% / 0.075);
+  /* box-shadow: 0 0 8px 0px inset hsl(0 0% 0% / 0.075); */
   border-radius: 4px;
 }
 
@@ -48,7 +51,7 @@ main {
 }
 
 img,
-vide {
+video {
   border-radius: 2px;
 }
 

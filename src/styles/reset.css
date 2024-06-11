@@ -19,6 +19,9 @@ video {
 }
 
 a {
-  text-decoration: none;
+  /* text-decoration: none; */
+  text-decoration: underline 1px;
+  text-underline-offset: 4px;
+  text-decoration-skip-ink: none;
   color: currentColor;
 }
