@@ -36,61 +36,47 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
 ---
 
 <BaseLayout title="works">
-  <div class="flow">
+  <div class="flow2">
     <Video src={glitterDonut} />
-    <div class="grid-left">
-      <Image
-        format="webp"
-        format="webp"
-        src={mans}
-        alt="mans"
-        widths={widths(mans.width)}
-        sizes={sizes(mans.width)}
-      />
-      <Image
-        format="webp"
-        src={ulv}
-        alt="ulv"
-        widths={widths(ulv.width)}
-        sizes={sizes(ulv.width)}
-      />
-      <div class="crop-container">
-        <Image
-          format="webp"
-          src={filedStudies}
-          alt="filed studies"
-          widths={widths(filedStudies.width)}
-          sizes={sizes(filedStudies.width)}
-        />
-      </div>
-    </div>
+    <Image
+      format="webp"
+      format="webp"
+      src={mans}
+      alt="mans"
+      widths={widths(mans.width)}
+      sizes={sizes(mans.width)}
+    />
+    <Image format="webp" src={ulv} alt="ulv" widths={widths(ulv.width)} sizes={sizes(ulv.width)} />
+    <Image
+      format="webp"
+      src={filedStudies}
+      alt="filed studies"
+      widths={widths(filedStudies.width)}
+      sizes={sizes(filedStudies.width)}
+    />
     <Video src={tickles} />
-    <div class="grid-two">
-      <div class="crop-container">
-        <Image
-          format="webp"
-          src={blockMan}
-          alt="block man"
-          widths={widths(blockMan.width)}
-          sizes={sizes(blockMan.width)}
-        />
-      </div>
-      <Image
-        format="webp"
-        src={towers}
-        alt="towers"
-        widths={widths(towers.width)}
-        sizes={sizes(towers.width)}
-      />
-      <Image
-        format="webp"
-        src={orangeLook}
-        alt="orange look"
-        widths={widths(orangeLook.width)}
-        sizes={sizes(orangeLook.width)}
-      />
-      <Video src={blink} />
-    </div>
+    <Image
+      format="webp"
+      src={blockMan}
+      alt="block man"
+      widths={widths(blockMan.width)}
+      sizes={sizes(blockMan.width)}
+    />
+    <Image
+      format="webp"
+      src={towers}
+      alt="towers"
+      widths={widths(towers.width)}
+      sizes={sizes(towers.width)}
+    />
+    <Image
+      format="webp"
+      src={orangeLook}
+      alt="orange look"
+      widths={widths(orangeLook.width)}
+      sizes={sizes(orangeLook.width)}
+    />
+    <Video src={blink} />
     <Image
       format="webp"
       src={flowField}
@@ -98,152 +84,32 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
       widths={widths(flowField.width)}
       sizes={sizes(flowField.width)}
     />
-    <div class="grid-three">
-      <Video src={stackingCells} />
-      <Video src={lines} />
-    </div>
+    <Video src={stackingCells} />
+    <Video src={lines} />
     <Video src={tubules} />
-    <div class="grid-vert">
-      <Video src={vormHole} />
-      <div class="crop-container">
-        <Image
-          format="webp"
-          src={anna}
-          alt="anna"
-          widths={widths(anna.width)}
-          sizes={sizes(anna.width)}
-        />
-      </div>
-      <Image
-        format="webp"
-        src={jag}
-        alt="jag"
-        widths={widths(jag.width)}
-        sizes={sizes(jag.width)}
-      />
-      <Image
-        format="webp"
-        src={view}
-        alt="view"
-        widths={widths(view.width)}
-        sizes={sizes(view.width)}
-      />
-    </div>
+    <Video src={vormHole} />
+    <Image
+      format="webp"
+      src={anna}
+      alt="anna"
+      widths={widths(anna.width)}
+      sizes={sizes(anna.width)}
+    />
+    <Image format="webp" src={jag} alt="jag" widths={widths(jag.width)} sizes={sizes(jag.width)} />
+    <Image
+      format="webp"
+      src={view}
+      alt="view"
+      widths={widths(view.width)}
+      sizes={sizes(view.width)}
+    />
   </div>
 </BaseLayout>
 
 <style>
-  .flow {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-  [class*="grid"] {
-    width: 100%;
+  .flow2 {
     display: grid;
-
-    grid-auto-flow: dense;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
     gap: 32px;
-  }
-  [class*="grid"] > * {
-    min-width: 0 !important;
-    min-height: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .crop-container {
-    overflow: hidden;
-    display: grid;
-    place-content: center;
-    /* border: 1px red solid; */
-    > * {
-      /* height: 100%; */
-      max-width: initial !important;
-    }
-    > [alt="block man"] {
-      min-width: 100%;
-      min-height: 100%;
-      transform-origin: center center;
-      transform: rotate(-90deg) scale(-1, 1) scale(0.75);
-      height: min-content;
-    }
-    > [alt="anna"] {
-      transform: scale(-1, 1) translate(5%, 0%);
-    }
-  }
-  .grid-left {
-    grid-template-rows: 736px 480px;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-  }
-  .grid-left > :first-child {
-    grid-column-end: span 2;
-    grid-row-end: span 2;
-  }
-  .grid-two {
-    grid-template-rows: 480px 480px 480px;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-  }
-  .grid-two > :first-child {
-    grid-column-end: span 2;
-  }
-  .grid-two > :nth-child(3) {
-    grid-column-end: span 2;
-    grid-row-end: span 3;
-  }
-  .grid-two > :nth-child(2) {
-    grid-row-end: span 2;
-  }
-  .grid-two > :nth-child(4) {
-    grid-row-end: span 2;
-  }
-  .grid-three {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-  }
-
-  .grid-vert {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-    grid-template-rows: 480px 480px 480px;
-  }
-  .grid-vert > :nth-child(1) {
-    grid-column-end: span 2;
-    /* grid-row-end: span 2; */
-  }
-  .grid-vert > :nth-child(2) {
-    grid-column-end: span 1;
-    grid-row-end: span 2;
-  }
-  .grid-vert > :nth-child(3) {
-    grid-column-end: span 1;
-    grid-row-end: span 2;
-  }
-  .grid-vert > :nth-child(4) {
-    grid-column-end: span 2;
-    /* grid-row-end: span 2; */
-  }
-  .grid-vert > :nth-child(5) {
-    /* grid-column: 1/-1; */
-  }
-
-  @media (max-width: 896px) {
-    [class*="grid"] {
-      grid-template-columns: 1fr !important;
-      grid-template-rows: unset !important;
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      > * {
-        /* grid-column: 1/-1 !important;
-        grid-row-end: initial !important; */
-        /* grid-row-end: span 1 !important; */
-        aspect-ratio: 1/1;
-      }
-    }
-    .crop-container {
-      > [alt="block man"] {
-        transform: initial !important;
-        transform: translateY(15%) !important;
-      }
-    }
   }
 </style>
