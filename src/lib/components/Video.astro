@@ -10,4 +10,4 @@ interface Props extends HTMLAttributes<"video"> {
 const { src, controls = false, loop = true, ...attrs } = Astro.props;
 ---
 
-<video {src} {controls} {loop} autoplay={loop} muted={loop} {...attrs}></video>
+<video playsinline {src} {controls} {loop} autoplay={loop} muted={loop} {...attrs}></video>
