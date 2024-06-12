@@ -1,0 +1,66 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import type { ActionError } from "astro:actions";
+import { Image } from "astro:assets";
+
+interface Props extends HTMLAttributes<"img"> {
+  src: ImageMetadata;
+  alt: string;
+  crop?: {
+    zoom?: number;
+    rotation?: number;
+    fill?: boolean;
+    reflect?: { x?: number; y?: number };
+    center?: boolean;
+  };
+}
+
+const { src, alt, crop, ...attrs } = Astro.props;
+
+let widths = (imgSize: number) => [720, imgSize];
+let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
+---
+
+{
+  (crop && (
+    <div class={`crop-container ${attrs["class"]}`} data-crop {...attrs}>
+      <Image {src} {alt} widths={widths(src.width)} sizes={sizes(src.width)} format="webp" />
+    </div>
+  )) || (
+    <Image
+      {src}
+      {alt}
+      widths={widths(src.width)}
+      sizes={sizes(src.width)}
+      format="webp"
+      {...attrs}
+    />
+  )
+}
+
+<style
+  define:vars={{
+    rotation: crop?.rotation,
+    zoom: crop?.zoom,
+    reflectX: crop?.reflect?.x,
+    reflectY: crop?.reflect?.y,
+    center: crop?.center ? "center" : null,
+  }}
+>
+  .crop-container:not([data-crop]) {
+    display: contents;
+  }
+
+  .crop-container[data-crop] {
+    /* outline: 3px red solid; */
+    overflow: hidden;
+    display: grid;
+    place-content: var(--center, initial);
+  }
+
+  .crop-container[data-crop] :global(img) {
+    /* opacity: 0.5; */
+    transform: translate(0%, 0%) rotate(calc(var(--rotation) * 1deg))
+      scale(var(--reflectX, 1), var(--reflectY, 1)) scale(calc(var(--zoom, 1)));
+  }
+</style>

@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
 import Video from "@lib/components/Video.astro";
-import { Image } from "astro:assets";
 
 import glitterDonut from "@assets/works/glitter-donut.mp4";
 
@@ -30,86 +29,50 @@ import view from "@assets/works/view.jpeg";
 import munn from "@assets/works/munn.jpeg";
 import pyra from "@assets/works/pyra.png";
 import even from "@assets/works/even.png";
+import Img from "@lib/components/Img.astro";
+import Grid2 from "@lib/components/Grid2.astro";
+import tentac from "@assets/works/tentac.mp4";
 
-let widths = (imgSize: number) => [720, imgSize];
-let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
+// let widths = (imgSize: number) => [720, imgSize];
+// let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
 ---
 
 <BaseLayout title="works">
-  <div class="flow2">
-    <Video src={glitterDonut} />
-    <Image
-      format="webp"
-      format="webp"
-      src={mans}
-      alt="mans"
-      widths={widths(mans.width)}
-      sizes={sizes(mans.width)}
-    />
-    <Image format="webp" src={ulv} alt="ulv" widths={widths(ulv.width)} sizes={sizes(ulv.width)} />
-    <Image
-      format="webp"
-      src={filedStudies}
-      alt="filed studies"
-      widths={widths(filedStudies.width)}
-      sizes={sizes(filedStudies.width)}
-    />
-    <Video src={tickles} />
-    <Image
-      format="webp"
+  <div class="gap-6 flex flex-col md:grid grid-cols-5 grid-auto-rows-[320px] grid-auto-flow-dense">
+    <Video src={glitterDonut} class="col-span-3 grid-row-span-4" />
+    <Img src={orangeLook} alt="orange look" class="col-span-2 row-span-2" />
+    <Img src={mans} alt="mans" class="col-span-2 row-span-2" />
+    <Img src={ulv} alt="ulv" class="col-span-2 col-start-2" />
+    <Video src={tubules} class="col-span-2" />
+    <Video src={stackingCells} class="col-span-1 row-span-2" />
+    <Img
+      crop={{ rotation: -90, zoom: 1.125, center: true }}
       src={blockMan}
       alt="block man"
-      widths={widths(blockMan.width)}
-      sizes={sizes(blockMan.width)}
+      class="col-span-3"
     />
-    <Image
-      format="webp"
-      src={towers}
-      alt="towers"
-      widths={widths(towers.width)}
-      sizes={sizes(towers.width)}
-    />
-    <Image
-      format="webp"
-      src={orangeLook}
-      alt="orange look"
-      widths={widths(orangeLook.width)}
-      sizes={sizes(orangeLook.width)}
-    />
-    <Video src={blink} />
-    <Image
-      format="webp"
-      src={flowField}
-      alt="flow field"
-      widths={widths(flowField.width)}
-      sizes={sizes(flowField.width)}
-    />
-    <Video src={stackingCells} />
-    <Video src={lines} />
-    <Video src={tubules} />
-    <Video src={vormHole} />
-    <Image
-      format="webp"
-      src={anna}
-      alt="anna"
-      widths={widths(anna.width)}
-      sizes={sizes(anna.width)}
-    />
-    <Image format="webp" src={jag} alt="jag" widths={widths(jag.width)} sizes={sizes(jag.width)} />
-    <Image
-      format="webp"
-      src={view}
-      alt="view"
-      widths={widths(view.width)}
-      sizes={sizes(view.width)}
-    />
+    <Img src={filedStudies} alt="field studies" class="col-span-1 row-span-1" />
+    <Video src={tickles} class="col-[-1/-3] row-span-3" />
+    <Video src={blink} class="col-span-2" />
+    <Video src={tentac} class="row-span-2 col-span-2" />
+    <Img src={towers} alt="towers" class="col-span-1 row-span-2" />
+    <Img src={flowField} alt="flow field" class="col-span-2" />
+    <Video src={lines} class="row-span-2 col-span-2" />
+    <Video src={vormHole} class="row-span-1 col-span-1" />
+    <Img src={jag} alt="jag" class="col-span-3" />
+    <Img src={anna} alt="anna" class="row-span-2" crop={{ reflect: { x: -1 } }} />
+    <!-- <Img src={view} alt="view" class="" /> -->
   </div>
 </BaseLayout>
 
 <style>
-  .flow2 {
+  /* .flow2 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
     gap: 32px;
+  } */
+  div :global(img, video) {
+    width: 100%;
+    height: 100%;
   }
 </style>
