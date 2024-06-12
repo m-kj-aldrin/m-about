@@ -11,7 +11,7 @@ interface Props extends Transform, Omit<HTMLAttributes<"circle">, "rotate" | "sc
 
 const { scale, rotate, translate, ...attrs } = Astro.props;
 
-let transform;
+let transform: undefined | string;
 
 if (!attrs["transform"]) {
   transform = transformString({ scale, rotate, translate });

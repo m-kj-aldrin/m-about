@@ -1,9 +1,7 @@
 ---
-import type { HTMLAttributes } from "astro/types";
-import type { ActionError } from "astro:actions";
-import { Image } from "astro:assets";
+import { Image, type ImgAttributes } from "astro:assets";
 
-interface Props extends HTMLAttributes<"img"> {
+interface Props extends ImgAttributes {
   src: ImageMetadata;
   alt: string;
   crop?: {
@@ -28,12 +26,12 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
     </div>
   )) || (
     <Image
-      {src}
       {alt}
       widths={widths(src.width)}
       sizes={sizes(src.width)}
       format="webp"
       {...attrs}
+      {src}
     />
   )
 }

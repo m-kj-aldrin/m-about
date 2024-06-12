@@ -273,7 +273,7 @@ const outerCircleRadi = 320;
     let prevTime = +(localStorage.getItem("svgTime") ?? 0);
     svg.setCurrentTime(prevTime);
 
-    const ani = (t: number) => {
+    const ani = () => {
       let svgTime = svg.getCurrentTime();
       if (svgTime) {
         localStorage.setItem("svgTime", `${svgTime}`);
@@ -296,7 +296,7 @@ const outerCircleRadi = 320;
 
   updateTime();
 
-  document.addEventListener("astro:page-load", (e) => {
+  document.addEventListener("astro:page-load", (_) => {
     setCurrentTime();
   });
 </script>

@@ -12,7 +12,7 @@ const { n = 3, width = 0, phase = 0 } = Astro.props;
 ---
 
 {
-  range(n).map((x, i) => {
+  range(n).map((_, i) => {
     const rotStep = 360 / n;
     return (
       <>
