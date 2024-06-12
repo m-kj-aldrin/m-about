@@ -10,6 +10,7 @@ interface Props extends ImgAttributes {
     fill?: boolean;
     reflect?: { x?: number; y?: number };
     center?: boolean;
+    autoHeight?: boolean;
   };
 }
 
@@ -43,6 +44,7 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
     reflectX: crop?.reflect?.x,
     reflectY: crop?.reflect?.y,
     center: crop?.center ? "center" : null,
+    heightAuto: crop?.autoHeight ? "auto" : null,
   }}
 >
   .crop-container:not([data-crop]) {
@@ -58,6 +60,7 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
 
   .crop-container[data-crop] :global(img) {
     /* opacity: 0.5; */
+    height: var(--heightAuto, 100%);
     transform: translate(0%, 0%) rotate(calc(var(--rotation) * 1deg))
       scale(var(--reflectX, 1), var(--reflectY, 1)) scale(calc(var(--zoom, 1)));
   }
