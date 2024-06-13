@@ -24,22 +24,6 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
 <div>
   <Image {alt} widths={widths(src.width)} sizes={sizes(src.width)} format="webp" {...attrs} {src} />
 </div>
-<!-- {
-  (crop && (
-    <div class={`crop-container ${attrs["class"]}`} data-crop {...attrs}>
-      <Image {src} {alt} widths={widths(src.width)} sizes={sizes(src.width)} format="webp" />
-    </div>
-  )) || (
-    <Image
-      {alt}
-      widths={widths(src.width)}
-      sizes={sizes(src.width)}
-      format="webp"
-      {...attrs}
-      {src}
-    />
-  )
-} -->
 
 <style
   define:vars={{
@@ -63,14 +47,12 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
   }
 
   .crop-container[data-crop] {
-    /* outline: 3px red solid; */
     overflow: hidden;
     display: grid;
     place-content: var(--center, initial);
   }
 
   .crop-container[data-crop] :global(img) {
-    /* opacity: 0.5; */
     height: var(--heightAuto, 100%);
     transform: translate(0%, 0%) rotate(calc(var(--rotation) * 1deg))
       scale(var(--reflectX, 1), var(--reflectY, 1)) scale(calc(var(--zoom, 1)));

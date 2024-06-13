@@ -25,26 +25,20 @@ import tubules from "@assets/works/tubules.mp4";
 import vormHole from "@assets/works/vorm-hole.mp4";
 import anna from "@assets/works/anna.jpeg";
 import jag from "@assets/works/jag.jpeg";
-import view from "@assets/works/view.jpeg";
-// import munn from "@assets/works/munn.jpeg";
-// import pyra from "@assets/works/pyra.png";
-import even from "@assets/works/even.png";
 import Img from "@lib/components/Img.astro";
-// import Grid2 from "@lib/components/Grid2.astro";
 import tentac from "@assets/works/tentac.mp4";
 import aquia from "@assets/works/aquia.jpeg";
-import rangs from "@assets/works/rangs.mov";
-import flow from "@assets/works/flow.jpeg";
-import stipp from "@assets/works/stipp.mov";
-import buble from "@assets/works/buble.mov"
-import match from "@assets/works/match.mp4"
-
-// let widths = (imgSize: number) => [720, imgSize];
-// let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
+import rangs from "@assets/works/rangs.mp4";
+import stipp from "@assets/works/stipp.mp4";
+import buble from "@assets/works/buble.mp4";
+import match from "@assets/works/match.mp4";
+import diffuse from "@assets/works/diffuse.mp4";
 ---
 
 <BaseLayout title="works">
-  <div class="gap-6 flex flex-col md:grid grid-cols-12 grid-auto-flow-dense items-stretch">
+  <div
+    class="gap-6 flex flex-col md:grid grid-cols-12 grid-auto-flow-dense items-stretch justify-items-stretch"
+  >
     <Video aspect={[1, 1]} src={glitterDonut} class="col-span-8 row-span-2" />
     <Img aspect={[1, 1]} src={orangeLook} alt="orange look" class="col-span-4" />
     <Img aspect={[1, 1]} src={filedStudies} alt="field studies" class="col-span-4" />
@@ -61,14 +55,12 @@ import match from "@assets/works/match.mp4"
     <Img src={jag} alt="jag" class="col-span-3" />
     <Video src={tentac} class="col-span-5 row-span-2" />
     <Video src={lines} class="col-span-7" />
-    <!-- <Img src={even} alt="event space" class="col-span-5 row-span-1" /> -->
     <Video src={vormHole} class="col-span-4 row-span-1" />
-    <!-- <Img src={aquia} alt="aquia" class="col-span-4" /> -->
     <Video src={stipp} class="col-span-4" />
     <Video src={rangs} class="col-span-4 row-span-2" />
-    <!-- <Img src={flow} alt="flow" class="col-span-2" /> -->
     <Img src={aquia} alt="view" class="col-span-6 row-span-2" />
     <Video src={buble} class="col-span-2 row-span-1" />
     <Video src={match} class="col-span-6 row-span-1" />
+    <Video src={diffuse} class="col-span-12" />
   </div>
 </BaseLayout>
