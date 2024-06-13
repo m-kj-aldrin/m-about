@@ -5,9 +5,45 @@ interface Props extends HTMLAttributes<"video"> {
   controls?: boolean;
   loop?: boolean;
   src: string;
+  aspect?: [number, number];
+  fillHeight?: boolean;
 }
 
-const { src, controls = false, loop = true, ...attrs } = Astro.props;
+const {
+  src,
+  controls = false,
+  loop = true,
+  aspect,
+  fillHeight,
+  class: _class,
+  ...attrs
+} = Astro.props;
+
+console.log(_class);
+
+const classList = [fillHeight && "fullHeight"];
 ---
 
-<video playsinline {src} {controls} {loop} autoplay={loop} muted={loop} {...attrs}></video>
+<div>
+  <video
+    playsinline
+    {src}
+    {controls}
+    {loop}
+    autoplay={loop}
+    muted={loop}
+    class={`${_class} ${classList.join(" ")}`}
+    {...attrs}></video>
+</div>
+
+<style define:vars={{ aspect: aspect ? `${aspect[0]}/${aspect[1]}` : null }}>
+  div {
+    display: contents;
+  }
+  video {
+    aspect-ratio: var(--aspect, intial);
+  }
+  video.fullHeight {
+    height: 100%;
+  }
+</style>

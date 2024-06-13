@@ -4,6 +4,7 @@ import { Image, type ImgAttributes } from "astro:assets";
 interface Props extends ImgAttributes {
   src: ImageMetadata;
   alt: string;
+  aspect?: [number, number];
   crop?: {
     zoom?: number;
     rotation?: number;
@@ -14,13 +15,16 @@ interface Props extends ImgAttributes {
   };
 }
 
-const { src, alt, crop, ...attrs } = Astro.props;
+const { src, alt, aspect, crop, ...attrs } = Astro.props;
 
 let widths = (imgSize: number) => [720, imgSize];
 let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
 ---
 
-{
+<div>
+  <Image {alt} widths={widths(src.width)} sizes={sizes(src.width)} format="webp" {...attrs} {src} />
+</div>
+<!-- {
   (crop && (
     <div class={`crop-container ${attrs["class"]}`} data-crop {...attrs}>
       <Image {src} {alt} widths={widths(src.width)} sizes={sizes(src.width)} format="webp" />
@@ -35,7 +39,7 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
       {src}
     />
   )
-}
+} -->
 
 <style
   define:vars={{
@@ -45,8 +49,15 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
     reflectY: crop?.reflect?.y,
     center: crop?.center ? "center" : null,
     heightAuto: crop?.autoHeight ? "auto" : null,
+    aspect: aspect ? `${aspect[0]}/${aspect[1]}` : null,
   }}
 >
+  div {
+    display: contents;
+  }
+  :global(img) {
+    aspect-ratio: var(--aspect, initial);
+  }
   .crop-container:not([data-crop]) {
     display: contents;
   }
