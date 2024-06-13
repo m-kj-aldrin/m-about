@@ -4,6 +4,7 @@ import { Image, type ImgAttributes } from "astro:assets";
 interface Props extends ImgAttributes {
   src: ImageMetadata;
   alt: string;
+  aspect?: [number, number];
   crop?: {
     zoom?: number;
     rotation?: number;
@@ -14,28 +15,15 @@ interface Props extends ImgAttributes {
   };
 }
 
-const { src, alt, crop, ...attrs } = Astro.props;
+const { src, alt, aspect, crop, ...attrs } = Astro.props;
 
 let widths = (imgSize: number) => [720, imgSize];
 let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
 ---
 
-{
-  (crop && (
-    <div class={`crop-container ${attrs["class"]}`} data-crop {...attrs}>
-      <Image {src} {alt} widths={widths(src.width)} sizes={sizes(src.width)} format="webp" />
-    </div>
-  )) || (
-    <Image
-      {alt}
-      widths={widths(src.width)}
-      sizes={sizes(src.width)}
-      format="webp"
-      {...attrs}
-      {src}
-    />
-  )
-}
+<div>
+  <Image {alt} widths={widths(src.width)} sizes={sizes(src.width)} format="webp" {...attrs} {src} />
+</div>
 
 <style
   define:vars={{
@@ -45,21 +33,26 @@ let sizes = (imgSize: number) => `(max-width:960px) 720px, ${imgSize}px`;
     reflectY: crop?.reflect?.y,
     center: crop?.center ? "center" : null,
     heightAuto: crop?.autoHeight ? "auto" : null,
+    aspect: aspect ? `${aspect[0]}/${aspect[1]}` : null,
   }}
 >
+  div {
+    display: contents;
+  }
+  :global(img) {
+    aspect-ratio: var(--aspect, initial);
+  }
   .crop-container:not([data-crop]) {
     display: contents;
   }
 
   .crop-container[data-crop] {
-    /* outline: 3px red solid; */
     overflow: hidden;
     display: grid;
     place-content: var(--center, initial);
   }
 
   .crop-container[data-crop] :global(img) {
-    /* opacity: 0.5; */
     height: var(--heightAuto, 100%);
     transform: translate(0%, 0%) rotate(calc(var(--rotation) * 1deg))
       scale(var(--reflectX, 1), var(--reflectY, 1)) scale(calc(var(--zoom, 1)));
