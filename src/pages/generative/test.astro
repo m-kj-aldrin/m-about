@@ -1,0 +1,31 @@
+---
+import WrappedMotion from "@lib/components/svg/animations/WrappedMotion.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+const N = 10;
+const uid = Math.random().toString(36).slice(2); // keep IDs unique per list
+---
+
+<BaseLayout title="test" fullScreen={true}>
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(50 50)">
+      <path id="path" d="M-10,0 a10,10 0 0 0 20,0 a10,10 0 0 0 -20,0" stroke="red" fill="none" stroke-width="0.25"></path>
+      <circle r="2"></circle>
+
+      {
+        Array.from({ length: N }, (_, i) => (
+          <polygon points="-2.8867,-5 -2.8867,5 5.7733,0" transform="translate(0 0) scale(0.25)" fill={i % 2 ? "#f7c948" : "#6aa9ff"}>
+            <WrappedMotion href="#path" N={N} index={i} dur={4} rotate="auto" idBase={`runner_${uid}_${i}`} />
+          </polygon>
+        ))
+      }
+    </g>
+  </svg>
+</BaseLayout>
+
+
+<style>
+	svg{
+		width: 100%;
+		height: 100%;
+	}
+</style>

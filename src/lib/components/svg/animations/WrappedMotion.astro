@@ -1,0 +1,165 @@
+---
+// WrappedMotion.astro
+// Renders two <animateMotion> tags that loop and "wrap" along a path.
+// Use *inside* a shape element (<polygon>, <circle>, <g>, etc.)
+//
+// Example:
+// <polygon ...>
+//   <WrappedMotion href="#path" N={10} index={i} idBase={`runner_${i}`} dur={4} rotate="auto" />
+// </polygon>
+
+interface Props {
+  /** CSS selector for the path to follow (e.g., "#path") */
+  href: string;
+
+  /** Total phase count (how many equal slices around the loop) */
+  N: number;
+
+  /** Which phase this runner starts at, 0..N-1 */
+  index: number;
+
+  /** Total loop time (seconds) for a full orbit */
+  dur?: number;
+
+  /** "auto" | "auto-reverse" | "none" */
+  rotate?: "auto" | "auto-reverse" | "none";
+
+  /** "linear" | "spline" */
+  calcMode?: "linear" | "spline";
+
+  /**
+   * Base for unique IDs (avoid hyphens).
+   * Must be unique per animated shape across the whole SVG.
+   * Tip: include the runner index and a per-list prefix.
+   */
+  idBase?: string;
+
+  /** Optional initial delay, e.g. "0s", "0.2s", "indefinite" */
+  begin?: string;
+}
+
+export type WrapMotionOptions = {
+  dur?: number;
+  rotate?: "auto" | "auto-reverse" | "none";
+  idBase?: string;
+  calcMode?: "linear" | "spline";
+  begin?: string;
+};
+
+export type WrapMotionResult = {
+  segA: string;
+  segB: string;
+  keyPointsA: string;
+  keyTimesA: string;
+  keyPointsB: string;
+  keyTimesB: string;
+  durA: number;
+  durB: number;
+  ids: { a: string; b: string };
+};
+
+function buildWrappedMotion(
+  N: number,
+  index: number,
+  href: string,
+  opts: WrapMotionOptions = {}
+): WrapMotionResult {
+  if (!Number.isFinite(N) || N < 2) {
+    throw new Error(`buildWrappedMotion: N must be >= 2, got ${N}`);
+  }
+
+  const {
+    dur = 4,
+    rotate = "auto",
+    idBase = "wm",
+    calcMode = "linear",
+    begin = "0s",
+  } = opts;
+
+  // Normalize index, compute phase p in [0,1)
+  const i = ((index % N) + N) % N;
+  const p = i / N;
+
+  // Keep constant speed by proportional durations
+  const EPS = 0.001;
+  const durA = Math.max((1 - p) * dur, EPS); // p -> 1
+  const durB = Math.max(p * dur, EPS);       // 0 -> p
+
+  const fmt = (v: number) => Number(v.toFixed(6)).toString();
+
+  const keyPointsA = `${fmt(p)};1`;
+  const keyTimesA = `0;1`;
+
+  const keyPointsB = `0;${fmt(p)}`;
+  const keyTimesB = `0;1`;
+
+  // IDs: avoid hyphens (syncbase quirk), keep them unique
+  const ida = `${idBase}_A_${i}`;
+  const idb = `${idBase}_B_${i}`;
+
+  const segA = `
+<animateMotion id="${ida}"
+  dur="${durA}s"
+  rotate="${rotate}"
+  calcMode="${calcMode}"
+  keyPoints="${keyPointsA}"
+  keyTimes="${keyTimesA}"
+  begin="${begin}; ${idb}.end"
+  repeatCount="1"
+  restart="always"
+  fill="freeze">
+  <mpath href="${href}" />
+</animateMotion>`.trim();
+
+  const segB = `
+<animateMotion id="${idb}"
+  dur="${durB}s"
+  rotate="${rotate}"
+  calcMode="${calcMode}"
+  keyPoints="${keyPointsB}"
+  keyTimes="${keyTimesB}"
+  begin="${ida}.end"
+  repeatCount="1"
+  restart="always"
+  fill="freeze">
+  <mpath href="${href}" />
+</animateMotion>`.trim();
+
+  return {
+    segA,
+    segB,
+    keyPointsA,
+    keyTimesA,
+    keyPointsB,
+    keyTimesB,
+    durA,
+    durB,
+    ids: { a: ida, b: idb },
+  };
+}
+
+const {
+  href,
+  N,
+  index,
+  dur = 4,
+  rotate = "auto",
+  calcMode = "linear",
+  idBase = "wm",
+  begin = "0s",
+} = Astro.props as Props;
+
+const m = buildWrappedMotion(N, index, href, {
+  dur,
+  rotate,
+  calcMode,
+  idBase,
+  begin,
+});
+---
+
+{/* Emits only the two <animateMotion> elements */}
+<>
+  <Fragment set:html={m.segA} />
+  <Fragment set:html={m.segB} />
+</>
