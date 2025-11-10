@@ -6,3 +6,6 @@ publish = "dist"
 for = "/_astro/*"
 [headers.values]
 Cache-Control = "public, max-age=31536000, immutable, s-maxage=31536000"
+
+[functions]
+directory = ".netlify/functions-internal"
