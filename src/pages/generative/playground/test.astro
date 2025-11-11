@@ -1,0 +1,62 @@
+---
+import type { CssColors } from "@lib/components/svg/types";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+
+function random_choice<const T extends unknown[]>(choices: T): T[number] {
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
+let w = 10;
+let N = 50;
+let h = 1.5;
+let c: CssColors[] = ["hsl(0 70 50)", "hsl(53 90 50)", "seagreen"];
+---
+
+<BaseLayout title="playground:test" fullScreen={true}>
+  <svg viewBox="-100 -100 200 200">
+    <g transform={`rotate(90) translate(-${w / 2 + 1} -${(N * h) / 2 - 0.5})`}>
+      <rect width={w} height={(N - 1) * h + 1} y="-0.5" x={w / 2 + 2}></rect>
+      {
+        Array.from({ length: N }).map((_, i, { length }) => {
+          let dir = Math.random() > i / length;
+          // let dir = i % 2;
+          let width = w;
+          let div = 8;
+          let rect_width = Math.max(Math.min((Math.floor(Math.random() * div) / div) * width, width), width / div);
+          let f = 1 - rect_width / width;
+          let keyPoints = dir ? `${f};0;${f}` : `0;${f};0`;
+          let keyTimes = dir ? `0;0.5;1` : `0;0.5;1`;
+          let dur = (Math.floor(Math.random() * div) / div) * div * 2 + div;
+          dur = Math.max(dur - (1 - f) * dur, 1);
+          let color = random_choice(c);
+          return (
+            <>
+              <g transform={`translate(-${width / 2} ${i * h})`}>
+                <path d={`M0,0 h${width}`} id={`path-${i}`} stroke={color} stroke-width="0.5" />
+                <g>
+                  {i !== length - 1 ? (
+                    <>
+                      <rect width={rect_width} height={h} fill={color} />
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  <animateMotion dur={`${dur}s`} repeatCount="indefinite" keyPoints={keyPoints} fill="freeze" keyTimes={keyTimes}>
+                    <mpath href={`#path-${i}`} />
+                  </animateMotion>
+                </g>
+              </g>
+            </>
+          );
+        })
+      }
+    </g>
+  </svg>
+</BaseLayout>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>
