@@ -18,4 +18,6 @@ if (!attrs["transform"]) {
 }
 ---
 
-<circle {...attrs} {fill} {transform}></circle>
+<circle {...attrs} {fill} {transform}>
+  <slot/>
+</circle>

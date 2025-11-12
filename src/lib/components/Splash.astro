@@ -6,6 +6,7 @@ import Rect from "./svg/builtin/Rect.astro";
 import Path from "@lib/components/svg/builtin/Path.astro";
 import Star from "./svg/shapes/star.astro";
 import SignEngine from "./svg/shapes/SignEngine.astro";
+import Animate from "./svg/animations/Animate.astro";
 const outerCircleRadi = 320;
 ---
 
@@ -19,7 +20,9 @@ const outerCircleRadi = 320;
           <Circle stroke="hsl(var(--color-dark))" r={144} stroke-dasharray={"1,16"} stroke-width={outerCircleRadi} stroke-opacity={0.03} fill="none" />
           <G transform="translate(-64)">
             <Circle r={8} stroke-width={1} fill="none" />
-            <Circle fill="hsl(var(--color-secondary))" stroke="none" r={2} stroke-width={1} />
+            <Circle fill="hsl(var(--color-secondary))" stroke="none" r={2} stroke-width={1}>
+              <Animate attributeName="r" begin="0s" dur="2s" values="2;2;8;2" keyTimes="0;0.5;0.6;1" repeatCount={"indefinite"} />
+            </Circle>
           </G>
         </g>
         <!-- SPOKE -->
@@ -76,7 +79,9 @@ const outerCircleRadi = 320;
       <g class="outer">
         <!-- MAIN BLUE CIRCLE -->
         <G color="hsl(var(--color-offset))" stroke-width={1}>
-          <Circle stroke="currentColor" fill="none" r={outerCircleRadi} stroke-dasharray={"8,4"} />
+          <Circle stroke="currentColor" fill="none" r={outerCircleRadi} stroke-dasharray={"8,4"}>
+            <Animate attributeName="stroke-dashoffset" from="0" to="12" begin="0s" dur="1s" repeatCount={"indefinite"} />
+          </Circle>
         </G>
         <!-- Cubic -->
         <!-- C x1 y1, x2 y2, x y -->
@@ -96,6 +101,9 @@ const outerCircleRadi = 320;
                 </G>
                 <Circle r={8} fill="none" />
                 <Rect fill="hsl(var(--color-ternary))" fill-opacity={0.5} width={96} height={96} center={true} />
+                <AnimateTransform type="rotate" values="0;2;0" begin={0} dur={5000} repeatCount={"indefinite"} />
+                <AnimateTransform type="rotate" values="0;-3;0" begin={0} dur={8000} repeatCount={"indefinite"} additive="sum" />
+                <AnimateTransform type="scale" values="1 1;1.05 1.05;1 1" begin={0} dur={8000} repeatCount={"indefinite"} additive="sum" />
               </G>
             </G>
           </G>
@@ -153,10 +161,16 @@ const outerCircleRadi = 320;
             150)">
       <g transform="scale(0.8)">
         <g class="star" transform="translate(127 83)">
-          <Star n={6}>
-            <Path d={[{ c: "m" }, { c: "v", p: { dy: 16 } }]} stroke="hsl(var(--color-primary))" />
-            <Circle cx={16} r={1} fill="hsl(var(--color-dark))" fill-opacity={0.5} />
-          </Star>
+          <g>
+            <Star n={6}>
+              <Path d={[{ c: "m" }, { c: "v", p: { dy: 16 } }]} stroke="hsl(var(--color-primary))" />
+              <Circle cx={16} r={1} fill="hsl(var(--color-dark))" fill-opacity={0.5} />
+            </Star>
+            <AnimateTransform id="s0" type="rotate" from="0" to="60" begin="0s;slast.end" dur={3000} repeatCount={1} />
+            <AnimateTransform id="s1" type="rotate" from="60" to="120" begin="s0.end" dur={500} repeatCount={1} />
+            <AnimateTransform id="s2" type="rotate" from="120" to="120" begin="s1.end" dur={1500} repeatCount={1} />
+            <AnimateTransform id="slast" type="rotate" from="120" to="360" begin="s2.end" dur={500} repeatCount={1} />
+          </g>
         </g>
         <g fill="hsl(var(--color-dark))" fill-opacity="0.04" stroke="currentColor" stroke-opacity="0.3" stroke-dasharray="4 1">
           <SignEngine />

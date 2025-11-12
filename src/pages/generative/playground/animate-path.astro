@@ -1,0 +1,29 @@
+---
+import Animate from "@lib/components/svg/animations/Animate.astro";
+import G from "@lib/components/svg/builtin/G.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+
+const l = 10;
+---
+
+<BaseLayout title="playground:animate-path" fullScreen={true}>
+  <svg viewBox="0 0 100 100">
+    <G translate={[50, 50]}>
+      <G stroke="black">
+        <line x1={-l} stroke-width="1" stroke-dasharray="2 0.5">
+          <Animate id="first0" attributeName="x2" from={-l} to={l} begin="0s;last0.end" dur="1s" repeatCount={1} fill="freeze" />
+          <Animate id="last0" attributeName="x1" from={-l} to={l} begin="first0.end" dur="0.5s" repeatCount={1} />
+          <Animate attributeName="stroke-dasharray" values="2 0.5;2 0.5;0 4;0 4" keyTimes="0;0.1;0.9;1" begin="first0.end" dur="500ms" repeatCount={1} />
+        </line>
+      </G>
+    </G>
+  </svg>
+</BaseLayout>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+    border: 1px currentColor dashed;
+  }
+</style>

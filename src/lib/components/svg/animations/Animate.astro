@@ -1,0 +1,118 @@
+---
+type AnimateAttributeName =
+  // Presentation attributes (style-related)
+  | "alignment-baseline"
+  | "baseline-shift"
+  | "clip"
+  | "clip-path"
+  | "clip-rule"
+  | "color"
+  | "color-interpolation"
+  | "color-interpolation-filters"
+  | "color-profile"
+  | "color-rendering"
+  | "cursor"
+  | "direction"
+  | "display"
+  | "dominant-baseline"
+  | "enable-background"
+  | "fill"
+  | "fill-opacity"
+  | "fill-rule"
+  | "filter"
+  | "flood-color"
+  | "flood-opacity"
+  | "font"
+  | "font-family"
+  | "font-size"
+  | "font-size-adjust"
+  | "font-stretch"
+  | "font-style"
+  | "font-variant"
+  | "font-weight"
+  | "glyph-orientation-horizontal"
+  | "glyph-orientation-vertical"
+  | "image-rendering"
+  | "kerning"
+  | "letter-spacing"
+  | "lighting-color"
+  | "marker"
+  | "marker-end"
+  | "marker-mid"
+  | "marker-start"
+  | "mask"
+  | "opacity"
+  | "overflow"
+  | "pointer-events"
+  | "shape-rendering"
+  | "stop-color"
+  | "stop-opacity"
+  | "stroke"
+  | "stroke-dasharray"
+  | "stroke-dashoffset"
+  | "stroke-linecap"
+  | "stroke-linejoin"
+  | "stroke-miterlimit"
+  | "stroke-opacity"
+  | "stroke-width"
+  | "text-anchor"
+  | "text-decoration"
+  | "text-rendering"
+  | "unicode-bidi"
+  | "visibility"
+  | "word-spacing"
+  | "writing-mode"
+
+  // Geometry attributes
+  | "cx"
+  | "cy"
+  | "x"
+  | "y"
+  | "r"
+  | "rx"
+  | "ry"
+  | "width"
+  | "height"
+  | "x1"
+  | "x2"
+  | "y1"
+  | "y2"
+  | "points"
+  | "d"
+
+  // Gradients/patterns
+  | "gradientTransform"
+  | "gradientUnits"
+  | "spreadMethod"
+  | "patternTransform"
+  | "patternUnits"
+
+  // Misc (filters, lighting, etc.)
+  | "kernelMatrix"
+  | "stdDeviation"
+  | "surfaceScale"
+  | "diffuseConstant"
+  | "specularConstant"
+  | "specularExponent"
+  | "in"
+  | "in2"
+  | "result";
+
+interface Props {
+  attributeName: AnimateAttributeName;
+  begin: `${string}.begin` | `${string}.end` | `${string}s` | `${string}ms`;
+  repeatCount: number | "indefinite";
+  dur: `${string}s` | `${string}ms`;
+  from?: string | number;
+  to?: string | number;
+  id?: string;
+  fill?: "freeze";
+  values?: string;
+  keyTimes?: string;
+  calcMode?: "linear" | "discrete" | "paced" | "spline";
+}
+
+const { ...attrs } = Astro.props;
+---
+
+<animate {...attrs}></animate>
