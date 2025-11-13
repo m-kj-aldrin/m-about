@@ -1,0 +1,98 @@
+---
+import AnimateMotion from "@lib/components/svg/animations/AnimateMotion.astro";
+import G from "@lib/components/svg/builtin/G.astro";
+import Path2 from "@lib/components/svg/builtin/Path2.astro";
+import Rect from "@lib/components/svg/builtin/Rect.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+
+function looping_keypoints(n: number) {
+  // if (n <= 2) return { key_points: "0;1", key_times: "0;1" };
+
+  let start_point = Math.random() * 0.5;
+  let key_points = `${start_point};1;0;`.repeat(n - 1).slice(0, -1) + `;${start_point}`;
+
+  let s = 0;
+  let key_times =
+    "0;" +
+    Array.from({ length: n - 1 })
+      .map((_, i) => {
+        let dx = 1 / n;
+        let time = s + dx + Math.random() * dx * 0.9;
+
+        s += dx;
+        return `${time};${time}`;
+      })
+      .join(";") +
+    ";1";
+
+  return { key_points, key_times };
+}
+
+let n = 1;
+---
+
+<BaseLayout title="playground:looping-keypoints" fullScreen={true}>
+  <svg viewBox="0 0 100 100">
+    <G translate={[50, 50]}>
+      <G>
+        <Path2 d={[["h", 10]]} stroke="currentColor" id="mpath-0" />
+        <Path2
+          d={[
+            ["m", 9, 0],
+            ["h", 2],
+          ]}
+          stroke="currentColor"
+        />
+        <Rect width={1} height={4}>
+							<!-- Whats the algo here for looping with offsetstar  -->
+          <AnimateMotion
+            keyPoints={"0.25;1;0;0.25; 1;0;0.25; 1;0;0.25"}
+						
+            keyTimes={"0;0.25;0.25;0.375; 0.375;0.625;"}
+            mpath="#mpath-0"
+            dur="1s"
+            begin="0s"
+            repeatCount={"indefinite"}
+          />
+        </Rect>
+      </G>
+      <G translate={[0, 8]}>
+        <Path2 d={[["h", 10]]} stroke="currentColor" id="mpath-0" />
+        <Path2
+          d={[
+            ["m", 9, 0],
+            ["h", 2],
+          ]}
+          stroke="currentColor"
+        />
+        <Rect width={1} height={4}>
+          <AnimateMotion keyPoints={"0.25;1;0;0.25"} keyTimes={"0;0.75;0.75;1"} mpath="#mpath-0" dur="1s" begin="0s" repeatCount={"indefinite"} />
+        </Rect>
+      </G>
+      <!-- <G translate={[-5, -((n - 1) * 6) / 2]}>
+        {
+          Array.from({ length: n }).map((_, i) => {
+            let ks = looping_keypoints(3);
+            return (
+              <G translate={[0, i * 6]}>
+                <Path2 d={[["h", 10]]} stroke="currentColor" id="mpath-0" />
+								<Path2 d={[['m',9,0],['h',2]]} stroke="currentColor" />
+                <Rect width={1} height={4}>
+                  <AnimateMotion keyPoints={ks.key_points} keyTimes={ks.key_times} mpath="#mpath-0" dur="2s" begin="0s" repeatCount={"indefinite"} />
+                </Rect>
+              </G>
+            );
+          })
+        }
+      </G> -->
+    </G>
+  </svg>
+</BaseLayout>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+    border: 1px currentColor dashed;
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type MoveCommand = ["m" | "M", number, number];
+type LineCommand = ["l" | "L", number, number];
+type VerticalCommand = ["v" | "V", number];
+type HorizontalCommand = ["h" | "h", number];
+
+// rx, ry, angle, large-arc-flag, sweep-flag, x, y
+type ArcCommand = ["a" | "A", number, number, number, number, number, number, number];
+
+export type Command = MoveCommand | LineCommand | VerticalCommand | HorizontalCommand | ArcCommand;
+
+type Tail<T extends any[]> = T extends [any, ...infer R] ? R : never;
+
+export type CommandNames = Command[0];
+export type CommandValues = Tail<Command>;
+
+interface Props extends Omit<HTMLAttributes<"path">, "d"> {
+  d: Command[];
+}
+
+const { d: _d, ...attrs } = Astro.props;
+
+const firstCommand = _d[0];
+if (firstCommand[0].toLocaleLowerCase() !== "m") {
+  _d.unshift(["M", 0, 0]);
+}
+const d = _d.map((command) => command[0] + command.slice(1).join(" ")).join(",");
+---
+
+<path {d} {...attrs}>
+  <slot />
+</path>

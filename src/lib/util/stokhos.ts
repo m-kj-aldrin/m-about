@@ -10,5 +10,5 @@ export function randn_bm() {
 export const chance = (ratio: number) => rand() < ratio;
 export const bm_chance = (ratio: number) => randn_bm() < ratio;
 
-export const pick = <T extends any[]>(choices: T): T[number] =>
+export const pick = <const T extends unknown[]>(choices: T): T[number] =>
     choices[irand(0, choices.length)];

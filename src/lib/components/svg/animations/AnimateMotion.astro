@@ -1,0 +1,20 @@
+---
+interface Props {
+  path?: string;
+  mpath?: string;
+  dur: `${string}s` | `${string}ms`;
+  begin: `${string}.begin` | `${string}.end` | `${string}s` | `${string}ms`;
+  repeatCount: number | "indefinite";
+  calcMode?: "linear" | "discrete" | "paced" | "spline";
+  keyTimes?: string;
+  keyPoints?: string;
+  fill?: "freeze";
+  id?: string;
+}
+
+const { mpath, ...attrs } = Astro.props;
+---
+
+<animateMotion {...attrs}>
+  {mpath && <mpath href={mpath} />}
+</animateMotion>
