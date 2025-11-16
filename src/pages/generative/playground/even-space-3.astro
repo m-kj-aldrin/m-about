@@ -4,8 +4,8 @@ import Rect from '@lib/components/svg/builtin/Rect.astro';
 import Filter from '@lib/components/svg/shapes/Filter.astro';
 import PatternMask from '@lib/components/svg/shapes/patterns/PatternMask.astro';
 import BaseLayout from '@lib/layouts/BaseLayout.astro';
-import { range } from '@lib/util/iter';
-import { chance, irand, pick, rand } from '@lib/util/stokhos';
+import { range } from 'src/lib/util/iter';
+import { chance, irand, pick, rand } from 'src/lib/util/stokhos';
 
 const grid_map = new Map<string, boolean>();
 const grid_points: [number, number, number, number][] = [];

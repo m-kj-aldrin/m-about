@@ -5,8 +5,8 @@ import G from '@lib/components/svg/builtin/G.astro';
 import Path2 from '@lib/components/svg/builtin/Path2.astro';
 import Rect from '@lib/components/svg/builtin/Rect.astro';
 import BaseLayout from '@lib/layouts/BaseLayout.astro';
-import { IF } from '@lib/util/comperator';
-import { chance, irand, pick, rand } from '@lib/util/stokhos';
+import { IF } from 'src/lib/util/comperator';
+import { chance, irand, pick, rand } from 'src/lib/util/stokhos';
 
 function looping_keypoints(n: number) {
   // random start offset on the path (0–1 or 0–0.5 if you prefer)

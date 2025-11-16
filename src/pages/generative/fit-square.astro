@@ -4,11 +4,11 @@ import G from "@lib/components/svg/builtin/G.astro";
 import Path from "@lib/components/svg/builtin/Path.astro";
 import Rect from "@lib/components/svg/builtin/Rect.astro";
 import PatternMask from "@lib/components/svg/shapes/patterns/PatternMask.astro";
-import type { NamedCssColor } from "@lib/components/svg/types";
+import type { NamedCssColor } from "src/lib/components/svg/types";
 import BaseLayout from "@lib/layouts/BaseLayout.astro";
-import { IF } from "@lib/util/comperator";
-import { range } from "@lib/util/iter";
-import { chance, pick, rand } from "@lib/util/stokhos";
+import { IF } from "src/lib/util/comperator";
+import { range } from "src/lib/util/iter";
+import { chance, pick, rand } from "src/lib/util/stokhos";
 
 export const prerender = false;
 

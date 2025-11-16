@@ -1,14 +1,12 @@
 ---
-// import Icon, { type IconTypes } from "./Icon.astro";
-
 const url = Astro.url;
 
-type TopPaths = "/" | "/works/" | "/generative/";
+type TopPaths = '/' | '/works/' | '/generative/';
 
 const paths: { path: TopPaths; name: string }[] = [
   // { path: "/", name: "home" },
-  { path: "/works/", name: "works" },
-  { path: "/generative/", name: "directives" },
+  { path: '/works/', name: 'works' },
+  { path: '/generative/', name: 'directives' },
 ];
 
 const re = /\/works\/.+/;
@@ -20,15 +18,17 @@ const gen = /\/gen\/.+/.test(url.pathname);
   <div class="links">
     {
       paths.map(({ name, path }) => {
-        const worksSubDir = work && path == "/works/";
-        const genSubDir = gen && path == "/generative/";
+        const worksSubDir = work && path == '/works/';
+        const genSubDir = gen && path == '/generative/';
 
         return (
           <a
             href={path}
-            aria-current={url.pathname == path ? "page" : null}
+            aria-current={url.pathname == path ? 'page' : null}
             icon-variant={worksSubDir || genSubDir}
             title={name}
+            font-style={(url.pathname == path && true) || null}
+            class={url.pathname == path ? 'font-italic' : ''}
           >
             {name}
           </a>
@@ -37,77 +37,6 @@ const gen = /\/gen\/.+/.test(url.pathname);
     }
   </div>
 </nav>
-
-<script>
-  // const mainHeader = document.getElementById("site-header");
-
-  // let keyframes: Keyframe[] = [
-  //   { transform: "scale(1,0)", offset: 0 },
-  //   { transform: "scale(1,0.5)", offset: 0.25 },
-  //   { transform: "scale(1,1)", offset: 1 },
-  // ];
-  // let keyFramesOption: KeyframeAnimationOptions = {
-  //   duration: 3000,
-  //   easing: "ease",
-  //   delay: 0,
-  //   fill: "both",
-  //   pseudoElement: "::before",
-  // };
-
-  // let loadAnimation: Animation;
-
-  // if (mainHeader) {
-  //   document.addEventListener("astro:before-preparation", () => {
-  //     loadAnimation = mainHeader.animate(keyframes, keyFramesOption);
-  //   });
-  //   document.addEventListener("astro:after-swap", () => {
-  //     //@ts-ignore
-  //     let timeFraction = loadAnimation.currentTime / 3000;
-  //     loadAnimation.cancel();
-  //     if (!timeFraction) return;
-  //     loadAnimation = mainHeader.animate(
-  //       [{ transform: "scale(1,0)" }, { transform: "scale(1,1)" }],
-  //       {
-  //         ...keyFramesOption,
-  //         duration: 400,
-  //         delay: 0,
-  //       }
-  //     );
-  //     loadAnimation.currentTime = timeFraction * 400;
-  //     loadAnimation.reverse();
-  //   });
-  //   document.addEventListener("astro:after-swap", () => {
-  //     const pathName = location.pathname;
-
-  //     const previousAnchor = mainHeader.querySelector("a[aria-current='page']");
-  //     if (previousAnchor) {
-  //       previousAnchor.removeAttribute("aria-current");
-  //     }
-
-  //     const currentAnchor = mainHeader.querySelector(`a[href='${pathName}']`);
-  //     if (currentAnchor) {
-  //       currentAnchor.ariaCurrent = "page";
-  //     }
-  //   });
-  //   document.addEventListener("astro:page-load", (e) => {
-  //     const pathname = location.pathname;
-  //     const test = /(\/work\/|\/generative\/).+/;
-  //     if (test.test(pathname)) {
-  //       let parentDir = "";
-  //       if (pathname.includes("generative")) {
-  //         parentDir = "generative";
-  //       } else if (pathname.includes("work")) {
-  //         parentDir = "work";
-  //       }
-  //       let el = mainHeader.querySelector(`a[title='${parentDir}']`);
-  //       el?.toggleAttribute("icon-variant", true);
-  //     } else {
-  //       let el = mainHeader.querySelector(`a[icon-variant]`);
-  //       el?.removeAttribute("icon-variant");
-  //     }
-  //   });
-  // }
-</script>
 
 <style>
   nav {
@@ -122,15 +51,13 @@ const gen = /\/gen\/.+/.test(url.pathname);
     gap: 8px;
   }
 
-  a[aria-current="page"] {
+  a[aria-current='page'] {
     color: hsl(var(--color-offset));
   }
 
   a {
-    /* display: block; */
-    /* line-height: 0; */
     transition: color 75ms ease;
-  text-transform: uppercase
+    text-transform: uppercase;
   }
   span {
     font-weight: 200;
@@ -142,7 +69,7 @@ const gen = /\/gen\/.+/.test(url.pathname);
     flex-shrink: 0;
   }
 
-  [aria-current="page"] {
+  [aria-current='page'] {
     color: hsl(var(--color-offset));
   }
 </style>

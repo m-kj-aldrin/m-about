@@ -3,8 +3,8 @@ import G from '@lib/components/svg/builtin/G.astro';
 import Path2, { type Command } from '@lib/components/svg/builtin/Path2.astro';
 import Rect from '@lib/components/svg/builtin/Rect.astro';
 import BaseLayout from '@lib/layouts/BaseLayout.astro';
-import { clamp } from '@lib/util/map';
-import { chance, irand, pick } from '@lib/util/stokhos';
+import { clamp } from 'src/lib/util/map';
+import { chance, irand, pick } from 'src/lib/util/stokhos';
 
 const grid_map = new Map<string, boolean>();
 const grid_points: [number, number][] = [];
