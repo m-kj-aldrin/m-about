@@ -1,0 +1,256 @@
+---
+import G from '@lib/components/svg/builtin/G.astro';
+import Path2, { type Command } from '@lib/components/svg/builtin/Path2.astro';
+import Rect from '@lib/components/svg/builtin/Rect.astro';
+import Filter from '@lib/components/svg/shapes/Filter.astro';
+import BaseLayout from '@lib/layouts/BaseLayout.astro';
+import { clamp } from '@lib/util/map';
+import { chance, irand, pick } from '@lib/util/stokhos';
+
+const grid_map = new Map<string, boolean>();
+const grid_points: [number, number][] = [];
+
+const cols = 256;
+const rows = 256;
+const cell_size = 4;
+const max_path_length_bound = 128;
+let actual_max_path_length = 0;
+
+let colors = [
+  [10, 10, 20],
+  [15, 100, 50],
+  [30, 90, 60],
+  [90, 20, 80],
+  // [140, 30, 50],
+  // [210, 50, 60],
+];
+
+// --- !! BUG FIX: Corrected randomColor function ---
+// The old one created invalid CSS: 'hsl(15 90 50%)'
+// This one is more efficient and creates valid CSS: 'hsl(15, 90%, 50%)'
+const randomColor = () => {
+  const [hue, sat, light] = pick(colors); // Get the base color
+
+  let saturation_offset = irand(-10, 10);
+  let saturation = sat + saturation_offset;
+  let lightness_offset = irand(-10, 20);
+  let lightness = light + lightness_offset;
+
+  saturation = clamp(saturation, 0, 100);
+  lightness = clamp(lightness, 0, 100);
+
+  // Return a valid hsl() string
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+};
+
+for (let y = 0; y < rows; y++) {
+  for (let x = 0; x < cols; x++) {
+    grid_points.push([x, y]);
+    grid_map.set(`${x},${y}`, false);
+  }
+}
+
+grid_points.sort(() => 0.5 - Math.random());
+
+const paths: [number, number][][] = [];
+
+for (const [x, y] of grid_points) {
+  if (grid_map.get(`${x},${y}`)) continue;
+
+  const path: [number, number][] = [];
+  let current_point: [number, number] = [x, y];
+
+  grid_map.set(`${x},${y}`, true);
+  path.push([x, y]);
+
+  let max_length = irand(4, max_path_length_bound);
+  let use_cardinal_directions = chance(0.5);
+
+  while (path.length < max_length) {
+    const diagonal_directions = [
+      [-1, -1], // Top-Left
+      [1, -1], // Top-Right
+      [-1, 1], // Bottom-Left
+      [1, 1], // Bottom-Right
+    ];
+
+    const cardinal_directions = [
+      [0, -1], // Up
+      [0, 1], // Down
+      [-1, 0], // Left
+      [1, 0], // Right
+    ];
+
+    const neighbors: [number, number][] = [];
+    const [cx, cy] = current_point; // Current X, Current Y
+
+    if (use_cardinal_directions) {
+      for (const [dx, dy] of cardinal_directions) {
+        const nx = cx + dx; // Next X
+        const ny = cy + dy; // Next Y
+        const next_point: [number, number] = [nx, ny];
+
+        // --- 1. Bounds Check ---
+        if (nx < 0 || nx >= cols || ny < 0 || ny >= rows) continue;
+
+        // --- 2. Destination Check ---
+        // Is the destination cell itself unvisited?
+        const dest_is_free = grid_map.get(`${nx},${ny}`) === false;
+
+        if (dest_is_free) {
+          neighbors.push(next_point);
+        }
+      }
+    } else {
+      for (const [dx, dy] of diagonal_directions) {
+        const nx = cx + dx; // Next X
+        const ny = cy + dy; // Next Y
+        const next_point: [number, number] = [nx, ny];
+
+        // --- 1. Bounds Check ---
+        if (nx < 0 || nx >= cols || ny < 0 || ny >= rows) continue;
+
+        // --- 2. Destination Check ---
+        // Is the destination cell itself unvisited?
+        const dest_is_free = grid_map.get(`${nx},${ny}`) === false;
+
+        // --- 3. Anti-Overlap "Corner" Check ---
+        // We must check the two "flanking" cells
+        // Flanking cells for a (cx,cy) -> (nx,ny) move are (cx, ny) and (nx, cy)
+        const flank1_is_free = !grid_map.get(`${cx},${ny}`);
+        const flank2_is_free = !grid_map.get(`${nx},${cy}`);
+
+        // The move is only valid if:
+        // 1. The destination is free, AND
+        // 2. At least ONE of the two flanking sides is also free.
+        if (dest_is_free && (flank1_is_free || flank2_is_free)) {
+          neighbors.push(next_point);
+        }
+      }
+    }
+
+    if (neighbors.length === 0) break; // Path is stuck
+
+    const next_point = pick(neighbors);
+    current_point = next_point;
+
+    grid_map.set(`${current_point[0]},${current_point[1]}`, true);
+    path.push(current_point);
+  }
+
+  paths.push(path);
+  actual_max_path_length = Math.max(actual_max_path_length, path.length);
+}
+---
+
+{/* The SVG/HTML part is identical to your grid_paths_diagonal.astro file */}
+<BaseLayout title="playground:traveling-paths-2" fullScreen={true}>
+  <svg viewBox="0 0 1024 1024" id="sketch">
+    <defs>
+      <filter id="grain" x="0" y="0" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2"></feTurbulence>
+        <feComponentTransfer>
+          <feFuncR type="linear" slope="5" intercept="-2"></feFuncR>
+          <feFuncG type="linear" slope="5" intercept="-2"></feFuncG>
+          <feFuncB type="linear" slope="5" intercept="-2"></feFuncB>
+        </feComponentTransfer>
+      </filter>
+      <!-- <filter id="smudge">
+        <feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="3"></feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          scale="3"
+          xChannelSelector="R"
+          yChannelSelector="G"
+          result="displacement"
+        >
+        </feDisplacementMap>
+      </filter> -->
+      <Filter id="smudge" >
+        <feTurbulence type="fractalNoise" baseFrequency="0.25" numOctaves="2"></feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          scale="5.5"
+          xChannelSelector="R"
+          yChannelSelector="G"
+          result="displacement"></feDisplacementMap>
+        <feComposite operator="arithmetic" in="SourceGraphic" k1="0.3" k2="0.5" k3="0.6" k4="0"
+        ></feComposite>
+      </Filter>
+    </defs>
+    <G translate={[512, 512]}>
+      <G translate={[(-cols * cell_size) / 2, (-rows * cell_size) / 2]}>
+        <Rect
+          width={cols * cell_size}
+          height={rows * cell_size}
+          fill={'#191121'}
+          opacity={1}
+          stroke="none"
+        />
+        <G filter="url(#smudge)">
+          {
+            paths.map((path) => {
+              if (path.length === 0) return null;
+              let color = randomColor();
+              let stroke_opacity = clamp(path.length / actual_max_path_length, 0.8, 1);
+              let stroke_width = irand(1, 4);
+              let stroke_dasharray = chance(0.1) ? `${irand(1, 3)}` : undefined;
+              let half_cell = cell_size / 2;
+              let commands = path.map((point, index) => {
+                let x = point[0] * cell_size + half_cell;
+                let y = point[1] * cell_size + half_cell;
+                if (index === 0) return ['M', x, y] as Command;
+                return ['L', x, y] as Command;
+              });
+              return (
+                <Path2
+                  stroke={color}
+                  stroke-opacity={stroke_opacity}
+                  stroke-width={stroke_width}
+                  stroke-dasharray={stroke_dasharray}
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  fill="none"
+                  d={commands}
+                />
+              );
+            })
+          }
+        </G>
+        <Rect
+          width={cols * cell_size}
+          height={rows * cell_size}
+          filter="url(#grain)"
+          opacity={0.2}
+        />
+      </G>
+    </G>
+  </svg>
+  <button>Download SVG</button>
+</BaseLayout>
+
+<script>
+  import { downloadSvgAsImage } from '@lib/util/render-svg';
+
+  const button = document.querySelector('button');
+
+  button?.addEventListener('click', downloadSvg);
+
+  function downloadSvg() {
+    const svg = document.querySelector('#sketch') as SVGSVGElement;
+    if (!svg) return;
+    downloadSvgAsImage(svg, {
+      scale: 2,
+      mimeType: 'image/jpeg',
+      quality: 0.9,
+      fileName: 'traveling-paths-5.jpeg',
+    });
+  }
+</script>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>

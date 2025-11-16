@@ -1,90 +1,112 @@
 ---
-import AnimateMotion from "@lib/components/svg/animations/AnimateMotion.astro";
-import G from "@lib/components/svg/builtin/G.astro";
-import Path2 from "@lib/components/svg/builtin/Path2.astro";
-import Rect from "@lib/components/svg/builtin/Rect.astro";
-import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import Animate from '@lib/components/svg/animations/Animate.astro';
+import AnimateMotion from '@lib/components/svg/animations/AnimateMotion.astro';
+import G from '@lib/components/svg/builtin/G.astro';
+import Path2 from '@lib/components/svg/builtin/Path2.astro';
+import Rect from '@lib/components/svg/builtin/Rect.astro';
+import BaseLayout from '@lib/layouts/BaseLayout.astro';
+import { IF } from '@lib/util/comperator';
+import { chance, irand, pick, rand } from '@lib/util/stokhos';
 
 function looping_keypoints(n: number) {
-  // if (n <= 2) return { key_points: "0;1", key_times: "0;1" };
+  // random start offset on the path (0–1 or 0–0.5 if you prefer)
+  const start_point = Math.random(); // or Math.random() * 0.5;
 
-  let start_point = Math.random() * 0.5;
-  let key_points = `${start_point};1;0;`.repeat(n - 1).slice(0, -1) + `;${start_point}`;
+  const loops = n - 1; // number of full laps
 
+  // --- keyPoints ---
+  // Pattern for L loops with start offset s:
+  //   s; 1;0; 1;0; ...; 1;0; s
+  // That gives 2*L + 2 entries.
+  const keyPointsArray: number[] = [start_point];
+  for (let i = 0; i < loops; i++) {
+    keyPointsArray.push(1, 0);
+  }
+  keyPointsArray.push(start_point);
+  const key_points = keyPointsArray.join(';');
+
+  // --- keyTimes ---
+  // We keep your idea:
+  //   0; t1;t1; t2;t2; ...; t_L;t_L; 1
+  // That is 2*L + 2 entries, matching keyPoints.
   let s = 0;
-  let key_times =
-    "0;" +
-    Array.from({ length: n - 1 })
-      .map((_, i) => {
-        let dx = 1 / n;
-        let time = s + dx + Math.random() * dx * 0.9;
+  const dx = 1 / n;
+  const keyTimesArray: number[] = [0];
 
-        s += dx;
-        return `${time};${time}`;
-      })
-      .join(";") +
-    ";1";
+  for (let i = 0; i < loops; i++) {
+    const time = s + dx + Math.random() * dx * 0.9;
+    s += dx;
+    keyTimesArray.push(time, time);
+  }
+
+  keyTimesArray.push(1);
+  const key_times = keyTimesArray.join(';');
 
   return { key_points, key_times };
 }
 
-let n = 1;
+let n = 30;
+let dy = 3;
 ---
 
 <BaseLayout title="playground:looping-keypoints" fullScreen={true}>
   <svg viewBox="0 0 100 100">
     <G translate={[50, 50]}>
-      <G>
-        <Path2 d={[["h", 10]]} stroke="currentColor" id="mpath-0" />
-        <Path2
-          d={[
-            ["m", 9, 0],
-            ["h", 2],
-          ]}
-          stroke="currentColor"
-        />
-        <Rect width={1} height={4}>
-							<!-- Whats the algo here for looping with offsetstar  -->
-          <AnimateMotion
-            keyPoints={"0.25;1;0;0.25; 1;0;0.25; 1;0;0.25"}
-						
-            keyTimes={"0;0.25;0.25;0.375; 0.375;0.625;"}
-            mpath="#mpath-0"
-            dur="1s"
-            begin="0s"
-            repeatCount={"indefinite"}
-          />
-        </Rect>
-      </G>
-      <G translate={[0, 8]}>
-        <Path2 d={[["h", 10]]} stroke="currentColor" id="mpath-0" />
-        <Path2
-          d={[
-            ["m", 9, 0],
-            ["h", 2],
-          ]}
-          stroke="currentColor"
-        />
-        <Rect width={1} height={4}>
-          <AnimateMotion keyPoints={"0.25;1;0;0.25"} keyTimes={"0;0.75;0.75;1"} mpath="#mpath-0" dur="1s" begin="0s" repeatCount={"indefinite"} />
-        </Rect>
-      </G>
-      <!-- <G translate={[-5, -((n - 1) * 6) / 2]}>
+      <G translate={[-25, -((n - 1) * dy) / 2]}>
         {
           Array.from({ length: n }).map((_, i) => {
-            let ks = looping_keypoints(3);
+            let ks = looping_keypoints(irand(4, 16));
+            let width = irand(1, 4);
+            let height = irand(1, 4);
+            let fillOpacity = rand(0.5, 1);
+            let color = pick(['red', 'green', 'blue']);
+            let duration = rand(16, 32);
+            let dasharray = chance(0.25) ? [rand(0.25, 2), rand(0.25, 2)] : undefined;
+
             return (
-              <G translate={[0, i * 6]}>
-                <Path2 d={[["h", 10]]} stroke="currentColor" id="mpath-0" />
-								<Path2 d={[['m',9,0],['h',2]]} stroke="currentColor" />
-                <Rect width={1} height={4}>
-                  <AnimateMotion keyPoints={ks.key_points} keyTimes={ks.key_times} mpath="#mpath-0" dur="2s" begin="0s" repeatCount={"indefinite"} />
+              <G translate={[0, i * dy]}>
+                <G stroke-width={0.25}>
+                  <Path2
+                    d={[['h', 50]]}
+                    stroke={color}
+                    id="mpath-0"
+                    stroke-dasharray={dasharray?.join(' ')}
+                  >
+                    {IF(!!dasharray, () => {
+                      return (
+                        <Animate
+                          attributeName="stroke-dashoffset"
+                          to={`${dasharray?.reduce((a, b) => a + b, 0) ?? 0 * 2}`}
+                          begin="0s"
+                          dur="1s"
+                          repeatCount="indefinite"
+                        />
+                      );
+                    })}
+                  </Path2>
+                </G>
+                <Rect
+                  fill={color}
+                  width={width}
+                  x={-width / 2}
+                  height={height}
+                  y={-height / 2}
+                  fill-opacity={fillOpacity}
+                >
+                  <AnimateMotion
+                    keyPoints={ks.key_points}
+                    keyTimes={ks.key_times}
+                    mpath="#mpath-0"
+                    dur={`${duration}s`}
+                    begin="0s"
+                    repeatCount={'indefinite'}
+                  />
                 </Rect>
               </G>
             );
           })
         }
-      </G> -->
+      </G>
     </G>
   </svg>
 </BaseLayout>
@@ -93,6 +115,5 @@ let n = 1;
   svg {
     width: 100%;
     height: 100%;
-    border: 1px currentColor dashed;
   }
 </style>

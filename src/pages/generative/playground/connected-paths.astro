@@ -1,0 +1,56 @@
+---
+import Animate from '@lib/components/svg/animations/Animate.astro';
+import G from '@lib/components/svg/builtin/G.astro';
+import Path2 from '@lib/components/svg/builtin/Path2.astro';
+import Rect from '@lib/components/svg/builtin/Rect.astro';
+import BaseLayout from '@lib/layouts/BaseLayout.astro';
+import { range } from '@lib/util/iter';
+import { irand, pick, rand } from '@lib/util/stokhos';
+---
+
+<BaseLayout title="playground:connected-paths" fullScreen={true}>
+  <svg viewBox="0 0 1024 1024">
+    <G translate={[16, 16]}>
+      {
+        range(32).map((_, i) => {
+          return range(32).map((_, j) => {
+            const width = Math.min(irand(1, 5) * 8, 32);
+            const height = width;
+            // const height = irand(1, 4) * 4;
+
+            const fill = pick(['red', 'blue', 'green']);
+
+            const height_dur = rand(1, 8) * 2;
+            const width_dur = rand(1, 4) * 4;
+
+            return (
+              <Rect x={i * 32} y={j * 32} {width} {height} {fill}>
+                <Animate
+                  attributeName="height"
+                  values={`${height};${height / 2};${height}`}
+                  begin="0s"
+                  dur={`${height_dur}s`}
+                  repeatCount="indefinite"
+                />
+                <Animate
+                  attributeName="width"
+                  values={`${width};${width / 2};${width}`}
+                  begin="0s"
+                  dur={`${width_dur}s`}
+                  repeatCount="indefinite"
+                />
+              </Rect>
+            );
+          });
+        })
+      }
+    </G>
+  </svg>
+</BaseLayout>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+</style>
