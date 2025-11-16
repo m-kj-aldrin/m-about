@@ -1,0 +1,84 @@
+---
+import AnimateMotion from "@lib/components/svg/animations/AnimateMotion.astro";
+import G from "@lib/components/svg/builtin/G.astro";
+import Path2, { type Command } from "@lib/components/svg/builtin/Path2.astro";
+import Rect from "@lib/components/svg/builtin/Rect.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import { chance, irand, rand } from "@lib/util/stokhos";
+---
+
+<BaseLayout title="playground:staggered-paths" fullScreen={true}>
+  <svg viewBox="0 0 100 100">
+    <G translate={[50, 50]} >
+      {
+        Array.from({ length: 24 }).map((_, i, arr) => {
+          let y_offset = i * 4;
+          let id = `mpath-${i}`;
+          let path: Command[] =
+            i % 2
+              ? [["h", 10]]
+              : [
+                  ["m", 5, 0],
+                  ["h", 5],
+                  ["M", 0, 0],
+                  ["h", 5],
+                ];
+
+          let keyPoints = Array.from({ length: irand(2, 6) }).map((_, index, array) => {
+            const n = array.length;
+
+            // Edge cases
+            if (n === 0) return 0;
+            if (n === 1) return 1;
+
+            const gap = 1 / (n - 1); // base distance between interpolation points
+
+            // Last index is pinned to 1 and never exceeds it
+            if (index === 0) return 0;
+            // if (index === n - 1) return 1;
+
+            const base = index * gap; // base interpolation value in [0, 1)
+            const maxOffset = gap * 0.999999; // never reaches the next base point
+
+            const offset = Math.random() * maxOffset;
+            const value = base + offset; // always < base + gap <= 1
+
+            return Math.min(value, 1);
+          });
+
+          let keyTimes = keyPoints.map((f, i, arr) => {
+            return i / (arr.length - 1);
+          });
+
+          return (
+            <>
+              <G translate={[-5, -((arr.length - 1) * 4) / 2]}>
+                <G translate={[0, y_offset]}>
+                  <Path2 id={id} d={path} stroke="currentColor" />
+                  <Rect width={4.25} height={4.25} x={-2.125} y={-2.125}>
+                    <AnimateMotion
+                      mpath={`#${id}`}
+                      begin="0s"
+                      dur="3s"
+                      repeatCount={"indefinite"}
+                      keyPoints={keyPoints.join(";")}
+                      keyTimes={keyTimes.join(";")}
+                    />
+                  </Rect>
+                </G>
+              </G>
+            </>
+          );
+        })
+      }
+    </G>
+  </svg>
+</BaseLayout>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+    border: 1px currentColor dashed;
+  }
+</style>

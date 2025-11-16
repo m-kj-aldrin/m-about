@@ -1,0 +1,26 @@
+---
+interface Props {
+  name: string;
+  scale?: [number, number];
+  rotate?: number;
+  width: number;
+  height: number;
+  patternUnits?: 'userSpaceOnUse' | 'objectBoundingBox';
+  patternTransform?: string;
+}
+
+const {
+  name,
+  scale = [1, 1],
+  width,
+  height,
+  rotate = 0,
+  patternUnits = 'userSpaceOnUse',
+  ...attrs
+} = Astro.props;
+const patternTransform = `scale(${scale[0]} ${scale[1]}) rotate(${rotate})`;
+---
+
+<pattern {...attrs} id={`pattern-${name}`} {width} {height} {patternUnits} {patternTransform}>
+  <slot />
+</pattern>

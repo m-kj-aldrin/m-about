@@ -1,0 +1,15 @@
+---
+interface Props {
+  id: string;
+  width?: number | string;
+  height?: number | string;
+  x?: number | string;
+  y?: number | string;
+}
+
+const { id, width = '100%', height = '100%', x = '0', y = '0' } = Astro.props;
+---
+
+<filter id={id} {width} {height} {x} {y}>
+  <slot />
+</filter>

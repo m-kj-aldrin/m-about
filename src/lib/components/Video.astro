@@ -25,13 +25,21 @@ const classList = [fillHeight && "fullHeight"];
 ---
 
 <div>
-  <video
+  <!-- <video
     playsinline
     {src}
     {controls}
     {loop}
     autoplay={loop}
     muted={loop}
+    class={`${_class} ${classList.join(" ")}`}
+    {...attrs}></video> -->
+  <video
+    {src}
+    controls
+    loop
+    muted
+    playsinline
     class={`${_class} ${classList.join(" ")}`}
     {...attrs}></video>
 </div>

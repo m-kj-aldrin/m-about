@@ -1,38 +1,41 @@
 ---
-import BaseLayout from "@lib/layouts/BaseLayout.astro";
-import Video from "@lib/components/Video.astro";
+import BaseLayout from '@lib/layouts/BaseLayout.astro';
+import Video from '@lib/components/Video.astro';
 
-import glitterDonut from "@assets/works/glitter-donut.mp4";
+import glitterDonut from '@assets/works/glitter-donut.mp4';
 
-import mans from "@assets/works/mans.jpeg";
-import ulv from "@assets/works/ulv.png";
-import filedStudies from "@assets/works/field-studies.jpg";
+import mans from '@assets/works/mans.jpeg';
+import ulv from '@assets/works/ulv.png';
+import filedStudies from '@assets/works/field-studies.jpg';
 
-import tickles from "@assets/works/tickles.mp4";
+import tickles from '@assets/works/tickles.mp4';
 
-import blockMan from "@assets/works/block-man.jpg";
-import towers from "@assets/works/towers.jpeg";
-import orangeLook from "@assets/works/orange-look.jpeg";
-import blink from "@assets/works/blink.mp4";
+import blockMan from '@assets/works/block-man.jpg';
+import towers from '@assets/works/towers.jpeg';
+import orangeLook from '@assets/works/orange-look.jpeg';
+import blink from '@assets/works/blink.mp4';
+import travelingPaths from '@assets/works/traveling-paths.jpg';
+import palace from '@assets/works/palace.jpg';
+import evenspace from '@assets/works/even-space.jpg';
 
-import flowField from "@assets/works/flow-field.jpeg";
+import flowField from '@assets/works/flow-field.jpeg';
 
-import stackingCells from "@assets/works/stacking-cells.mp4";
-import lines from "@assets/works/lines.mp4";
+import stackingCells from '@assets/works/stacking-cells.mp4';
+import lines from '@assets/works/lines.mp4';
 
-import tubules from "@assets/works/tubules.mp4";
+import tubules from '@assets/works/tubules.mp4';
 
-import vormHole from "@assets/works/vorm-hole.mp4";
-import anna from "@assets/works/anna.jpeg";
-import jag from "@assets/works/jag.jpeg";
-import Img from "@lib/components/Img.astro";
-import tentac from "@assets/works/tentac.mp4";
-import aquia from "@assets/works/aquia.jpeg";
-import rangs from "@assets/works/rangs.mp4";
-import stipp from "@assets/works/stipp.mp4";
-import buble from "@assets/works/buble.mp4";
-import match from "@assets/works/match.mp4";
-import diffuse from "@assets/works/diffuse.mp4";
+import vormHole from '@assets/works/vorm-hole.mp4';
+import anna from '@assets/works/anna.jpeg';
+import jag from '@assets/works/jag.jpeg';
+import Img from '@lib/components/Img.astro';
+import tentac from '@assets/works/tentac.mp4';
+import aquia from '@assets/works/aquia.jpeg';
+import rangs from '@assets/works/rangs.mp4';
+import stipp from '@assets/works/stipp.mp4';
+import buble from '@assets/works/buble.mp4';
+import match from '@assets/works/match.mp4';
+import diffuse from '@assets/works/diffuse.mp4';
 ---
 
 <BaseLayout title="works">
@@ -41,8 +44,11 @@ import diffuse from "@assets/works/diffuse.mp4";
   >
     <Video aspect={[1, 1]} src={glitterDonut} class="col-span-8 row-span-2" />
     <Img aspect={[1, 1]} src={orangeLook} alt="orange look" class="col-span-4" />
-    <Img aspect={[1, 1]} src={filedStudies} alt="field studies" class="col-span-4" />
-    <Img src={ulv} alt="ulv" class="col-span-4 h-full" aspect={[1, 1]} />
+    <!-- <Img aspect={[1, 1]} src={filedStudies} alt="field studies" class="col-span-4" /> -->
+    <Img aspect={[1, 1]} src={palace} alt="palace" class="col-span-4" />
+    <Img src={evenspace} alt="even space" class="col-span-4 row-span-2 w-full" />
+    <!-- <Img src={ulv} alt="ulv" class="col-span-4 h-full" aspect={[1, 1]} /> -->
+    <Img aspect={[1, 1]} src={travelingPaths} alt="traveling paths" class="col-span-8" />
     <Img src={mans} alt="mans" class="col-span-6 row-span-3 h-full" />
     <Video src={stackingCells} class="col-span-2" />
     <Video src={tubules} class="col-span-4" />

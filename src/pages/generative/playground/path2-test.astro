@@ -1,0 +1,70 @@
+---
+import G from "@lib/components/svg/builtin/G.astro";
+import Path2, { type Command, type CommandNames, type CommandValues } from "@lib/components/svg/builtin/Path2.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import { chance, pick } from "@lib/util/stokhos";
+---
+
+<BaseLayout title="playground:path2-test" fullScreen={true}>
+  <svg viewBox="0 0 2048 2048">
+    <G translate={[1024, 1024]} fill="none" stroke="black" stroke-width={4}>
+      <Path2
+        d={Array.from({ length: 512 }).map(
+          function (this: { prevC: CommandNames; signCount: { pos: number; neg: number } }, _, i): Command {
+            let c = pick(["v", "v", "v", "v", "v", "v", "h", "h", "h", "h", "h", "h", "a"]);
+            while (this.prevC === c) {
+              c = pick(["v", "v", "v", "h", "h", "h", "a"]);
+            }
+
+            this.prevC = c;
+
+            let sign = Math.sign(Math.random() - 0.5);
+
+            if (sign === 1) this.signCount.pos += 1;
+            if (sign === -1) this.signCount.neg += 1;
+
+            if (this.signCount.pos > 4) {
+              sign = -1;
+              this.signCount.pos = 0;
+              this.signCount.neg -= 1;
+            }
+            if (this.signCount.neg > 4) {
+              sign = 1;
+              this.signCount.neg = 0;
+              this.signCount.pos -= 1;
+            }
+
+            let l: CommandValues;
+
+            switch (c) {
+              case "v":
+              case "h":
+                l = [pick([1, 2, 4, 8]) * sign * 16];
+                break;
+              case "a":
+                let r = pick([1, 1, 1, 1, 1, 2, 2, 2, 8]) * 16;
+                let dxdy_sign = sign;
+                if (chance(0.5)) {
+                  l = [r, r, 0, 0, 0, r * 2 * dxdy_sign, 0];
+                } else {
+                  l = [r, r, 0, 0, 0, 0, r * 2 * dxdy_sign];
+                }
+                break;
+            }
+
+            return [c, ...l];
+          },
+          { prevC: null, signCount: { pos: 0, neg: 0 } }
+        )}
+      />
+    </G>
+  </svg>
+</BaseLayout>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+    border: 1px currentColor dashed;
+  }
+</style>
