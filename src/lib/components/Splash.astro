@@ -7,6 +7,8 @@ import Path from "@lib/components/svg/builtin/Path.astro";
 import Star from "./svg/shapes/star.astro";
 import SignEngine from "./svg/shapes/SignEngine.astro";
 import Animate from "./svg/animations/Animate.astro";
+import Path2 from "./svg/builtin/Path2.astro";
+import { irand } from "@lib/util/stokhos";
 const outerCircleRadi = 320;
 ---
 
@@ -27,9 +29,7 @@ const outerCircleRadi = 320;
         </g>
         <!-- SPOKE -->
         <g class="spoke">
-          <g class="direction" stroke="hsl(var(--color-primary))" stroke-width="2" transform="">
-            <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 0 0" to="360 0 0" dur="32s" repeatCount="indefinite"
-            ></animateTransform>
+          <g class="direction" stroke="hsl(var(--color-primary))" stroke-width="2">
             <circle r="4" fill="hsl(var(--color-primary))" stroke="none"></circle>
             <G translate={[128 - 4, 0]} color="hsl(var(--color-primary))" stroke-width={1}>
               <Circle r={1} />
@@ -40,6 +40,7 @@ const outerCircleRadi = 320;
                 <Circle r="32" stroke="none" fill="hsl(var(--color-secondary))" fill-opacity="0.2" />
               </g>
             </G>
+            <AnimateTransform type="rotate" from="0 0 0" to="360 0 0" begin={"0s"} dur={32000} repeatCount={"indefinite"} additive="sum" />
           </g>
         </g>
         <!-- DASH & BEND -->
@@ -110,7 +111,52 @@ const outerCircleRadi = 320;
           <g>
             <g>
               <g transform={`rotate(-45) translate(${outerCircleRadi} 0) translate(64)`}>
-                <circle r="32" stroke="hsl(var(--color-offset))" stroke-width="2" stroke-dasharray="8 1"> </circle>
+                <circle r="24" stroke="hsl(var(--color-offset))" fill="hsl(var(--color-offset))" stroke-width="2" stroke-dasharray="4 2">
+                  <Animate
+                    id="circlepulse"
+                    attributeName="fill-opacity"
+                    values="0;0;0.5;0"
+                    keyTimes="0;0.98;0.99;1"
+                    dur="3s"
+                    begin="0s;alast.end"
+                    repeatCount={1}
+                    fill="freeze"
+                  />
+                  <Animate attributeName="stroke-dashoffset" to={6 * -2} dur="2s" begin="0s" repeatCount={"indefinite"} />
+                </circle>
+                <G fill="hsl(var(--color-offset))">
+                  {
+                    Array.from({ length: 9 }).map((_, i, arr) => (
+                      <Circle cx={24} r={2} rotate={i * (360 / arr.length)}>
+                        {/* <AnimateTransform
+                          id={i === arr.length - 1 ? "alast" : `a${i}`}
+                          type="translate"
+                          begin={i == 0 ? `circlepulse.end` : `a${i - 1}.end`}
+                          dur={irand(1,4) * 35 + 75}
+                          values={`0 0;${irand(2,6)} 0;0 0`}
+                          keyTimes="0;0.5;1"
+                          calcMode="spline"
+                          keySplines="0.35 0 0.4 0.9;0.4 0.9 1 1"
+                          repeatCount={1}
+                          fill="freeze"
+                          additive="sum"
+                        /> */}
+                        <Animate
+                          id={i === arr.length - 1 ? "alast" : `a${i}`}
+                          attributeName="r"
+                          begin={i == 0 ? `circlepulse.end` : `a${i - 1}.end`}
+                          dur={`${irand(1, 4) * 50 + 75}ms`}
+                          values={`2;${irand(1, 3) * 2 + 2};2`}
+                          keyTimes="0;0.5;1"
+                          calcMode="spline"
+                          keySplines="0.35 0 0.4 0.9;0.4 0.9 1 1"
+                          repeatCount={1}
+                          fill="freeze"
+                        />
+                      </Circle>
+                    ))
+                  }
+                </G>
               </g>
               <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 0 0" to="-360 0 0" dur="64s" repeatCount="indefinite"
               ></animateTransform>

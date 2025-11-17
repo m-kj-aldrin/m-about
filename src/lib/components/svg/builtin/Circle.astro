@@ -9,7 +9,7 @@ interface Props extends Transform, Omit<HTMLAttributes<"circle">, "rotate" | "sc
   color?: CssColors;
 }
 
-const { scale, rotate, translate, fill = "currentColor", ...attrs } = Astro.props;
+const { scale, rotate, translate, fill, ...attrs } = Astro.props;
 
 let transform: string | undefined = "";
 
@@ -19,5 +19,5 @@ if (!attrs["transform"]) {
 ---
 
 <circle {...attrs} {fill} {transform}>
-  <slot/>
+  <slot />
 </circle>

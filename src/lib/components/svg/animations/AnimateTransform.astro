@@ -8,8 +8,10 @@ interface Props {
   to?: string;
   values?: string;
   dur: number;
-  repeatCount?: number | "indefinite";
-  calcMode?: "linear" | "paced" | "discrete";
+  repeatCount: number | "indefinite";
+  keyTimes?: string;
+  keySplines?: string;
+  calcMode?: "linear" | "discrete" | "paced" | "spline";
   begin?: BeginType;
   fill?: "remove" | "freeze";
   id?: string;
@@ -17,7 +19,7 @@ interface Props {
   additive?: "replace" | "sum";
 }
 
-const { type, from, to, dur: _dur, repeatCount = 'indefinite', calcMode, values, begin: _begin, fill, id, accumulate, additive } = Astro.props as Props;
+const {dur:_dur,begin:_begin,...attrs} = Astro.props as Props;
 
 const dur = `${_dur}ms`;
 const begin = typeof _begin === "number" ? `${_begin}ms` : _begin;
@@ -26,15 +28,7 @@ const begin = typeof _begin === "number" ? `${_begin}ms` : _begin;
 <animateTransform
   attributeName="transform"
   attributeType="XML"
-  {additive}
-  {accumulate}
-  {type}
-  {from}
-  {to}
   {dur}
-  {repeatCount}
-  {calcMode}
-  {values}
   {begin}
-  {fill}
-  {id}></animateTransform>
+  {...attrs}
+  </animateTransform>
