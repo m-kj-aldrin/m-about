@@ -6,6 +6,7 @@ export interface Transform {
   scale?: Scale;
   rotate?: Rotate;
   translate?: Translate;
+  transformOrigin?: string;
 }
 
 export default function ({ scale, rotate, translate }: Transform) {

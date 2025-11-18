@@ -1,0 +1,185 @@
+---
+import Circle from "@lib/components/svg/builtin/Circle.astro";
+import G from "@lib/components/svg/builtin/G.astro";
+import Rect from "@lib/components/svg/builtin/Rect.astro";
+import Pattern from "@lib/components/svg/shapes/patterns/Pattern.astro";
+import PatternMask from "@lib/components/svg/shapes/patterns/PatternMask.astro";
+import BaseLayout from "@lib/layouts/BaseLayout.astro";
+import { chance, irand, pick } from "@lib/util/stokhos";
+
+const cols = 16;
+const rows = 64;
+const viewbox_x = 100;
+const viewbox_y = 100 * (rows / cols);
+const cell_w = viewbox_x / cols;
+const cell_h = viewbox_y / rows;
+const cell_padding = 0.35;
+
+// 1. Setup Grid (Indices)
+const grid_map = new Map<string, boolean>();
+const grid_points: [number, number][] = [];
+
+for (let y = 0; y < rows; y++) {
+  for (let x = 0; x < cols; x++) {
+    grid_map.set(`${x},${y}`, false);
+    grid_points.push([x, y]);
+  }
+}
+
+grid_points.sort(() => 0.5 - Math.random());
+
+const rectangles: { x: number; y: number; width: number; height: number }[] = [];
+
+// 2. Greedy Expansion Logic
+for (const [x, y] of grid_points) {
+  if (grid_map.get(`${x},${y}`)) continue;
+
+  // We set a maximum "attempt" size so we don't just make one giant rectangle
+  // But unlike before, we will SHRINK this if we hit a wall.
+  // const max_w_attempt = Math.min(irand(1, 12), cols - x);
+  // const max_h_attempt = Math.min(chance(0.9) ? max_w_attempt : irand(24, 64), rows - y);
+  let max_w_attempt = chance(0.85) ? irand(4, 8) : irand(1, 3) * 32;
+  let max_h_attempt = chance(0.825) ? max_w_attempt : chance(0.5) ? irand(1, 4) : irand(1, 3) * 32;
+
+  max_w_attempt = Math.min(max_w_attempt, cols - x);
+  max_h_attempt = Math.min(max_h_attempt, rows - y);
+
+  let valid_width = 0;
+  let valid_height = 0;
+
+  // Randomly decide whether to prioritize Width or Height expansion
+  // This prevents the layout from looking purely horizontal or vertical
+  const horizontal_bias = Math.random() > 0.5;
+
+  if (horizontal_bias) {
+    // --- STRATEGY A: Expand Width first, then Height ---
+
+    // 1. Expand X as far as possible (up to max attempt)
+    for (let dx = 0; dx < max_w_attempt; dx++) {
+      const target_x = x + dx;
+      if (target_x >= cols || grid_map.get(`${target_x},${y}`)) break;
+      valid_width++;
+    }
+
+    // 2. Expand Y, but only if the WHOLE ROW of width is clear
+    checkRowLoop: for (let dy = 0; dy < max_h_attempt; dy++) {
+      const target_y = y + dy;
+      if (target_y >= rows) break;
+
+      // Check every cell in this row for the established width
+      for (let dx = 0; dx < valid_width; dx++) {
+        if (grid_map.get(`${x + dx},${target_y}`)) break checkRowLoop;
+      }
+      valid_height++;
+    }
+  } else {
+    // --- STRATEGY B: Expand Height first, then Width ---
+
+    // 1. Expand Y as far as possible
+    for (let dy = 0; dy < max_h_attempt; dy++) {
+      const target_y = y + dy;
+      if (target_y >= rows || grid_map.get(`${x},${target_y}`)) break;
+      valid_height++;
+    }
+
+    // 2. Expand X, but only if the WHOLE COLUMN of height is clear
+    checkColLoop: for (let dx = 0; dx < max_w_attempt; dx++) {
+      const target_x = x + dx;
+      if (target_x >= cols) break;
+
+      for (let dy = 0; dy < valid_height; dy++) {
+        if (grid_map.get(`${target_x},${y + dy}`)) break checkColLoop;
+      }
+      valid_width++;
+    }
+  }
+
+  // 3. Mark the calculated area as used
+  for (let dy = 0; dy < valid_height; dy++) {
+    for (let dx = 0; dx < valid_width; dx++) {
+      grid_map.set(`${x + dx},${y + dy}`, true);
+    }
+  }
+
+  // 4. Save
+  rectangles.push({
+    x: x * cell_w,
+    y: y * cell_h,
+    width: valid_width * cell_w,
+    height: valid_height * cell_h,
+  });
+}
+
+const inner_padding = 0;
+const padding_scaling_x = viewbox_x / (viewbox_x + inner_padding);
+const padding_scaling_y = viewbox_y / (viewbox_y + inner_padding);
+---
+
+<BaseLayout title="playground:packing-scan" fullScreen={true}>
+  <svg viewBox={`0 0 ${viewbox_x} ${viewbox_y}`}>
+    <defs>
+      <!-- <Pattern name="dots" width={16} height={16} patternUnits="userSpaceOnUse" scale={[0.0625, 0.0625]}>
+        <G fill="black">
+          <Circle cx={4} cy={4} r={2} />
+          <Circle cx={12} cy={12} r={2} />
+        </G>
+      </Pattern> -->
+      <PatternMask name="dots" width={16} height={16} scale={[0.25, 0.25]}>
+        <G fill="white">
+          <Circle cx={4} cy={4} r={3} />
+          <Circle cx={12} cy={12} r={3} />
+        </G>
+      </PatternMask>
+    </defs>
+    <G scale={[padding_scaling_x, padding_scaling_y]} transformOrigin={`${viewbox_x / 2} ${viewbox_y / 2}`}>
+      <Rect
+        width={viewbox_x + inner_padding}
+        height={viewbox_y + inner_padding}
+        x={-inner_padding / 2}
+        y={-inner_padding / 2}
+        fill="none"
+        stroke="blue"
+        stroke-width={cell_w * 0.125}
+        stroke-dasharray={cell_w * 0.5}
+      />
+      <!-- <Rect width={viewbox_x} height={viewbox_y} fill="blue" mask="url(#mask-dots)" /> -->
+      <G>
+        {
+          rectangles.map((rect) => {
+            // Calculate padding logic for display
+            const pad_w = cell_w * cell_padding;
+            const pad_h = cell_h * cell_padding;
+            const fill_opacity = chance(0.9) ? pick([0.75, 0.85, 1]) : 0.25;
+            const mask = chance(0.2) ? "url(#mask-dots)" : undefined;
+            const fill = mask ? "blue" : "none";
+            const stroke = fill == "none" ? "blue" : "none";
+            const strokeWidth = stroke ? cell_w * 0.1 : undefined;
+            return (
+              <Rect
+                x={rect.x + pad_w / 2}
+                y={rect.y + pad_h / 2}
+                width={rect.width - pad_w}
+                height={rect.height - pad_h}
+                {fill}
+                {stroke}
+                stroke-width={strokeWidth}
+                {mask}
+                rx={1}
+              />
+            );
+          })
+        }
+      </G>
+    </G>
+  </svg>
+</BaseLayout>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+    border: 1px #0002 dashed;
+    padding: 4px;
+    overflow: visible;
+  }
+</style>
