@@ -105,7 +105,6 @@ for (const [x, y] of grid_points) {
     longest_actual_path_length = Math.max(longest_actual_path_length, actual_path_length);
   }
 }
-console.log(`longest_actual_path_length: ${longest_actual_path_length}`);
 
 // const colors = ['yellow', 'orange', 'red', 'purple', 'blue', 'black'];
 let colors = [
@@ -134,7 +133,6 @@ const get_color_by_index = (index: number) => {
   // return `hsl(${hue}, ${sat}%, ${light}%)`;
 };
 
-console.log(`cell_x_size: ${cell_x_size}, cell_y_size: ${cell_y_size}`);
 ---
 
 <BaseLayout title="playground:shape-packing" fullScreen={true}>
@@ -176,7 +174,6 @@ console.log(`cell_x_size: ${cell_x_size}, cell_y_size: ${cell_y_size}`);
       <G filter="url(#smudge)">
         {
           paths.map(({ path, length }) => {
-            // console.log(`length: ${length}`);
             const color_index = Math.floor(
               (length / longest_actual_path_length) * (colors.length - 1)
             );
