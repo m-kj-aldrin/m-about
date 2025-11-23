@@ -13,7 +13,7 @@ const paths: [number, number][][] = [];
 
 const rows = 256;
 const cols = 256;
-const CELL_SIZE = 4; // For drawing
+const CELL_SIZE = 5; // For drawing
 
 // Helper to generate random HSL colors
 let colors = [
@@ -208,7 +208,7 @@ function createPathData(path: [number, number][]): Command[] {
   function downloadSvg() {
     const svg = document.querySelector('#sketch') as SVGSVGElement;
     if (!svg) return;
-    downloadSvgAsImage(svg, { scale: 2 });
+    downloadSvgAsImage(svg, { mimeType: 'image/jpeg', scale: 3, fileName: 'traveling-paths.jpeg' });
   }
 </script>
 

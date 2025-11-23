@@ -6,12 +6,14 @@ import transformString, { type Transform } from './transformString';
 type MoveCommand = ['m' | 'M', number, number];
 type LineCommand = ['l' | 'L', number, number];
 type VerticalCommand = ['v' | 'V', number];
-type HorizontalCommand = ['h' | 'h', number];
+type HorizontalCommand = ['h' | 'H', number];
+type QuadraticBezierCurveCommand = ['q' | 'Q', number, number, number, number];
+type QuadraticBezierCurveShortCommand = ['t' | 'T', number, number];
 
 // rx, ry, angle, large-arc-flag, sweep-flag, x, y
 type ArcCommand = ['a' | 'A', number, number, number, number, number, number, number];
 
-export type Command = MoveCommand | LineCommand | VerticalCommand | HorizontalCommand | ArcCommand;
+export type Command = MoveCommand | LineCommand | VerticalCommand | HorizontalCommand | ArcCommand | QuadraticBezierCurveCommand | QuadraticBezierCurveShortCommand;
 
 type Tail<T extends any[]> = T extends [any, ...infer R] ? R : never;
 

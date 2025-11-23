@@ -10,23 +10,23 @@ interface Props {
 const { name, scale = [1, 1], width, height, rotate = 0, ...attrs } = Astro.props;
 ---
 
-<svg transition:persist={true}>
-  <defs>
-    <pattern
-      {...attrs}
-      id={`pattern-${name}`}
-      width={width}
-      height={height}
-      patternUnits="userSpaceOnUse"
-      patternTransform={`scale(${scale[0]} ${scale[1]}) rotate(${rotate})`}
-    >
-      <slot />
-    </pattern>
-    <mask id={`mask-${name}`} width="2" height="2">
-      <rect width="200%" height="200%" fill={`url(#pattern-${name})`}></rect>
-    </mask>
-  </defs></svg
+<!-- <svg transition:persist={true}>
+  <defs> -->
+<pattern
+  {...attrs}
+  id={`pattern-${name}`}
+  width={width}
+  height={height}
+  patternUnits="userSpaceOnUse"
+  patternTransform={`scale(${scale[0]} ${scale[1]}) rotate(${rotate})`}
 >
+  <slot />
+</pattern>
+<mask id={`mask-${name}`} width="2" height="2">
+  <rect width="200%" height="200%" fill={`url(#pattern-${name})`}></rect>
+</mask>
+<!-- </defs></svg
+> -->
 
 <style>
   svg {
