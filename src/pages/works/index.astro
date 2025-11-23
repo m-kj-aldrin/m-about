@@ -15,9 +15,12 @@ import towers from '@assets/works/towers.jpeg';
 import orangeLook from '@assets/works/orange-look.jpeg';
 import blink from '@assets/works/blink.mp4';
 import travelingPaths from '@assets/works/traveling-paths.jpg';
-import shapePacking from "@assets/works/shape-packing.jpg";
+import travelingPathsOriginal from '@assets/works/traveling-paths.jpg';
+import shapePacking from '@assets/works/shape-packing.jpg';
 import palace from '@assets/works/palace.jpg';
 import evenspace from '@assets/works/even-space.jpg';
+import evenspace32 from '@assets/works/even-space-3-2.jpg';
+import bars from '@assets/works/bars.jpg';
 
 import flowField from '@assets/works/flow-field.jpeg';
 
@@ -37,7 +40,7 @@ import stipp from '@assets/works/stipp.mp4';
 import buble from '@assets/works/buble.mp4';
 import match from '@assets/works/match.mp4';
 import diffuse from '@assets/works/diffuse.mp4';
-import circling from "@assets/works/circling.mp4";
+import circling from '@assets/works/circling.mp4';
 ---
 
 <BaseLayout title="works">
@@ -49,27 +52,33 @@ import circling from "@assets/works/circling.mp4";
     <Img aspect={[1, 1]} src={orangeLook} alt="orange look" class="col-span-4" />
     <!-- <Img aspect={[1, 1]} src={filedStudies} alt="field studies" class="col-span-4" /> -->
     <Img aspect={[1, 1]} src={palace} alt="palace" class="col-span-4" />
-    <Img src={evenspace} alt="even space" class="col-span-4 row-span-2 w-full" />
-    <Img aspect={[1, 1]} src={travelingPaths} alt="traveling paths" class="col-span-8" />
+    <!-- <Img src={evenspace} alt="even space" class="col-span-4 row-span-2 w-full" /> -->
+    <!-- <Img aspect={[1, 1]} src={travelingPaths} alt="traveling paths" class="col-span-8" /> -->
+    <Img aspect={[1, 1]} src={bars} alt="bars" class="col-span-6" />
+    <!-- <Img aspect={[1, 1]} src={evenspace32} alt="even space 32" class="col-span-6" /> -->
+    <Video aspect={[1, 1]} src={tubules} class="col-span-6" />
     <Img src={mans} alt="mans" class="col-span-8 row-span-3 h-full" />
-    <Img src={ulv} alt="ulv" class="col-span-4 h-full"  />
-    <Video src={tubules} class="col-span-4" />
+    <Img src={ulv} alt="ulv" class="col-span-4 h-full" />
+    <!-- <Video src={tubules} class="col-span-4" /> -->
     <Video src={blink} class="col-span-8 row-span-2" />
-    <Img src={flowField} alt="flow field" class="col-span-4" />
+    <!-- <Img src={flowField} alt="flow field" class="col-span-4" /> -->
     <Video src={circling} class="col-span-4" aspect={[1, 1]} />
     <!-- <Img src={anna} alt="anna" class="col-span-3 row-span-2" crop={{ reflect: { x: -1 } }} /> -->
     <!-- <Img src={towers} alt="towers" class="" /> -->
     <!-- <Img src={jag} alt="jag" class="col-span-3" /> -->
-    <Video src={tentac} class="col-span-5 row-span-2" />
-    <Video src={lines} class="col-span-7" />
+    <Video src={tentac} class="col-span-5 row-span-1" />
+    <!-- <Video src={lines} class="col-span-7" /> -->
+    <Img src={travelingPathsOriginal} alt="traveling paths" class="col-span-7" />
     <Video src={vormHole} class="col-span-4 row-span-1" />
     <Video src={stipp} class="col-span-4" />
     <Video src={rangs} class="col-span-3 row-span-2" />
     <Img src={aquia} alt="view" class="col-span-5 row-span-2" />
     <Img src={blockMan} alt="block man" class="col-span-4" />
-    <Video src={stackingCells} class="col-span-3" />
-    <Img aspect={[1, 1]} src={shapePacking} alt="shape packing" class="col-span-6" />
+    <!-- <Video src={stackingCells} class="col-span-3" /> -->
+    <Img crop={{ reflect: { x: -1 } }} src={anna} alt="anna" class="col-span-4 row-span-2" />
+    <!-- <Img aspect={[1, 1]} src={shapePacking} alt="shape packing" class="col-span-6" /> -->
     <Video src={diffuse} class="col-span-6" />
+    <Img aspect={[1, 1]} src={evenspace32} alt="even space 32" class="col-span-6" />
     <Video src={match} class="col-span-12 row-span-1" />
   </div>
 </BaseLayout>

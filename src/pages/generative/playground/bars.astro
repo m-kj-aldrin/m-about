@@ -1,0 +1,316 @@
+---
+import G from '@lib/components/svg/builtin/G.astro';
+import Path2 from '@lib/components/svg/builtin/Path2.astro';
+import Rect from '@lib/components/svg/builtin/Rect.astro';
+import Filter from '@lib/components/svg/shapes/Filter.astro';
+import PatternMask from '@lib/components/svg/shapes/patterns/PatternMask.astro';
+import BaseLayout from '@lib/layouts/BaseLayout.astro';
+import { clamp } from '@lib/util/map';
+import { chance, irand, pick } from '@lib/util/stokhos';
+
+const grid_map = new Map<string, boolean>();
+const grid_points: [number, number][] = [];
+
+const cols = 16;
+const rows = 16;
+
+const cell_width = 16;
+const cell_height = 16;
+const cell_padding = 0;
+
+const content_padding = 16;
+const content_width = cols * cell_width + cell_padding * 2 + content_padding * 2;
+const content_height = rows * cell_height + cell_padding * 2 + content_padding * 2;
+
+const viewbox = `-${content_padding + cell_padding} -${content_padding + cell_padding} ${content_width} ${content_height}`;
+
+for (let y = 0; y < rows; y++) {
+  for (let x = 0; x < cols; x++) {
+    grid_points.push([x, y]);
+    grid_map.set(`${x},${y}`, false);
+  }
+}
+
+grid_points.sort(() => 0.5 - Math.random());
+
+const bars: {
+  orientation: 'horizontal' | 'vertical';
+  x: number;
+  y: number;
+  length: number;
+}[] = [];
+
+for (const [x, y] of grid_points) {
+  if (grid_map.get(`${x},${y}`)) continue;
+
+  grid_map.set(`${x},${y}`, true);
+
+  const orientation = pick(['horizontal', 'vertical']);
+
+  if (orientation === 'horizontal') {
+    const atempted_width = irand(1, cols);
+    const clamped_width = clamp(atempted_width, 1, cols - x);
+    let actual_width = 1;
+
+    for (let i = 1; i < clamped_width; i++) {
+      if (grid_map.get(`${x + i},${y}`)) break;
+
+      actual_width++;
+      grid_map.set(`${x + i},${y}`, true);
+    }
+
+    bars.push({
+      orientation,
+      x,
+      y,
+      length: actual_width,
+    });
+  } else if (orientation === 'vertical') {
+    const atempted_height = irand(1, rows);
+    const clamped_height = clamp(atempted_height, 1, rows - y);
+    let actual_height = 1;
+
+    for (let i = 1; i < clamped_height; i++) {
+      if (grid_map.get(`${x},${y + i}`)) break;
+
+      actual_height++;
+      grid_map.set(`${x},${y + i}`, true);
+    }
+
+    bars.push({
+      orientation,
+      x,
+      y,
+      length: actual_height,
+    });
+  }
+}
+
+const bg_color = 'hsl(225 69% 45%)';
+const stroke_color = 'hsl(257 59.2% 90.1%)';
+
+const shade_color_1 = 'hsl(203 100% 13.3%)';
+const shade_color_2 = 'hsl(210 100% 22.3%)';
+const tint_color_1 = 'hsl(275 100% 87.8%)';
+---
+
+<BaseLayout title="playground:bars" fullScreen={true}>
+  <svg viewBox={viewbox} id="sketch">
+    <defs>
+      <Filter id="grain">
+        <feTurbulence type="fractalNoise" baseFrequency="3" numOctaves="1"></feTurbulence>
+        <feComponentTransfer>
+          <feFuncR type="linear" slope="3.5" intercept="-0.5"></feFuncR>
+        </feComponentTransfer>
+        <feColorMatrix
+          type="matrix"
+          values="
+          1 0 0 0 0
+          1 0 0 0 0
+          1 0 0 0 0
+          0 0 0 1 0"
+          result="only-red"
+        >
+        </feColorMatrix>
+      </Filter>
+      <Filter id="smudge" x="-100%" y="-100%" width="200%" height="200%">
+        <feTurbulence type="fractalNoise" baseFrequency="1.35" numOctaves="2"></feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          scale="1.1"
+          xChannelSelector="R"
+          yChannelSelector="G"
+          result="displacement"></feDisplacementMap>
+        <feComposite operator="arithmetic" in="SourceGraphic" k1="0.4" k2="0.8" k3="0.2" k4="0"
+        ></feComposite>
+      </Filter>
+      <PatternMask width={16} height={16} scale={[0.125, 0.125]} name="dots">
+        <circle r={2} cx="4" cy="4" fill="white"></circle>
+        <circle r={2} cx="12" cy="12" fill="white"></circle>
+      </PatternMask>
+      <filter id="highlight-bloom" x="-50%" y="-50%" width="200%" height="200%">
+
+        <feComponentTransfer in="SourceGraphic" result="intenseHighlights">
+          <feFuncR type="linear" slope="3.5" intercept="-2.0"/>
+          <feFuncG type="linear" slope="3.5" intercept="-2.0"/>
+          <feFuncB type="linear" slope="3.5" intercept="-2.0"/>
+        </feComponentTransfer>
+  
+        <feGaussianBlur in="intenseHighlights" stdDeviation="4" result="blurredLight"/>
+  
+        <!-- <feBlend in="blurredLight" in2="SourceGraphic" mode="screen"/> -->
+        <feComposite operator="arithmetic" in="blurredLight" in2="SourceGraphic" k1="0.1" k2="0.35" k3="0.95" k4="0"
+        ></feComposite>
+        
+      </filter>
+    </defs>
+
+    <G filter="url(#highlight-bloom)">
+      <G filter="url(#smudge)">
+        <Rect
+          width={content_width}
+          height={content_height}
+          x={-content_padding - cell_padding}
+          y={-content_padding - cell_padding}
+          fill={bg_color}
+        />
+        <G stroke={stroke_color} stroke-width={0.75}>
+          {
+            bars.map((bar) => {
+              const x = bar.x * cell_width + cell_padding / 2;
+              const y = bar.y * cell_height + cell_padding / 2;
+              let width,
+                height = 0;
+              if (bar.orientation === 'horizontal') {
+                width = bar.length * cell_width - cell_padding;
+                height = cell_height - cell_padding;
+              } else {
+                width = cell_width - cell_padding;
+                height = bar.length * cell_height - cell_padding;
+              }
+              const box_or_bars = chance(0.25) && bar.length > 1 ? 'box' : 'bars';
+              if (box_or_bars === 'box') {
+                const colors = [shade_color_1, shade_color_2];
+                const fill = pick(colors);
+                const mask = 'url(#mask-dots)';
+                return (
+                  <Rect
+                    x={x}
+                    y={y}
+                    width={width}
+                    height={height}
+                    fill="none"
+                    stroke={stroke_color}
+                    stroke-width={0.5}
+                  />
+                  <Rect
+                    x={x}
+                    y={y}
+                    width={width}
+                    height={height}
+                    fill={stroke_color}
+                    fill-opacity={0.5}
+                    {mask}
+                    stroke="none"
+                  />
+                );
+              } else if (box_or_bars === 'bars') {
+                let n_bars = 1
+                chance(0.75) && (n_bars++);
+                chance(0.5) && n_bars > 1 && (n_bars++);
+                chance(0.75) && n_bars > 2 && (n_bars++);
+                // chance(0.25) && n_bars > 3 && (n_bars--)
+                
+                const stroke_width = 0.5;
+                const special = chance(0.5) && bar.length > 1 && n_bars > 2
+                const q_offset = 1 / bar.length
+                // const special = true
+                return (
+                  <G translate={[x, y]} stroke-width={stroke_width} stroke-linecap="round">
+                    {Array.from({ length: n_bars }).map((_, i, arr) => {
+                      const stroke_dasharray =
+                        chance(0.5) && bar.length > 2 && n_bars < 3
+                          ? `${1}`
+                          : undefined;
+                      if (bar.orientation === 'horizontal') {
+                        if(special) {
+                          return (
+                            <Path2 d={[
+                              ['M',0,height / (arr.length - 1) * i],
+                              ['q',width/8 ,q_offset,width/4,0],
+                              ['t',width/4,0],
+                              ['t',width/4,0],
+                              ['t',width/4,0]
+
+                            ]} 
+                            fill="none"
+                            stroke-opacity="1"
+                            />
+                          )
+                        }else{
+
+                        return (
+                          <line
+                            x1={0}
+                            x2={width}
+                            y1={(height / (arr.length - 1)) * i}
+                            y2={(height / (arr.length - 1)) * i}
+                            stroke-dasharray={stroke_dasharray}
+                            stroke-opacity={stroke_dasharray && 0.3 || 1}
+                          />
+                        );
+                        }
+                      } else if (bar.orientation === 'vertical') {
+                        if(special) {
+                          return (
+                            <Path2 d={[
+                              ['M',width / (arr.length-1) * i,0],
+                              ['q',q_offset,height/8,0,height/4],
+                              ['t',0,height/4],
+                              ['t',0,height/4],
+                              ['t',0,height/4]
+                            ]} 
+                            fill="none"
+                            stroke-opacity="1"
+                            />
+                          )
+                        }else{
+                        return (
+                          <line
+                            x1={(width / (arr.length - 1)) * i}
+                            x2={(width / (arr.length - 1)) * i}
+                            y1={0}
+                            y2={height}
+                            stroke-dasharray={stroke_dasharray}
+                            stroke-opacity={stroke_dasharray && 0.3 || 1}
+                          />
+                        );}
+                      }
+                    })}
+                  </G>
+                );
+              }
+            })
+          }
+        </G>
+        <Rect
+          width={content_width}
+          height={content_height}
+          x={-content_padding - cell_padding}
+          y={-content_padding - cell_padding}
+          filter="url(#grain)"
+          opacity={0.3}
+        />
+      </G>
+    </G>
+  </svg>
+  <button>Download SVG</button>
+</BaseLayout>
+
+<script>
+  import { downloadSvgAsImage } from '@lib/util/render-svg';
+
+  const button = document.querySelector('button');
+
+  button?.addEventListener('click', downloadSvg);
+
+  function downloadSvg() {
+    const svg = document.querySelector('#sketch') as SVGSVGElement;
+    if (!svg) return;
+    downloadSvgAsImage(svg, {
+      scale: 25,
+      mimeType: 'image/jpeg',
+      quality: 0.9,
+      fileName: 'bars.jpeg',
+    });
+  }
+</script>
+
+<style>
+  svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    /* border: 1px red solid */
+  }
+</style>

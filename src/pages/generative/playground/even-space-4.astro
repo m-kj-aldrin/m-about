@@ -1,0 +1,372 @@
+---
+import G from '@lib/components/svg/builtin/G.astro';
+import Path2 from '@lib/components/svg/builtin/Path2.astro';
+import Rect from '@lib/components/svg/builtin/Rect.astro';
+import Filter from '@lib/components/svg/shapes/Filter.astro';
+import PatternMask from '@lib/components/svg/shapes/patterns/PatternMask.astro';
+import BaseLayout from '@lib/layouts/BaseLayout.astro';
+import { clamp } from '@lib/util/map';
+import { chance, irand, pick } from '@lib/util/stokhos';
+import { loadRenderers } from 'astro:container';
+import { object, undefined } from 'astro:schema';
+
+const rows = 64;
+const cols = 64;
+
+const cell_size = 8;
+const cell_padding = 2;
+
+const sketch_padding = 20;
+
+const content_width = cols * cell_size + cell_padding * sketch_padding;
+const content_height = rows * cell_size + cell_padding * sketch_padding;
+const content_x = (-cell_padding * sketch_padding) / 2;
+const content_y = (-cell_padding * sketch_padding) / 2;
+
+let viewBox = `${content_x} ${content_y} ${content_width} ${content_height}`;
+
+// ----------------------------
+
+const grid_map = new Map<string, boolean>();
+const grid_points: [number, number][] = [];
+const rectangles: { x: number; y: number; width: number; height: number }[] = [];
+
+for (let y = 0; y < rows; y++) {
+  for (let x = 0; x < cols; x++) {
+    grid_points.push([x, y]);
+    grid_map.set(`${x},${y}`, false);
+  }
+}
+
+grid_points.sort(() => 0.5 - Math.random());
+
+const w_f = () => (chance(0.45) ? irand(1, 8) : irand(1, 3) * 32);
+const h_f = () => (chance(0.825) ? w_f() : chance(0.5) ? irand(1, 4) : irand(1, 3) * 32);
+
+for (const [x, y] of grid_points) {
+  if (grid_map.get(`${x},${y}`)) continue;
+
+  const candidates = [];
+
+  // --- A. Quadrant I: (x, y) is Top-Left Corner (Expand Right & Down) ---
+  {
+    let max_w = 0;
+    let max_attempted_w = clamp(w_f(), 1, cols - x); // Limit search rightwards
+
+    // 1. Find Max Width (W) rightwards
+    for (let w = 1; w <= max_attempted_w; w++) {
+      if (grid_map.get(`${x + w - 1},${y}`)) break;
+      max_w = w;
+    }
+
+    // 2. Find Max Height (H) downwards for the calculated max_w
+    let max_h = 0;
+    let max_attempted_h = clamp(h_f(), 1, rows - y);
+    for (let h = 1; h <= max_attempted_h; h++) {
+      let row_is_free = true;
+      for (let w = 0; w < max_w; w++) {
+        if (grid_map.get(`${x + w},${y + h - 1}`)) {
+          row_is_free = false;
+          break;
+        }
+      }
+      if (row_is_free) max_h = h;
+      else break;
+    }
+
+    candidates.push({ x, y, width: max_w, height: max_h });
+  }
+
+  // --- B. Quadrant II: (x, y) is Bottom-Left Corner (Expand Right & Up) ---
+  {
+    let max_w = 0;
+    let max_attempted_w = clamp(w_f(), 1, cols - x); // Limit search rightwards
+
+    // 1. Find Max Width (W) rightwards
+    for (let w = 1; w <= max_attempted_w; w++) {
+      if (grid_map.get(`${x + w - 1},${y}`)) break;
+      max_w = w;
+    }
+
+    // 2. Find Max Height (H) upwards for the calculated max_w
+    let max_h = 0;
+    let max_attempted_h = clamp(h_f(), 1, rows - y);
+    for (let h = 1; h <= max_attempted_h; h++) {
+      const check_y = y - h + 1;
+      if (check_y < 0) break; // Check canvas boundary (row 0 is the limit)
+
+      let row_is_free = true;
+      for (let w = 0; w < max_w; w++) {
+        if (grid_map.get(`${x + w},${check_y}`)) {
+          row_is_free = false;
+          break;
+        }
+      }
+
+      if (row_is_free) max_h = h;
+      else break;
+    }
+
+    // CORRECTION: Adjust y coordinate to the actual top-left corner
+    candidates.push({
+      x: x,
+      y: y - max_h + 1,
+      width: max_w,
+      height: max_h,
+    });
+  }
+
+  // --- C. Quadrant III: (x, y) is Bottom-Right Corner (Expand Left & Up) ---
+  {
+    let max_w = 0;
+    let max_attempted_w = clamp(w_f(), 1, x + 1); // Limit search leftwards
+
+    // 1. Find Max Width (W) leftwards
+    for (let w = 1; w <= max_attempted_w; w++) {
+      if (grid_map.get(`${x - w + 1},${y}`)) break;
+      max_w = w;
+    }
+
+    // 2. Find Max Height (H) upwards for the calculated max_w
+    let max_h = 0;
+    let max_attempted_h = clamp(h_f(), 1, rows - y);
+    for (let h = 1; h <= max_attempted_h; h++) {
+      const check_y = y - h + 1;
+      if (check_y < 0) break; // Check canvas boundary
+
+      let row_is_free = true;
+      for (let w = 0; w < max_w; w++) {
+        if (grid_map.get(`${x - w},${check_y}`)) {
+          row_is_free = false;
+          break;
+        }
+      }
+
+      if (row_is_free) max_h = h;
+      else break;
+    }
+
+    // CORRECTION: Adjust x and y coordinates to the actual top-left corner
+    candidates.push({
+      x: x - max_w + 1, // Shift X left by width - 1
+      y: y - max_h + 1, // Shift Y up by height - 1
+      width: max_w,
+      height: max_h,
+    });
+  }
+
+  // --- D. Quadrant IV: (x, y) is Top-Right Corner (Expand Left & Down) ---
+  {
+    let max_w = 0;
+    let max_attempted_w = clamp(w_f(), 1, x + 1); // Limit search leftwards
+
+    // 1. Find Max Width (W) leftwards
+    for (let w = 1; w <= max_attempted_w; w++) {
+      if (grid_map.get(`${x - w + 1},${y}`)) break;
+      max_w = w;
+    }
+
+    // 2. Find Max Height (H) downwards for the calculated max_w
+    let max_h = 0;
+    let max_attempted_h = clamp(h_f(), 1, rows - y);
+    for (let h = 1; h <= max_attempted_h; h++) {
+      const check_y = y + h - 1;
+
+      let row_is_free = true;
+      for (let w = 0; w < max_w; w++) {
+        if (grid_map.get(`${x - w},${check_y}`)) {
+          row_is_free = false;
+          break;
+        }
+      }
+
+      if (row_is_free) max_h = h;
+      else break;
+    }
+
+    // CORRECTION: Adjust x coordinate to the actual top-left corner
+    candidates.push({
+      x: x - max_w + 1, // Shift X left by width - 1
+      y: y,
+      width: max_w,
+      height: max_h,
+    });
+  }
+
+  // --- 3. CHOOSE LONGEST CANDIDATE (Based on Area) ---
+  const longest_candidate = candidates.reduce((acc, curr) =>
+    curr.width * curr.height > acc.width * acc.height ? curr : acc
+  );
+
+  if (longest_candidate.width > 0 && longest_candidate.height > 0) {
+    // --- 4. MARK THE AREA ---
+    const final_x = longest_candidate.x;
+    const final_y = longest_candidate.y;
+    const final_w = longest_candidate.width;
+    const final_h = longest_candidate.height;
+
+    for (let current_y = final_y; current_y < final_y + final_h; current_y++) {
+      for (let current_x = final_x; current_x < final_x + final_w; current_x++) {
+        grid_map.set(`${current_x},${current_y}`, true);
+      }
+    }
+
+    // --- 5. RECORD THE RECTANGLE ---
+    rectangles.push(longest_candidate);
+  }
+}
+---
+
+<BaseLayout title="playground:even-space-4" fullScreen={true}>
+  <svg viewBox={viewBox} id="sketch">
+    <PatternMask width={16} height={16} scale={[0.25, 0.25]} name="dots">
+      <circle r={3} cx="4" cy="4" fill="white"></circle>
+      <circle r={3} cx="12" cy="12" fill="white"></circle>
+    </PatternMask>
+    <PatternMask width={16} height={16} scale={[0.25, 0.25]} name="lines">
+      <G stroke="white">
+        <Path2
+          d={[
+            ['M', 0, 0],
+            ['L', 16, 16],
+          ]}
+          translate={[-8, 0]}
+        />
+        <Path2
+          d={[
+            ['M', 0, 0],
+            ['L', 16, 16],
+          ]}
+          translate={[8, 0]}
+        />
+      </G>
+    </PatternMask>
+
+    <Filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2"></feTurbulence>
+      <feComponentTransfer>
+        <feFuncR type="linear" slope="2.5" intercept="-0.1"></feFuncR>
+      </feComponentTransfer>
+
+      <feColorMatrix
+        type="matrix"
+        values="
+        1 0 0 0 0
+        1 0 0 0 0
+        1 0 0 0 0
+        0 0 0 1 0"
+        result="only-red"
+      >
+      </feColorMatrix>
+    </Filter>
+
+    <Rect width={content_width} height={content_height} x={content_x} y={content_y} fill="#fff" />
+    <Rect
+      width={content_width - cell_padding * 2}
+      height={content_height - cell_padding * 2}
+      x={content_x + cell_padding}
+      y={content_y + cell_padding}
+      fill="#ece9e9"
+      stroke="#000"
+      stroke-width={cell_size * 0.0625}
+      stroke-dasharray={cell_size * 0.25}
+      stroke-opacity={0.25}
+    />
+    <G>
+      {
+        rectangles.map((rect) => {
+          const width = rect.width * cell_size - cell_padding;
+          const height = rect.height * cell_size - cell_padding;
+
+          const x = rect.x * cell_size + cell_padding / 2;
+          const y = rect.y * cell_size + cell_padding / 2;
+
+          const rx = rect.width == rect.height && rect.width == 1 ? width / 2 : 0;
+
+          let stroke = undefined;
+
+          let fill = 'none';
+          if (rect.height === 1 && rect.width !== rect.height) {
+            fill = pick(['red', 'blue']);
+          }
+
+          let mask: string | undefined = undefined;
+
+          if (rect.width > 1 && rect.height > 1) {
+            if (chance(0.35)) {
+              if (chance(0.7)) {
+                mask = 'url(#mask-dots)';
+              } else {
+                mask = 'url(#mask-lines)';
+              }
+              fill = pick(['red', 'blue']);
+            }
+          }
+
+          let strokeDasharray = undefined;
+          if (fill === 'none') {
+            stroke = 'currentColor';
+            if (chance(0.5)) {
+              stroke = pick(['red', 'blue']);
+            }
+            if (stroke === 'currentColor' ? chance(0.7) : chance(0.1)) {
+              strokeDasharray = `${irand(1, 3)}`;
+            }
+          }
+
+          return (
+            <Rect
+              {x}
+              {y}
+              {width}
+              {height}
+              {rx}
+              {fill}
+              {mask}
+              stroke={stroke}
+              stroke-width={1}
+              stroke-dasharray={strokeDasharray}
+            />
+          );
+        })
+      }
+    </G>
+    <Rect
+      width={content_width}
+      height={content_height}
+      x={content_x}
+      y={content_y}
+      filter="url(#grain)"
+      opacity={0.25}
+    />
+  </svg>
+  <button>Download SVG</button>
+</BaseLayout>
+
+<script>
+  import { downloadSvgAsImage } from '@lib/util/render-svg';
+
+  const button = document.querySelector('button');
+
+  button?.addEventListener('click', downloadSvg);
+
+  function downloadSvg() {
+    const svg = document.querySelector('#sketch') as SVGSVGElement;
+    if (!svg) return;
+    downloadSvgAsImage(svg, {
+      scale: 2,
+      mimeType: 'image/jpeg',
+      quality: 0.9,
+      fileName: 'even-space-4.jpeg',
+    });
+  }
+</script>
+<style>
+  svg {
+    width: auto;
+    height: 100%;
+    margin: 0 auto;
+    overflow: visible;
+    padding: 8px;
+  }
+</style>
